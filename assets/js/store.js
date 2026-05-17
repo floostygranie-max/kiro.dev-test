@@ -53,6 +53,7 @@
         date: "2026-05-10",
         category: "Infrastruktura",
         tags: ["szlak", "edukacja", "rodzina"],
+        gallery: ["p1","p2","p3","p4","p7"],
         views: 1247,
         featured: true,
         published: true
@@ -68,6 +69,7 @@
         date: "2026-05-05",
         category: "Przyroda",
         tags: ["flora", "wiosna", "fotografia"],
+        gallery: ["p8","p9","p10"],
         views: 854,
         featured: true,
         published: true
@@ -83,6 +85,7 @@
         date: "2026-04-28",
         category: "Wydarzenia",
         tags: ["historia", "rekonstrukcja", "lato"],
+        gallery: ["p11","p12","p15","p16"],
         views: 3421,
         featured: true,
         published: true
@@ -98,6 +101,7 @@
         date: "2026-04-15",
         category: "Infrastruktura",
         tags: ["punkt widokowy", "modernizacja"],
+        gallery: ["p1","p5","p6"],
         views: 612,
         featured: false,
         published: true
@@ -113,6 +117,7 @@
         date: "2026-04-02",
         category: "Edukacja",
         tags: ["fotografia", "warsztaty"],
+        gallery: ["p2","p3","p4","p5","p6","p7"],
         views: 432,
         featured: false,
         published: true
@@ -128,6 +133,7 @@
         date: "2026-03-20",
         category: "Infrastruktura",
         tags: ["dostępność", "turystyka"],
+        gallery: [],
         views: 289,
         featured: false,
         published: true
@@ -417,6 +423,20 @@
       Object.keys(SEED).forEach(k => {
         if (!(k in this._data)) this._data[k] = SEED[k];
       });
+
+      // Seed reactions on first run (only if no reactions data exists yet)
+      if (!localStorage.getItem("pustynia_reactions_v1")) {
+        const seedReactions = {
+          n1: { heart: 47, thumb: 23, love: 12, fire: 8, clap: 31 },
+          n2: { heart: 92, thumb: 18, love: 64, fire: 4, clap: 22 },
+          n3: { heart: 156, thumb: 87, love: 41, fire: 73, clap: 102 },
+          n4: { heart: 28, thumb: 19, love: 7, fire: 2, clap: 15 },
+          n5: { heart: 14, thumb: 11, love: 8, fire: 3, clap: 9 },
+          n6: { heart: 9, thumb: 7, love: 4, fire: 1, clap: 5 }
+        };
+        localStorage.setItem("pustynia_reactions_v1", JSON.stringify(seedReactions));
+      }
+
       return this._data;
     },
 
@@ -507,6 +527,55 @@
     },
     nextEvent() { return this.upcomingEvents()[0]; },
     photosByFolder(folderId) { return this.all("photos").filter(p => p.folderId === folderId); },
+
+    // ----- Reactions (per news/event item) -----
+    reactionsKey: "pustynia_reactions_v1",
+    userReactionsKey: "pustynia_user_reactions_v1",
+
+    getReactions(itemId) {
+      const raw = localStorage.getItem(this.reactionsKey);
+      const all = raw ? JSON.parse(raw) : {};
+      return all[itemId] || { heart: 0, thumb: 0, love: 0, fire: 0, clap: 0 };
+    },
+
+    getUserReaction(itemId) {
+      const raw = localStorage.getItem(this.userReactionsKey);
+      const all = raw ? JSON.parse(raw) : {};
+      return all[itemId] || null;
+    },
+
+    toggleReaction(itemId, type) {
+      const raw = localStorage.getItem(this.reactionsKey);
+      const all = raw ? JSON.parse(raw) : {};
+      const current = all[itemId] || { heart: 0, thumb: 0, love: 0, fire: 0, clap: 0 };
+
+      const userRaw = localStorage.getItem(this.userReactionsKey);
+      const userAll = userRaw ? JSON.parse(userRaw) : {};
+      const previousUser = userAll[itemId];
+
+      // If user already reacted with this type — toggle off
+      if (previousUser === type) {
+        current[type] = Math.max(0, (current[type] || 0) - 1);
+        delete userAll[itemId];
+      } else {
+        // If they reacted with another type — switch
+        if (previousUser) {
+          current[previousUser] = Math.max(0, (current[previousUser] || 0) - 1);
+        }
+        current[type] = (current[type] || 0) + 1;
+        userAll[itemId] = type;
+      }
+
+      all[itemId] = current;
+      localStorage.setItem(this.reactionsKey, JSON.stringify(all));
+      localStorage.setItem(this.userReactionsKey, JSON.stringify(userAll));
+      return { counts: current, userReaction: userAll[itemId] || null };
+    },
+
+    totalReactions(itemId) {
+      const r = this.getReactions(itemId);
+      return Object.values(r).reduce((s, n) => s + n, 0);
+    },
 
     // ----- Auth -----
     login(username, password) {

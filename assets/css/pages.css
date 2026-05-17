@@ -144,8 +144,232 @@
   align-items: center;
   gap: 6px;
   transition: all var(--t-fast);
+  border: none;
+  cursor: pointer;
+  color: inherit;
 }
-.share-btn:hover { background: var(--sand-900); color: var(--sand-50); }
+.share-btn:hover { background: var(--sand-900); color: var(--sand-50); transform: translateY(-1px); }
+.share-btn.facebook:hover { background: #1877f2; color: #fff; }
+.share-btn.twitter:hover { background: #000; color: #fff; }
+.share-btn.linkedin:hover { background: #0a66c2; color: #fff; }
+.share-btn.whatsapp:hover { background: #25d366; color: #fff; }
+.share-btn.telegram:hover { background: #0088cc; color: #fff; }
+.share-btn.email:hover { background: var(--sun-500); color: #fff; }
+.share-btn.copy:hover { background: var(--ok); color: #fff; }
+
+/* =========================================================
+   REACTIONS
+   ========================================================= */
+.reactions-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: var(--s-5);
+  margin: var(--s-6) 0;
+}
+.reactions-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: var(--s-3);
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+.reactions-head h4 {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 1rem;
+}
+.reactions-head .total {
+  font-size: .85rem;
+  color: var(--text-muted);
+}
+.reactions-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+.reaction-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-full);
+  background: var(--surface);
+  cursor: pointer;
+  transition: all var(--t-mid);
+  font-size: .9rem;
+  font-weight: 600;
+  color: var(--text);
+  position: relative;
+}
+.reaction-btn .emoji {
+  font-size: 1.3rem;
+  line-height: 1;
+  transition: transform var(--t-mid);
+}
+.reaction-btn .count {
+  background: var(--sand-100);
+  color: var(--sand-800);
+  padding: 1px 8px;
+  border-radius: var(--r-full);
+  font-size: .75rem;
+  font-weight: 700;
+  min-width: 20px;
+  text-align: center;
+  transition: all var(--t-mid);
+}
+.reaction-btn:hover {
+  border-color: var(--sun-400);
+  background: var(--sand-50);
+  transform: translateY(-2px);
+}
+.reaction-btn:hover .emoji {
+  transform: scale(1.3) rotate(-8deg);
+}
+.reaction-btn.active {
+  background: var(--sun-400);
+  border-color: var(--sun-500);
+  color: var(--sand-900);
+}
+.reaction-btn.active .count {
+  background: var(--sand-900);
+  color: var(--sun-400);
+}
+.reaction-btn.active .emoji {
+  animation: reactionPop .5s ease-out;
+}
+@keyframes reactionPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.6) rotate(15deg); }
+  100% { transform: scale(1.1); }
+}
+
+/* Floating emoji animation when clicked */
+.float-emoji {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.5rem;
+  pointer-events: none;
+  animation: floatUp 1.2s ease-out forwards;
+}
+@keyframes floatUp {
+  0% { transform: translate(-50%, 0) scale(.5); opacity: 1; }
+  100% { transform: translate(-50%, -60px) scale(1.5) rotate(20deg); opacity: 0; }
+}
+
+/* Compact reaction summary on news cards */
+.news-card .reactions-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: .8rem;
+  color: var(--text-muted);
+  margin-top: var(--s-2);
+}
+.news-card .reactions-summary .emojis {
+  display: inline-flex;
+}
+.news-card .reactions-summary .emojis span {
+  background: var(--surface);
+  border: 1.5px solid var(--bg);
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .85rem;
+  margin-left: -6px;
+}
+.news-card .reactions-summary .emojis span:first-child { margin-left: 0; }
+
+/* =========================================================
+   NEWS GALLERY (inside article)
+   ========================================================= */
+.article-gallery {
+  margin: var(--s-6) 0;
+  background: var(--sand-50);
+  border-radius: var(--r-lg);
+  padding: var(--s-5);
+}
+.article-gallery h3 {
+  margin-bottom: var(--s-3);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.article-gallery h3 .count {
+  background: var(--sand-200);
+  padding: 2px 10px;
+  border-radius: var(--r-full);
+  font-size: .8rem;
+  letter-spacing: 0;
+}
+.article-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--s-2);
+}
+.article-gallery-tile {
+  aspect-ratio: 1;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  transition: transform var(--t-mid);
+}
+.article-gallery-tile:hover {
+  transform: scale(1.05) rotate(-1deg);
+  z-index: 2;
+  box-shadow: var(--shadow-md);
+}
+.article-gallery-tile::after {
+  content: "🔍";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.4);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  opacity: 0;
+  transition: opacity var(--t-fast);
+}
+.article-gallery-tile:hover::after { opacity: 1; }
+
+/* Native share button */
+.share-native {
+  background: linear-gradient(135deg, var(--sun-400), var(--sand-600)) !important;
+  color: var(--sand-900) !important;
+  font-weight: 700;
+}
+.share-native:hover {
+  background: linear-gradient(135deg, var(--sun-500), var(--sand-700)) !important;
+  color: #fff !important;
+}
+
+/* Reading progress bar */
+.reading-progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--sun-400), var(--sand-700));
+  z-index: 200;
+  width: 0%;
+  transition: width .1s linear;
+  box-shadow: 0 0 8px rgba(244,163,64,.6);
+}
 
 /* =========================================================
    EVENTS

@@ -13,6 +13,9 @@
 <body>
 <div id="header-slot"></div>
 
+<!-- Reading progress bar -->
+<div class="reading-progress" id="reading-progress"></div>
+
 <main>
   <article class="section" id="article-root" style="padding-top: calc(var(--header-h) + var(--s-7))">
     <div class="container">
@@ -30,6 +33,15 @@
   </section>
 </main>
 
+<!-- Lightbox for news gallery -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lb-close" aria-label="Zamknij">✕</button>
+  <button class="lightbox-nav prev" id="lb-prev" aria-label="Poprzednie">‹</button>
+  <button class="lightbox-nav next" id="lb-next" aria-label="Następne">›</button>
+  <div class="lightbox-content" id="lb-content"></div>
+  <div class="lightbox-info" id="lb-info"></div>
+</div>
+
 <div id="footer-slot"></div>
 
 <script src="assets/js/store.js"></script>
@@ -46,57 +58,223 @@
     return;
   }
 
-  // Increment views
-  Store.update("news", id, { views: (news.views || 0) + 1 });
+  // Increment views (only once per session, to avoid spamming)
+  const seenKey = "pustynia_seen_news_" + news.id;
+  if (!sessionStorage.getItem(seenKey)) {
+    Store.update("news", news.id, { views: (news.views || 0) + 1 });
+    sessionStorage.setItem(seenKey, "1");
+  }
 
   document.title = news.title + " — Pustynia Błędowska";
+
+  // Get attached gallery photos
+  const galleryIds = Array.isArray(news.gallery) ? news.gallery : [];
+  const galleryPhotos = galleryIds
+    .map(pid => Store.get("photos", pid))
+    .filter(Boolean);
 
   root.innerHTML = `
     <div class="breadcrumbs">
       <a href="index.html">Strona główna</a> <span>›</span>
       <a href="aktualnosci.html">Aktualności</a> <span>›</span>
-      <span>${App.escapeHtml(news.title)}</span>
+      <span>${App.escapeHtml(news.title.length > 50 ? news.title.slice(0,50)+'…' : news.title)}</span>
     </div>
     <span class="badge badge-accent">${App.escapeHtml(news.category)}</span>
     <h1 style="margin: 16px 0">${App.escapeHtml(news.title)}</h1>
     <div class="article-meta">
       <span>📅 ${App.fmtDate(news.date)}</span>
       <span>✍️ ${App.escapeHtml(news.author || 'Redakcja')}</span>
-      <span>👁 ${(news.views || 0).toLocaleString('pl-PL')} wyświetleń</span>
+      <span>👁 <span id="view-count">${(news.views || 0).toLocaleString('pl-PL')}</span> wyświetleń</span>
+      <span>⏱ ~${Math.max(1, Math.round((news.content || news.excerpt || '').replace(/<[^>]*>/g,'').split(/\s+/).length / 200))} min czytania</span>
     </div>
     <div class="article-cover" style="background:${news.cover}"></div>
-    <div class="article-content">${news.content || '<p>'+App.escapeHtml(news.excerpt)+'</p>'}</div>
-    <div class="article-tags">
-      ${(news.tags || []).map(t => `<span class="tag-pill">#${t}</span>`).join('')}
-    </div>
-    <div>
-      <strong style="display:block;margin-bottom:8px">Udostępnij:</strong>
-      <div class="share-row">
-        <a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(location.href)}" target="_blank" rel="noopener">📘 Facebook</a>
-        <a class="share-btn" href="https://twitter.com/intent/tweet?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(news.title)}" target="_blank" rel="noopener">🐦 X</a>
-        <a class="share-btn" href="https://wa.me/?text=${encodeURIComponent(news.title + ' ' + location.href)}" target="_blank" rel="noopener">💬 WhatsApp</a>
-        <button class="share-btn" onclick="navigator.clipboard.writeText(location.href).then(()=>App.toast('Link skopiowany!','ok'))">🔗 Kopiuj link</button>
+    <div class="article-content" id="article-content">${news.content || '<p>'+App.escapeHtml(news.excerpt)+'</p>'}</div>
+
+    ${galleryPhotos.length ? `
+      <div class="article-gallery">
+        <h3>📸 Galeria zdjęć <span class="count">${galleryPhotos.length}</span></h3>
+        <div class="article-gallery-grid" id="news-gallery">
+          ${galleryPhotos.map((p, i) => `
+            <div class="article-gallery-tile" data-idx="${i}" style="background:${p.cover}" title="${App.escapeHtml(p.title)}"></div>
+          `).join('')}
+        </div>
       </div>
+    ` : ''}
+
+    <div class="article-tags">
+      ${(news.tags || []).map(t => `<a class="tag-pill" href="aktualnosci.html?tag=${encodeURIComponent(t)}">#${t}</a>`).join('')}
+    </div>
+
+    <!-- Reactions -->
+    <div class="reactions-box reveal">
+      <div class="reactions-head">
+        <h4>Co o tym myślisz?</h4>
+        <span class="total" id="reactions-total">— reakcji</span>
+      </div>
+      <div class="reactions-buttons" id="reactions-buttons"></div>
+    </div>
+
+    <!-- Share -->
+    <div style="margin-top: 24px">
+      <strong style="display:block;margin-bottom:8px">📤 Podziel się:</strong>
+      <div class="share-row" id="share-row"></div>
     </div>
   `;
 
-  // Related news (same category, exclude current)
+  // ============== REACTIONS ==============
+  const REACTIONS = [
+    { type: "heart", emoji: "❤️",  label: "Super" },
+    { type: "thumb", emoji: "👍",  label: "Lajk" },
+    { type: "love",  emoji: "😍",  label: "Kocham" },
+    { type: "fire",  emoji: "🔥",  label: "Świetne" },
+    { type: "clap",  emoji: "👏",  label: "Brawo" }
+  ];
+
+  function renderReactions() {
+    const counts = Store.getReactions(news.id);
+    const userR = Store.getUserReaction(news.id);
+    const total = Object.values(counts).reduce((s,n) => s + n, 0);
+
+    document.getElementById("reactions-total").textContent =
+      total === 0 ? "Bądź pierwszy!" :
+      total + " " + (total === 1 ? "reakcja" : (total < 5 ? "reakcje" : "reakcji"));
+
+    document.getElementById("reactions-buttons").innerHTML = REACTIONS.map(r => `
+      <button class="reaction-btn ${userR === r.type ? 'active' : ''}" data-type="${r.type}" aria-label="${r.label}">
+        <span class="emoji">${r.emoji}</span>
+        <span>${r.label}</span>
+        <span class="count">${counts[r.type] || 0}</span>
+      </button>
+    `).join("");
+
+    document.querySelectorAll(".reaction-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        // Floating emoji animation
+        const emoji = btn.querySelector(".emoji").textContent;
+        const float = document.createElement("span");
+        float.className = "float-emoji";
+        float.textContent = emoji;
+        btn.appendChild(float);
+        setTimeout(() => float.remove(), 1200);
+
+        Store.toggleReaction(news.id, btn.dataset.type);
+        renderReactions();
+      });
+    });
+  }
+  renderReactions();
+
+  // ============== SHARING ==============
+  const url = location.href;
+  const text = news.title;
+  const shareData = {
+    title: news.title,
+    text: news.excerpt,
+    url: url
+  };
+
+  const shareRow = document.getElementById("share-row");
+  let buttons = "";
+  // Native share (only on mobile / supported browsers)
+  if (navigator.share) {
+    buttons += `<button class="share-btn share-native" id="share-native">📲 Udostępnij...</button>`;
+  }
+  buttons += `
+    <a class="share-btn facebook" href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}" target="_blank" rel="noopener">📘 Facebook</a>
+    <a class="share-btn twitter" href="https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}" target="_blank" rel="noopener">𝕏 X / Twitter</a>
+    <a class="share-btn linkedin" href="https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}" target="_blank" rel="noopener">in LinkedIn</a>
+    <a class="share-btn whatsapp" href="https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}" target="_blank" rel="noopener">💬 WhatsApp</a>
+    <a class="share-btn telegram" href="https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}" target="_blank" rel="noopener">✈ Telegram</a>
+    <a class="share-btn email" href="mailto:?subject=${encodeURIComponent(text)}&body=${encodeURIComponent('Polecam: ' + url)}">✉ Email</a>
+    <button class="share-btn copy" id="share-copy">🔗 Kopiuj link</button>
+  `;
+  shareRow.innerHTML = buttons;
+
+  if (navigator.share) {
+    document.getElementById("share-native").addEventListener("click", async () => {
+      try { await navigator.share(shareData); } catch (e) { /* user cancelled */ }
+    });
+  }
+  document.getElementById("share-copy").addEventListener("click", () => {
+    navigator.clipboard.writeText(url).then(() => App.toast("Link skopiowany!", "ok"));
+  });
+
+  // ============== NEWS GALLERY LIGHTBOX ==============
+  if (galleryPhotos.length) {
+    const lb = document.getElementById("lightbox");
+    let lbIdx = 0;
+    function openLB(i) {
+      lbIdx = i;
+      paint();
+      lb.classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+    function closeLB() {
+      lb.classList.remove("open");
+      document.body.style.overflow = "";
+    }
+    function navLB(d) {
+      lbIdx = (lbIdx + d + galleryPhotos.length) % galleryPhotos.length;
+      paint();
+    }
+    function paint() {
+      const p = galleryPhotos[lbIdx];
+      document.getElementById("lb-content").style.background = p.cover;
+      document.getElementById("lb-info").innerHTML = `<strong>${App.escapeHtml(p.title)}</strong><small>${App.escapeHtml(p.author || '')} · ${App.fmtDate(p.date || '')} · ${lbIdx+1} / ${galleryPhotos.length}</small>`;
+    }
+    document.querySelectorAll(".article-gallery-tile").forEach(t => {
+      t.addEventListener("click", () => openLB(parseInt(t.dataset.idx)));
+    });
+    document.getElementById("lb-close").addEventListener("click", closeLB);
+    document.getElementById("lb-prev").addEventListener("click", () => navLB(-1));
+    document.getElementById("lb-next").addEventListener("click", () => navLB(1));
+    lb.addEventListener("click", e => { if (e.target === lb) closeLB(); });
+    document.addEventListener("keydown", e => {
+      if (!lb.classList.contains("open")) return;
+      if (e.key === "Escape") closeLB();
+      if (e.key === "ArrowLeft") navLB(-1);
+      if (e.key === "ArrowRight") navLB(1);
+    });
+  }
+
+  // ============== READING PROGRESS BAR ==============
+  const progressBar = document.getElementById("reading-progress");
+  const articleEl = document.getElementById("article-content");
+  function updateProgress() {
+    if (!articleEl) return;
+    const rect = articleEl.getBoundingClientRect();
+    const total = articleEl.offsetHeight - window.innerHeight;
+    if (total <= 0) { progressBar.style.width = rect.bottom < 0 ? "100%" : "0%"; return; }
+    const scrolled = -rect.top;
+    const pct = Math.max(0, Math.min(100, (scrolled / total) * 100));
+    progressBar.style.width = pct + "%";
+  }
+  window.addEventListener("scroll", updateProgress, { passive: true });
+  updateProgress();
+
+  // ============== RELATED NEWS ==============
   const related = Store.publishedNews()
     .filter(n => n.id !== news.id && n.category === news.category)
     .slice(0, 3);
   const fallback = Store.publishedNews().filter(n => n.id !== news.id).slice(0, 3);
   const list = related.length ? related : fallback;
-  document.getElementById("related").innerHTML = list.map(n => `
+  document.getElementById("related").innerHTML = list.map(n => {
+    const reactions = Store.getReactions(n.id);
+    const total = Object.values(reactions).reduce((s,x) => s + x, 0);
+    const top3 = Object.entries(reactions).sort((a,b) => b[1] - a[1]).slice(0,3).filter(([,v])=>v>0);
+    const emojiMap = { heart:"❤️", thumb:"👍", love:"😍", fire:"🔥", clap:"👏" };
+    return `
     <a href="news.html?id=${n.id}" class="card news-card">
       <div class="card-img" style="background:${n.cover}"></div>
       <div class="card-body">
         <div class="meta"><span class="badge">${App.escapeHtml(n.category)}</span><time>${App.fmtDate(n.date)}</time></div>
         <h3>${App.escapeHtml(n.title)}</h3>
         <p class="excerpt">${App.escapeHtml(n.excerpt)}</p>
+        ${total ? `<div class="reactions-summary"><span class="emojis">${top3.map(([k]) => `<span>${emojiMap[k]}</span>`).join('')}</span><span>${total}</span></div>` : ''}
         <span class="read-more">Czytaj więcej →</span>
       </div>
     </a>
-  `).join("");
+  `}).join("");
 })();
 </script>
 </body>
