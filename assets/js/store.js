@@ -376,32 +376,66 @@
       { id: "g3", name: "Flora i fauna", slug: "flora-fauna", description: "Życie na pustyni", cover: "linear-gradient(135deg,#A8C49B,#6E9A5C,#3F5E32)", order: 3 },
       { id: "g4", name: "Wydarzenia 2025", slug: "wydarzenia-2025", description: "Najciekawsze momenty zeszłego sezonu", cover: "linear-gradient(135deg,#F4A340,#C56812,#6B4422)", order: 4 },
       { id: "g5", name: "Zima na pustyni", slug: "zima", description: "Niesamowita biel, niesamowita cisza", cover: "linear-gradient(135deg,#DCEEF5,#8FC6E0,#4A9BC4)", order: 5 },
-      { id: "g6", name: "Zdjęcia historyczne", slug: "historyczne", description: "Archiwalne zdjęcia z XX wieku", cover: "linear-gradient(135deg,#D9BC8E,#8B5A2B,#1F1F1F)", order: 6 }
+      { id: "g6", name: "Zdjęcia historyczne", slug: "historyczne", description: "Archiwalne zdjęcia z XX wieku", cover: "linear-gradient(135deg,#D9BC8E,#8B5A2B,#1F1F1F)", order: 6 },
+      { id: "g7", name: "Trasy rowerowe", slug: "rowery", description: "Trasy rowerowe i sportowe", cover: "linear-gradient(135deg,#A8C49B,#6E9A5C,#1F1F1F)", order: 7 },
+      { id: "g8", name: "Nocna pustynia", slug: "noc", description: "Pustynia po zmroku — gwiazdy i Mleczna Droga", cover: "linear-gradient(135deg,#1F1F1F,#234567,#4A9BC4)", order: 8 }
     ],
 
     photos: [
       // Wydmy o świcie
-      { id: "p1",  folderId: "g1", title: "Świt nad Czubatką",       cover: "linear-gradient(135deg,#FFD27A 0%,#F4A340 60%,#8B5A2B 100%)", author: "Tomasz Nowak", date: "2026-05-01", tags: ["świt","panorama"] },
-      { id: "p2",  folderId: "g1", title: "Pierwsze promienie",      cover: "linear-gradient(180deg,#FFD27A 0%,#E8841E 50%,#6B4422 100%)", author: "Tomasz Nowak", date: "2026-05-02", tags: ["świt"] },
-      { id: "p3",  folderId: "g1", title: "Złota godzina",            cover: "linear-gradient(135deg,#F4A340 0%,#C56812 100%)", author: "Anna Wiśniewska", date: "2026-04-22", tags: ["zachód"] },
-      { id: "p4",  folderId: "g1", title: "Mgła w dolinie wydm",      cover: "linear-gradient(180deg,#F4E9D4 0%,#D9BC8E 50%,#8B5A2B 100%)", author: "Tomasz Nowak", date: "2026-04-15", tags: ["mgła","poranek"] },
+      { id: "p1",  folderId: "g1", title: "Świt nad Czubatką",       cover: "linear-gradient(135deg,#FFD27A 0%,#F4A340 60%,#8B5A2B 100%)", author: "Tomasz Nowak", date: "2026-05-01", tags: ["świt","panorama"], aspect: "landscape" },
+      { id: "p2",  folderId: "g1", title: "Pierwsze promienie",      cover: "linear-gradient(180deg,#FFD27A 0%,#E8841E 50%,#6B4422 100%)", author: "Tomasz Nowak", date: "2026-05-02", tags: ["świt"], aspect: "portrait" },
+      { id: "p3",  folderId: "g1", title: "Złota godzina",            cover: "linear-gradient(135deg,#F4A340 0%,#C56812 100%)", author: "Anna Wiśniewska", date: "2026-04-22", tags: ["zachód"], aspect: "landscape" },
+      { id: "p4",  folderId: "g1", title: "Mgła w dolinie wydm",      cover: "linear-gradient(180deg,#F4E9D4 0%,#D9BC8E 50%,#8B5A2B 100%)", author: "Tomasz Nowak", date: "2026-04-15", tags: ["mgła","poranek"], aspect: "square" },
+      { id: "p1a", folderId: "g1", title: "Promienie słońca przez wydmy", cover: "linear-gradient(45deg,#FFFBEA,#FFD27A 30%,#F4A340 60%,#8B5A2B)", author: "Marcin Lewandowski", date: "2025-09-12", tags: ["świt","promienie"], aspect: "landscape" },
+      { id: "p1b", folderId: "g1", title: "Cisza poranka", cover: "linear-gradient(180deg,#FBF6EE 0%,#F4E9D4 40%,#D9BC8E 100%)", author: "Anna Wiśniewska", date: "2025-08-20", tags: ["świt","cisza"], aspect: "portrait" },
+
       // Drone
-      { id: "p5",  folderId: "g2", title: "Lot nad pustynią",         cover: "linear-gradient(135deg,#8FC6E0 0%,#4A9BC4 50%,#D9BC8E 100%)", author: "Drone Studio PL", date: "2026-03-12", tags: ["drone"] },
-      { id: "p6",  folderId: "g2", title: "Spirala wydm z 200m",      cover: "radial-gradient(circle at 30% 70%,#F4A340 0%,#8B5A2B 60%,#1F1F1F 100%)", author: "Drone Studio PL", date: "2026-03-12", tags: ["drone","abstrakcja"] },
-      { id: "p7",  folderId: "g2", title: "Granica las-pustynia",     cover: "linear-gradient(90deg,#3F5E32 0%,#A8C49B 30%,#D9BC8E 60%,#8B5A2B 100%)", author: "Marcin Lewandowski", date: "2026-02-20", tags: ["drone","granice"] },
+      { id: "p5",  folderId: "g2", title: "Lot nad pustynią",         cover: "linear-gradient(135deg,#8FC6E0 0%,#4A9BC4 50%,#D9BC8E 100%)", author: "Drone Studio PL", date: "2026-03-12", tags: ["drone"], aspect: "landscape" },
+      { id: "p6",  folderId: "g2", title: "Spirala wydm z 200m",      cover: "radial-gradient(circle at 30% 70%,#F4A340 0%,#8B5A2B 60%,#1F1F1F 100%)", author: "Drone Studio PL", date: "2026-03-12", tags: ["drone","abstrakcja"], aspect: "square" },
+      { id: "p7",  folderId: "g2", title: "Granica las-pustynia",     cover: "linear-gradient(90deg,#3F5E32 0%,#A8C49B 30%,#D9BC8E 60%,#8B5A2B 100%)", author: "Marcin Lewandowski", date: "2026-02-20", tags: ["drone","granice"], aspect: "landscape" },
+      { id: "p7a", folderId: "g2", title: "Pustynia z 500m", cover: "radial-gradient(ellipse at 50% 50%,#F4E9D4 0%,#D9BC8E 30%,#A87A4A 70%,#6B4422)", author: "Drone Studio PL", date: "2026-01-15", tags: ["drone","panorama"], aspect: "square" },
+      { id: "p7b", folderId: "g2", title: "Wzór wydm o zachodzie", cover: "linear-gradient(135deg,#FFD27A,#F4A340 30%,#C56812 70%,#1F1F1F)", author: "Drone Studio PL", date: "2025-11-08", tags: ["drone","zachód"], aspect: "landscape" },
+
       // Flora & Fauna
-      { id: "p8",  folderId: "g3", title: "Szczotlicha siwa",         cover: "linear-gradient(135deg,#A8C49B 0%,#6E9A5C 100%)", author: "dr Anna Kowalska", date: "2026-05-05", tags: ["flora"] },
-      { id: "p9",  folderId: "g3", title: "Skowronek borowy",         cover: "linear-gradient(135deg,#D9BC8E 0%,#6B4422 100%)", author: "dr Anna Kowalska", date: "2026-04-22", tags: ["fauna","ptaki"] },
-      { id: "p10", folderId: "g3", title: "Mrówka sahara",            cover: "linear-gradient(135deg,#F4A340 0%,#1F1F1F 100%)", author: "dr Paweł Mazur", date: "2026-04-10", tags: ["fauna","makro"] },
+      { id: "p8",  folderId: "g3", title: "Szczotlicha siwa",         cover: "linear-gradient(135deg,#A8C49B 0%,#6E9A5C 100%)", author: "dr Anna Kowalska", date: "2026-05-05", tags: ["flora"], aspect: "square" },
+      { id: "p9",  folderId: "g3", title: "Skowronek borowy",         cover: "linear-gradient(135deg,#D9BC8E 0%,#6B4422 100%)", author: "dr Anna Kowalska", date: "2026-04-22", tags: ["fauna","ptaki"], aspect: "portrait" },
+      { id: "p10", folderId: "g3", title: "Mrówka sahara",            cover: "linear-gradient(135deg,#F4A340 0%,#1F1F1F 100%)", author: "dr Paweł Mazur", date: "2026-04-10", tags: ["fauna","makro"], aspect: "square" },
+      { id: "p10a", folderId: "g3", title: "Goździk piaskowy", cover: "linear-gradient(135deg,#FFD27A 0%,#F4A340 50%,#A8C49B 100%)", author: "dr Anna Kowalska", date: "2026-05-15", tags: ["flora","kwiaty"], aspect: "portrait" },
+      { id: "p10b", folderId: "g3", title: "Jaszczurka zwinka", cover: "linear-gradient(135deg,#E8D5B7 0%,#A87A4A 50%,#6B4422 100%)", author: "dr Paweł Mazur", date: "2026-05-08", tags: ["fauna","gady"], aspect: "landscape" },
+
       // Wydarzenia 2025
-      { id: "p11", folderId: "g4", title: "Inwazja Pustynna 2025",    cover: "linear-gradient(135deg,#8B5A2B 0%,#1F1F1F 100%)", author: "Foto Express", date: "2025-08-15", tags: ["rekonstrukcja"] },
-      { id: "p12", folderId: "g4", title: "Maraton 2025 — start",     cover: "linear-gradient(135deg,#F4A340 0%,#E8841E 100%)", author: "Foto Express", date: "2025-09-05", tags: ["sport"] },
+      { id: "p11", folderId: "g4", title: "Inwazja Pustynna 2025",    cover: "linear-gradient(135deg,#8B5A2B 0%,#1F1F1F 100%)", author: "Foto Express", date: "2025-08-15", tags: ["rekonstrukcja"], eventId: "e_inv25", aspect: "landscape" },
+      { id: "p12", folderId: "g4", title: "Maraton 2025 — start",     cover: "linear-gradient(135deg,#F4A340 0%,#E8841E 100%)", author: "Foto Express", date: "2025-09-05", tags: ["sport"], eventId: "e_mar25", aspect: "landscape" },
+      { id: "p11a", folderId: "g4", title: "Czołg T-34 w akcji", cover: "linear-gradient(135deg,#6B4422 0%,#1F1F1F 70%,#3F5E32)", author: "Foto Express", date: "2025-08-15", tags: ["rekonstrukcja","czołgi"], eventId: "e_inv25", aspect: "landscape" },
+      { id: "p11b", folderId: "g4", title: "Rekonstruktorzy", cover: "linear-gradient(135deg,#8B5A2B 0%,#A87A4A 50%,#D9BC8E)", author: "Foto Express", date: "2025-08-16", tags: ["rekonstrukcja","ludzie"], eventId: "e_inv25", aspect: "portrait" },
+      { id: "p12a", folderId: "g4", title: "Meta na Czubatce", cover: "linear-gradient(180deg,#F4A340 0%,#C56812 70%,#8B5A2B)", author: "Foto Express", date: "2025-09-05", tags: ["sport","meta"], eventId: "e_mar25", aspect: "landscape" },
+      { id: "perso25a", folderId: "g4", title: "Perseidy 2025 — moment maksimum", cover: "radial-gradient(circle at 50% 30%, #FFFBEA 0%, #FFD27A 5%, #234567 30%, #1F1F1F)", author: "Astronomia Klucze", date: "2025-08-12", tags: ["astronomia","gwiazdy"], eventId: "e_per25", aspect: "landscape" },
+      { id: "dz25a", folderId: "g4", title: "Wielbłądzie wyścigi 2025", cover: "linear-gradient(135deg,#FFD27A 0%,#F4A340 50%,#8B5A2B 100%)", author: "Foto Express", date: "2025-06-01", tags: ["rodzinne","wielbłądy"], eventId: "e_dz25", aspect: "square" },
+
       // Zima
-      { id: "p13", folderId: "g5", title: "Pierwszy śnieg",            cover: "linear-gradient(180deg,#FFFFFF 0%,#DCEEF5 50%,#8FC6E0 100%)", author: "Tomasz Nowak", date: "2025-12-10", tags: ["zima","śnieg"] },
-      { id: "p14", folderId: "g5", title: "Mróz na wydmach",           cover: "linear-gradient(135deg,#DCEEF5 0%,#D9BC8E 100%)", author: "Tomasz Nowak", date: "2025-12-22", tags: ["zima"] },
+      { id: "p13", folderId: "g5", title: "Pierwszy śnieg",            cover: "linear-gradient(180deg,#FFFFFF 0%,#DCEEF5 50%,#8FC6E0 100%)", author: "Tomasz Nowak", date: "2025-12-10", tags: ["zima","śnieg"], aspect: "landscape" },
+      { id: "p14", folderId: "g5", title: "Mróz na wydmach",           cover: "linear-gradient(135deg,#DCEEF5 0%,#D9BC8E 100%)", author: "Tomasz Nowak", date: "2025-12-22", tags: ["zima"], aspect: "square" },
+      { id: "p13a", folderId: "g5", title: "Szron na traw", cover: "linear-gradient(180deg,#FFFFFF,#DCEEF5 50%,#A8C49B 100%)", author: "Anna Wiśniewska", date: "2026-01-05", tags: ["zima","makro"], aspect: "portrait" },
+      { id: "p13b", folderId: "g5", title: "Niebieska godzina zimą", cover: "linear-gradient(180deg,#234567 0%,#4A9BC4 50%,#DCEEF5 100%)", author: "Tomasz Nowak", date: "2026-01-18", tags: ["zima","zmierzch"], aspect: "landscape" },
+
       // Historyczne
-      { id: "p15", folderId: "g6", title: "Pustynia 1925 (rekonstr.)", cover: "linear-gradient(135deg,#D9BC8E 0%,#4A2F18 100%)", author: "Archiwum", date: "1925-06-01", tags: ["archiwum"] },
-      { id: "p16", folderId: "g6", title: "Manewry wojskowe 1965",     cover: "linear-gradient(135deg,#8B5A2B 0%,#1F1F1F 100%)", author: "Archiwum MON", date: "1965-09-15", tags: ["wojsko","archiwum"] }
+      { id: "p15", folderId: "g6", title: "Pustynia 1925 (rekonstr.)", cover: "linear-gradient(135deg,#D9BC8E 0%,#4A2F18 100%)", author: "Archiwum", date: "1925-06-01", tags: ["archiwum"], aspect: "square" },
+      { id: "p16", folderId: "g6", title: "Manewry wojskowe 1965",     cover: "linear-gradient(135deg,#8B5A2B 0%,#1F1F1F 100%)", author: "Archiwum MON", date: "1965-09-15", tags: ["wojsko","archiwum"], aspect: "landscape" },
+      { id: "p15a", folderId: "g6", title: "Kawalerowicz na planie 'Faraona' (1965)", cover: "linear-gradient(135deg,#FFD27A 0%,#8B5A2B 60%,#1F1F1F)", author: "Archiwum Filmowe", date: "1965-08-15", tags: ["film","archiwum"], aspect: "landscape" },
+      { id: "p16a", folderId: "g6", title: "Hermaszewski przed misją (1978)", cover: "linear-gradient(135deg,#A87A4A 0%,#6B4422 50%,#1F1F1F)", author: "Archiwum CSK", date: "1978-04-20", tags: ["kosmos","archiwum"], aspect: "portrait" },
+
+      // Rowery (nowy album)
+      { id: "rb1", folderId: "g7", title: "MTB na wydmach", cover: "linear-gradient(135deg,#A8C49B,#6E9A5C 50%,#3F5E32)", author: "Bike Klucze", date: "2026-04-10", tags: ["sport","rower"], aspect: "landscape" },
+      { id: "rb2", folderId: "g7", title: "Family Loop weekend", cover: "linear-gradient(135deg,#FFD27A,#F4A340 50%,#A8C49B)", author: "Foto Express", date: "2026-05-04", tags: ["rodzinne","rower"], aspect: "landscape" },
+      { id: "rb3", folderId: "g7", title: "Sunset Tour grupa", cover: "linear-gradient(135deg,#FFD27A,#C56812 50%,#1F1F1F)", author: "Bike Klucze", date: "2026-05-18", tags: ["zachód","rower"], aspect: "square" },
+      { id: "rb4", folderId: "g7", title: "Maraton — pętla 2025", cover: "linear-gradient(135deg,#C0392B,#8B5A2B 70%,#1F1F1F)", author: "Foto Express", date: "2025-09-06", tags: ["sport","rower","maraton"], eventId: "e_mar25", aspect: "landscape" },
+
+      // Nocna pustynia (nowy album)
+      { id: "n1pho", folderId: "g8", title: "Mleczna Droga nad wydmami", cover: "radial-gradient(ellipse at 50% 30%,#234567 0%,#1F1F1F 60%,#000 100%)", author: "Astronomia Klucze", date: "2025-08-12", tags: ["astronomia","mleczna droga"], aspect: "landscape" },
+      { id: "n2pho", folderId: "g8", title: "Spadająca gwiazda", cover: "linear-gradient(180deg,#1F1F1F 0%,#234567 50%,#4A9BC4 100%)", author: "Astronomia Klucze", date: "2025-08-12", tags: ["astronomia","perseidy"], eventId: "e_per25", aspect: "portrait" },
+      { id: "n3pho", folderId: "g8", title: "Pełnia nad pustynią", cover: "radial-gradient(circle at 70% 30%,#FFFBEA 0%,#FFD27A 5%,#234567 40%,#1F1F1F)", author: "Tomasz Nowak", date: "2025-12-15", tags: ["księżyc","noc"], aspect: "landscape" },
+      { id: "n4pho", folderId: "g8", title: "Light painting na wydmach", cover: "linear-gradient(135deg,#1F1F1F 0%,#F4A340 30%,#234567 70%,#1F1F1F)", author: "Marcin Lewandowski", date: "2026-03-22", tags: ["noc","sztuka"], aspect: "square" }
     ],
 
     projects: [
@@ -863,6 +897,8 @@
     },
     nextEvent() { return this.upcomingEvents()[0]; },
     photosByFolder(folderId) { return this.all("photos").filter(p => p.folderId === folderId); },
+    photosByEvent(eventId) { return this.all("photos").filter(p => p.eventId === eventId); },
+    photosWithEvents() { return this.all("photos").filter(p => p.eventId); },
 
     // ----- Reactions (per news/event item) -----
     reactionsKey: "pustynia_reactions_v1",
