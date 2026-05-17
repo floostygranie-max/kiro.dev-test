@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Ustawienia — Panel admina</title>
+<link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+<link rel="stylesheet" href="../assets/css/main.css">
+<link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body>
+<div id="admin-sidebar-slot"></div>
+<div class="admin-main">
+  <div id="admin-topbar-slot"></div>
+  <div class="admin-content">
+
+    <div class="admin-card">
+      <div class="admin-card-head"><h3>Ogólne ustawienia witryny</h3></div>
+      <div class="admin-card-body">
+        <form id="settings-form">
+          <div class="form-row">
+            <div class="form-group"><label>Nazwa serwisu</label><input id="s-name"></div>
+            <div class="form-group"><label>Tagline / podtytuł</label><input id="s-tagline"></div>
+          </div>
+          <div class="form-group"><label>Opis (meta description)</label><textarea id="s-desc" rows="3"></textarea></div>
+        </form>
+      </div>
+    </div>
+
+    <div class="admin-card">
+      <div class="admin-card-head"><h3>Dane kontaktowe</h3></div>
+      <div class="admin-card-body">
+        <div class="form-row">
+          <div class="form-group"><label>Telefon</label><input id="c-phone"></div>
+          <div class="form-group"><label>Email</label><input id="c-email"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Adres</label><input id="c-addr"></div>
+          <div class="form-group"><label>Godziny otwarcia</label><input id="c-hours"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-card">
+      <div class="admin-card-head"><h3>Social media</h3></div>
+      <div class="admin-card-body">
+        <div class="form-row">
+          <div class="form-group"><label>Facebook</label><input id="sm-fb"></div>
+          <div class="form-group"><label>Instagram</label><input id="sm-ig"></div>
+        </div>
+        <div class="form-group"><label>YouTube</label><input id="sm-yt"></div>
+      </div>
+    </div>
+
+    <div class="admin-card">
+      <div class="admin-card-head"><h3>Statystyki na stronie głównej</h3></div>
+      <div class="admin-card-body">
+        <div id="stats-rows"></div>
+        <button class="btn btn-outline btn-sm" id="addStat" style="margin-top:8px">+ Dodaj statystykę</button>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn btn-primary" id="saveAll">💾 Zapisz wszystkie zmiany</button>
+    </div>
+
+  </div>
+</div>
+
+<script src="../assets/js/store.js"></script>
+<script src="../assets/js/app.js"></script>
+<script src="../assets/js/admin.js"></script>
+<script>
+if (Admin.init({ title: "Ustawienia" })) {
+  const s = Store.settings();
+
+  document.getElementById("s-name").value = s.siteName || "";
+  document.getElementById("s-tagline").value = s.tagline || "";
+  document.getElementById("s-desc").value = s.description || "";
+  document.getElementById("c-phone").value = s.contact?.phone || "";
+  document.getElementById("c-email").value = s.contact?.email || "";
+  document.getElementById("c-addr").value = s.contact?.address || "";
+  document.getElementById("c-hours").value = s.contact?.hours || "";
+  document.getElementById("sm-fb").value = s.social?.facebook || "";
+  document.getElementById("sm-ig").value = s.social?.instagram || "";
+  document.getElementById("sm-yt").value = s.social?.youtube || "";
+
+  let stats = [...(s.stats || [])];
+  function renderStats() {
+    document.getElementById("stats-rows").innerHTML = stats.map((st, i) => `
+      <div class="form-row" style="margin-bottom:8px">
+        <input data-i="${i}" data-k="value" type="number" value="${st.value}" placeholder="Wartość" style="flex:1">
+        <input data-i="${i}" data-k="suffix" value="${App.escapeHtml(st.suffix||'')}" placeholder="Sufiks (np. km²)" style="flex:1">
+        <input data-i="${i}" data-k="label" value="${App.escapeHtml(st.label||'')}" placeholder="Etykieta" style="flex:2">
+        <button class="btn btn-ghost btn-sm" data-rm="${i}" type="button">✕</button>
+      </div>
+    `).join("");
+    document.querySelectorAll("#stats-rows input").forEach(inp => inp.addEventListener("input", e => {
+      const i = +e.target.dataset.i, k = e.target.dataset.k;
+      stats[i][k] = k === "value" ? parseFloat(e.target.value) || 0 : e.target.value;
+    }));
+    document.querySelectorAll("#stats-rows [data-rm]").forEach(b => b.addEventListener("click", e => {
+      stats.splice(+b.dataset.rm, 1); renderStats();
+    }));
+  }
+  renderStats();
+  document.getElementById("addStat").addEventListener("click", () => { stats.push({ value: 0, suffix: "", label: "" }); renderStats(); });
+
+  document.getElementById("saveAll").addEventListener("click", () => {
+    Store.setSettings({
+      siteName: document.getElementById("s-name").value,
+      tagline: document.getElementById("s-tagline").value,
+      description: document.getElementById("s-desc").value,
+      contact: {
+        phone: document.getElementById("c-phone").value,
+        email: document.getElementById("c-email").value,
+        address: document.getElementById("c-addr").value,
+        hours: document.getElementById("c-hours").value
+      },
+      social: {
+        facebook: document.getElementById("sm-fb").value,
+        instagram: document.getElementById("sm-ig").value,
+        youtube: document.getElementById("sm-yt").value
+      },
+      stats
+    });
+    App.toast("Zapisano ustawienia!", "ok");
+  });
+}
+</script>
+</body>
+</html>

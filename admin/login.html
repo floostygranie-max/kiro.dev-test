@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Logowanie — Panel admina</title>
+<link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+<link rel="stylesheet" href="../assets/css/main.css">
+<link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body class="login-page">
+<div class="login-card">
+  <svg class="brand-logo" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <polygon points="100,8 180,52 180,148 100,192 20,148 20,52" fill="none" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/>
+    <g fill="currentColor">
+      <polygon points="100,20 110,95 100,100 90,95"/><polygon points="100,180 110,105 100,100 90,105"/>
+      <polygon points="22,100 95,90 100,100 95,110"/><polygon points="178,100 105,90 100,100 105,110"/>
+      <polygon points="42,42 96,96 100,100 90,90"/><polygon points="158,42 104,96 100,100 110,90"/>
+      <polygon points="42,158 96,104 100,100 90,110"/><polygon points="158,158 104,104 100,100 110,110"/>
+    </g>
+  </svg>
+  <h1>Panel administratora</h1>
+  <p>Pustynia Błędowska — system CMS</p>
+
+  <form id="login-form">
+    <div class="form-group">
+      <label for="username">Nazwa użytkownika</label>
+      <input type="text" id="username" required autofocus value="admin">
+    </div>
+    <div class="form-group">
+      <label for="password">Hasło</label>
+      <input type="password" id="password" required value="admin123">
+    </div>
+    <div class="form-group">
+      <label style="display:flex;gap:8px;font-weight:400;font-size:.85rem;align-items:center">
+        <input type="checkbox" style="width:auto"> Zapamiętaj mnie
+      </label>
+    </div>
+    <div id="error-msg" class="alert alert-danger hidden"></div>
+    <button type="submit" class="btn btn-primary" style="width:100%">Zaloguj się</button>
+  </form>
+
+  <div class="login-hint">
+    💡 Dane testowe: <code>admin</code> / <code>admin123</code>
+  </div>
+
+  <div style="margin-top:24px;text-align:center">
+    <a href="../index.html" style="color:var(--text-muted);font-size:.85rem">← Wróć do strony</a>
+  </div>
+</div>
+
+<script src="../assets/js/store.js"></script>
+<script>
+document.getElementById("login-form").addEventListener("submit", e => {
+  e.preventDefault();
+  const u = document.getElementById("username").value.trim();
+  const p = document.getElementById("password").value;
+  const session = Store.login(u, p);
+  if (session) {
+    location.href = "index.html";
+  } else {
+    const err = document.getElementById("error-msg");
+    err.textContent = "Nieprawidłowa nazwa użytkownika lub hasło.";
+    err.classList.remove("hidden");
+  }
+});
+// Auto-redirect if already logged in
+if (Store.session()) location.href = "index.html";
+</script>
+</body>
+</html>

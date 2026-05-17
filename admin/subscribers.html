@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Subskrybenci — Panel admina</title>
+<link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+<link rel="stylesheet" href="../assets/css/main.css">
+<link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body>
+<div id="admin-sidebar-slot"></div>
+<div class="admin-main">
+  <div id="admin-topbar-slot"></div>
+  <div class="admin-content">
+
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="label">Łącznie subskrybentów</div>
+        <div class="value" id="kpi-total">0</div>
+      </div>
+      <div class="kpi-card">
+        <div class="label">Nowych w tym miesiącu</div>
+        <div class="value" id="kpi-month">0</div>
+      </div>
+      <div class="kpi-card">
+        <div class="label">Średnio w tygodniu</div>
+        <div class="value" id="kpi-avg">0</div>
+      </div>
+      <div class="kpi-card">
+        <div class="label">Wskaźnik wzrostu</div>
+        <div class="value" style="color:var(--ok)">+12%</div>
+      </div>
+    </div>
+
+    <div class="admin-card">
+      <div class="admin-card-head">
+        <h3>Subskrybenci newslettera</h3>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-outline" id="exportBtn">📥 Eksportuj CSV</button>
+          <button class="btn btn-primary" id="composeBtn">✉ Wyślij newsletter</button>
+        </div>
+      </div>
+      <div class="admin-card-body" style="padding-bottom:0">
+        <div class="page-filters">
+          <input type="search" id="search" placeholder="Szukaj emaila...">
+        </div>
+      </div>
+      <table class="admin-table">
+        <thead><tr><th>Email</th><th>Data zapisu</th><th></th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/js/store.js"></script>
+<script src="../assets/js/app.js"></script>
+<script src="../assets/js/admin.js"></script>
+<script>
+if (Admin.init({ title: "Subskrybenci" })) {
+  let state = { search: "" };
+
+  function render() {
+    let list = Store.all("subscribers");
+    const total = list.length;
+    if (state.search) list = list.filter(s => s.email.toLowerCase().includes(state.search));
+    list.sort((a,b) => (b.date||"").localeCompare(a.date||""));
+
+    document.getElementById("kpi-total").textContent = total;
+    const now = new Date();
+    const thisMonth = list.filter(s => {
+      if (!s.date) return false;
+      const d = new Date(s.date);
+      return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+    }).length;
+    document.getElementById("kpi-month").textContent = thisMonth;
+    document.getElementById("kpi-avg").textContent = Math.round(total / 4);
+
+    const tb = document.getElementById("tbody");
+    if (!list.length) { tb.innerHTML = `<tr><td colspan="3" style="text-align:center;padding:40px;color:var(--text-muted)">Brak subskrybentów</td></tr>`; return; }
+    tb.innerHTML = list.map(s => `
+      <tr>
+        <td><strong>${App.escapeHtml(s.email)}</strong></td>
+        <td>${App.fmtDate(s.date)}</td>
+        <td><div class="row-actions">
+          <a class="row-action-btn" href="mailto:${s.email}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="m22 6-10 7L2 6"/></svg></a>
+          <button class="row-action-btn delete" data-del="${s.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button>
+        </div></td>
+      </tr>
+    `).join("");
+    tb.querySelectorAll("[data-del]").forEach(b => b.addEventListener("click", async () => {
+      if (await Admin.confirmDialog("Usunąć subskrybenta?")) { Store.remove("subscribers", b.dataset.del); App.toast("Usunięto","ok"); render(); }
+    }));
+  }
+
+  document.getElementById("search").addEventListener("input", e => { state.search = e.target.value.toLowerCase(); render(); });
+  document.getElementById("exportBtn").addEventListener("click", () => {
+    const list = Store.all("subscribers");
+    const csv = "Email,Data\n" + list.map(s => `"${s.email}","${s.date}"`).join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob); a.download = "subskrybenci.csv"; a.click();
+    URL.revokeObjectURL(a.href);
+    App.toast("Pobrano CSV","ok");
+  });
+  document.getElementById("composeBtn").addEventListener("click", () => {
+    Admin.modal({
+      title: "Wyślij newsletter",
+      body: `
+        <div class="form-group"><label>Temat</label><input id="ml-subject" value="Co nowego na Pustyni Błędowskiej"></div>
+        <div class="form-group"><label>Treść</label><textarea rows="8" placeholder="Treść wiadomości...">Cześć,\n\nW tym miesiącu...</textarea></div>
+        <div class="alert alert-info">📧 Wiadomość zostanie wysłana do ${Store.all("subscribers").length} subskrybentów. (Demo — w produkcji integracja z SendGrid/Mailchimp)</div>
+      `,
+      footer: `<button class="btn btn-ghost" data-close>Anuluj</button><button class="btn btn-primary" id="ml-send">Wyślij</button>`
+    }).root.querySelector("#ml-send").addEventListener("click", () => { App.toast("Newsletter wysłany!","ok"); document.querySelector(".admin-modal-backdrop").classList.remove("open"); });
+  });
+
+  render();
+}
+</script>
+</body>
+</html>

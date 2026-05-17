@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Użytkownicy — Panel admina</title>
+<link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+<link rel="stylesheet" href="../assets/css/main.css">
+<link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body>
+<div id="admin-sidebar-slot"></div>
+<div class="admin-main">
+  <div id="admin-topbar-slot"></div>
+  <div class="admin-content">
+    <div class="admin-card">
+      <div class="admin-card-head">
+        <h3>Użytkownicy panelu (<span id="count">0</span>)</h3>
+        <button class="btn btn-primary" id="btnNew">+ Nowy użytkownik</button>
+      </div>
+      <table class="admin-table">
+        <thead><tr><th></th><th>Imię i nazwisko</th><th>Login</th><th>Rola</th><th></th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="alert alert-warn" style="margin-top:24px">
+      <strong>⚠ Bezpieczeństwo</strong><br>
+      W tej wersji demonstracyjnej hasła są przechowywane w localStorage przeglądarki. W produkcji <strong>obowiązkowo</strong> należy:
+      <ul style="margin:8px 0 0 24px">
+        <li>Hashować hasła (bcrypt/argon2)</li>
+        <li>Używać HTTPS i sesji serwerowych</li>
+        <li>Wprowadzić 2FA dla administratorów</li>
+        <li>Logować próby logowania</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/js/store.js"></script>
+<script src="../assets/js/app.js"></script>
+<script src="../assets/js/admin.js"></script>
+<script>
+if (Admin.init({ title: "Użytkownicy" })) {
+  const roles = { admin: "Administrator", editor: "Redaktor", moderator: "Moderator" };
+
+  function render() {
+    const list = Store.all("users");
+    document.getElementById("count").textContent = list.length;
+    const me = Store.session();
+    const tb = document.getElementById("tbody");
+    tb.innerHTML = list.map(u => `
+      <tr>
+        <td><div style="width:36px;height:36px;border-radius:50%;background:var(--sun-400);color:var(--sand-900);display:flex;align-items:center;justify-content:center;font-weight:700">${(u.name||u.username).split(" ").map(s=>s[0]).join("").slice(0,2).toUpperCase()}</div></td>
+        <td><strong>${App.escapeHtml(u.name||u.username)}</strong>${u.id===me.userId?'<span class="badge badge-accent" style="margin-left:6px">Ja</span>':''}</td>
+        <td><code>${App.escapeHtml(u.username)}</code></td>
+        <td><span class="badge ${u.role==='admin'?'badge-dark':''}">${roles[u.role] || u.role}</span></td>
+        <td><div class="row-actions">
+          <button class="row-action-btn" data-edit="${u.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+          ${u.id !== me.userId ? `<button class="row-action-btn delete" data-del="${u.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button>` : ''}
+        </div></td>
+      </tr>
+    `).join("");
+    tb.querySelectorAll("[data-edit]").forEach(b => b.addEventListener("click", () => openForm(b.dataset.edit)));
+    tb.querySelectorAll("[data-del]").forEach(b => b.addEventListener("click", async () => {
+      if (await Admin.confirmDialog("Usunąć użytkownika?")) { Store.remove("users", b.dataset.del); App.toast("Usunięto","ok"); render(); }
+    }));
+  }
+
+  function openForm(id) {
+    const isNew = !id;
+    const item = isNew ? { name:"", username:"", password:"", role:"editor" } : Store.get("users", id);
+    if (!item) return;
+    const form = document.createElement("div");
+    form.innerHTML = `
+      <div class="form-group"><label>Imię i nazwisko *</label><input id="f-name" value="${App.escapeHtml(item.name||"")}"></div>
+      <div class="form-row">
+        <div class="form-group"><label>Nazwa użytkownika *</label><input id="f-username" value="${App.escapeHtml(item.username||"")}" required></div>
+        <div class="form-group"><label>Rola</label><select id="f-role">
+          <option value="admin" ${item.role==='admin'?'selected':''}>Administrator</option>
+          <option value="editor" ${item.role==='editor'?'selected':''}>Redaktor</option>
+          <option value="moderator" ${item.role==='moderator'?'selected':''}>Moderator</option>
+        </select></div>
+      </div>
+      <div class="form-group"><label>${isNew ? 'Hasło *' : 'Nowe hasło (puste = bez zmian)'}</label><input type="password" id="f-pw" ${isNew?'required':''}></div>
+    `;
+    const m = Admin.modal({
+      title: isNew ? "Nowy użytkownik" : "Edytuj użytkownika",
+      body: form,
+      footer: `<button class="btn btn-ghost" data-close>Anuluj</button><button class="btn btn-primary" id="save">Zapisz</button>`
+    });
+    m.root.querySelector("#save").addEventListener("click", () => {
+      const username = form.querySelector("#f-username").value.trim();
+      if (!username) return App.toast("Login wymagany","err");
+      const data = {
+        name: form.querySelector("#f-name").value.trim() || username,
+        username,
+        role: form.querySelector("#f-role").value
+      };
+      const pw = form.querySelector("#f-pw").value;
+      if (isNew) {
+        if (!pw) return App.toast("Hasło wymagane","err");
+        Store.add("users", { ...data, password: pw });
+      } else {
+        if (pw) data.password = pw;
+        Store.update("users", id, data);
+      }
+      App.toast(isNew?"Dodano!":"Zapisano!","ok"); m.close(); render();
+    });
+  }
+
+  document.getElementById("btnNew").addEventListener("click", () => openForm(null));
+  render();
+}
+</script>
+</body>
+</html>

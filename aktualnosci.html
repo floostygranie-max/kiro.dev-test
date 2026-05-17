@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Aktualności — Pustynia Błędowska</title>
+<meta name="description" content="Najnowsze wiadomości i ogłoszenia z Pustyni Błędowskiej">
+<link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+<link rel="stylesheet" href="assets/css/main.css">
+<link rel="stylesheet" href="assets/css/header.css">
+<link rel="stylesheet" href="assets/css/home.css">
+<link rel="stylesheet" href="assets/css/pages.css">
+</head>
+<body>
+<div id="header-slot"></div>
+
+<main>
+  <section class="page-hero">
+    <div class="container">
+      <div class="breadcrumbs">
+        <a href="index.html">Strona główna</a> <span>›</span> <span>Aktualności</span>
+      </div>
+      <h1>Aktualności</h1>
+      <p class="lead">Najnowsze wiadomości, ogłoszenia i ciekawostki z naszego rezerwatu. Bądź na bieżąco z tym, co dzieje się na Pustyni Błędowskiej.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="filter-bar">
+        <input type="search" id="search" placeholder="Szukaj w aktualnościach..." aria-label="Szukaj">
+        <select id="category" aria-label="Kategoria">
+          <option value="">Wszystkie kategorie</option>
+        </select>
+        <select id="sort" aria-label="Sortowanie">
+          <option value="date-desc">Najnowsze</option>
+          <option value="date-asc">Najstarsze</option>
+          <option value="views">Najpopularniejsze</option>
+        </select>
+      </div>
+
+      <div class="tag-pills" id="tag-pills"></div>
+
+      <div class="cards-grid" id="news-list"></div>
+      <div class="pagination" id="pagination"></div>
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+
+<script src="assets/js/store.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+(function(){
+  const all = Store.publishedNews();
+  const PER_PAGE = 6;
+  let state = { search: "", category: "", tag: "", sort: "date-desc", page: 1 };
+
+  // Build categories
+  const cats = [...new Set(all.map(n => n.category))];
+  document.getElementById("category").innerHTML += cats.map(c => `<option value="${c}">${c}</option>`).join("");
+
+  // Build tag pills
+  const tags = [...new Set(all.flatMap(n => n.tags || []))];
+  const tagPills = document.getElementById("tag-pills");
+  tagPills.innerHTML = `<span class="tag-pill active" data-tag="">Wszystkie</span>` + tags.map(t => `<span class="tag-pill" data-tag="${t}">#${t}</span>`).join("");
+  tagPills.addEventListener("click", e => {
+    if (!e.target.classList.contains("tag-pill")) return;
+    tagPills.querySelectorAll(".tag-pill").forEach(p => p.classList.remove("active"));
+    e.target.classList.add("active");
+    state.tag = e.target.dataset.tag;
+    state.page = 1;
+    render();
+  });
+
+  document.getElementById("search").addEventListener("input", e => { state.search = e.target.value.toLowerCase(); state.page = 1; render(); });
+  document.getElementById("category").addEventListener("change", e => { state.category = e.target.value; state.page = 1; render(); });
+  document.getElementById("sort").addEventListener("change", e => { state.sort = e.target.value; render(); });
+
+  function filtered() {
+    let list = all.filter(n => {
+      if (state.search && !(n.title.toLowerCase().includes(state.search) || n.excerpt.toLowerCase().includes(state.search))) return false;
+      if (state.category && n.category !== state.category) return false;
+      if (state.tag && !(n.tags || []).includes(state.tag)) return false;
+      return true;
+    });
+    if (state.sort === "date-asc") list.sort((a,b) => a.date.localeCompare(b.date));
+    else if (state.sort === "views") list.sort((a,b) => (b.views||0) - (a.views||0));
+    else list.sort((a,b) => b.date.localeCompare(a.date));
+    return list;
+  }
+
+  function render() {
+    const list = filtered();
+    const totalPages = Math.max(1, Math.ceil(list.length / PER_PAGE));
+    if (state.page > totalPages) state.page = totalPages;
+    const slice = list.slice((state.page-1)*PER_PAGE, state.page*PER_PAGE);
+
+    const container = document.getElementById("news-list");
+    if (!slice.length) {
+      container.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <h3>Nic nie znaleziono</h3>
+        <p>Spróbuj zmienić filtry lub wyszukiwane słowo.</p>
+      </div>`;
+      document.getElementById("pagination").innerHTML = "";
+      return;
+    }
+    container.innerHTML = slice.map(n => `
+      <a href="news.html?id=${n.id}" class="card news-card reveal">
+        <div class="card-img" style="background:${n.cover}"></div>
+        <div class="card-body">
+          <div class="meta">
+            <span class="badge">${App.escapeHtml(n.category)}</span>
+            <time>${App.fmtDate(n.date)}</time>
+            <span>👁 ${(n.views||0).toLocaleString('pl-PL')}</span>
+          </div>
+          <h3>${App.escapeHtml(n.title)}</h3>
+          <p class="excerpt">${App.escapeHtml(n.excerpt)}</p>
+          <span class="read-more">Czytaj więcej →</span>
+        </div>
+      </a>
+    `).join("");
+
+    // Pagination
+    const pg = document.getElementById("pagination");
+    if (totalPages <= 1) { pg.innerHTML = ""; return; }
+    let html = `<button ${state.page===1?'disabled':''} data-page="${state.page-1}">‹</button>`;
+    for (let i = 1; i <= totalPages; i++) html += `<button class="${i===state.page?'active':''}" data-page="${i}">${i}</button>`;
+    html += `<button ${state.page===totalPages?'disabled':''} data-page="${state.page+1}">›</button>`;
+    pg.innerHTML = html;
+    pg.querySelectorAll("button").forEach(b => b.addEventListener("click", () => {
+      state.page = parseInt(b.dataset.page); render();
+      window.scrollTo({top: 200, behavior: "smooth"});
+    }));
+
+    // Reveal newly added
+    container.querySelectorAll(".reveal").forEach(el => setTimeout(() => el.classList.add("in"), 50));
+  }
+  render();
+})();
+</script>
+</body>
+</html>

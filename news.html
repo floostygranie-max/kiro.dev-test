@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Aktualność — Pustynia Błędowska</title>
+<link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+<link rel="stylesheet" href="assets/css/main.css">
+<link rel="stylesheet" href="assets/css/header.css">
+<link rel="stylesheet" href="assets/css/home.css">
+<link rel="stylesheet" href="assets/css/pages.css">
+</head>
+<body>
+<div id="header-slot"></div>
+
+<main>
+  <article class="section" id="article-root" style="padding-top: calc(var(--header-h) + var(--s-7))">
+    <div class="container">
+      <div class="article" id="article"></div>
+    </div>
+  </article>
+
+  <section class="section dunes-bg">
+    <div class="container">
+      <div class="section-head">
+        <h2>Może Cię zainteresować</h2>
+      </div>
+      <div class="cards-grid" id="related"></div>
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+
+<script src="assets/js/store.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+(function(){
+  const id = new URLSearchParams(location.search).get("id");
+  const news = id && Store.get("news", id);
+  const root = document.getElementById("article");
+
+  if (!news) {
+    root.innerHTML = `<div class="empty-state"><h2>Aktualność nie znaleziona</h2><p>Wróć do <a href="aktualnosci.html">listy aktualności</a>.</p></div>`;
+    document.getElementById("related").innerHTML = "";
+    return;
+  }
+
+  // Increment views
+  Store.update("news", id, { views: (news.views || 0) + 1 });
+
+  document.title = news.title + " — Pustynia Błędowska";
+
+  root.innerHTML = `
+    <div class="breadcrumbs">
+      <a href="index.html">Strona główna</a> <span>›</span>
+      <a href="aktualnosci.html">Aktualności</a> <span>›</span>
+      <span>${App.escapeHtml(news.title)}</span>
+    </div>
+    <span class="badge badge-accent">${App.escapeHtml(news.category)}</span>
+    <h1 style="margin: 16px 0">${App.escapeHtml(news.title)}</h1>
+    <div class="article-meta">
+      <span>📅 ${App.fmtDate(news.date)}</span>
+      <span>✍️ ${App.escapeHtml(news.author || 'Redakcja')}</span>
+      <span>👁 ${(news.views || 0).toLocaleString('pl-PL')} wyświetleń</span>
+    </div>
+    <div class="article-cover" style="background:${news.cover}"></div>
+    <div class="article-content">${news.content || '<p>'+App.escapeHtml(news.excerpt)+'</p>'}</div>
+    <div class="article-tags">
+      ${(news.tags || []).map(t => `<span class="tag-pill">#${t}</span>`).join('')}
+    </div>
+    <div>
+      <strong style="display:block;margin-bottom:8px">Udostępnij:</strong>
+      <div class="share-row">
+        <a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(location.href)}" target="_blank" rel="noopener">📘 Facebook</a>
+        <a class="share-btn" href="https://twitter.com/intent/tweet?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(news.title)}" target="_blank" rel="noopener">🐦 X</a>
+        <a class="share-btn" href="https://wa.me/?text=${encodeURIComponent(news.title + ' ' + location.href)}" target="_blank" rel="noopener">💬 WhatsApp</a>
+        <button class="share-btn" onclick="navigator.clipboard.writeText(location.href).then(()=>App.toast('Link skopiowany!','ok'))">🔗 Kopiuj link</button>
+      </div>
+    </div>
+  `;
+
+  // Related news (same category, exclude current)
+  const related = Store.publishedNews()
+    .filter(n => n.id !== news.id && n.category === news.category)
+    .slice(0, 3);
+  const fallback = Store.publishedNews().filter(n => n.id !== news.id).slice(0, 3);
+  const list = related.length ? related : fallback;
+  document.getElementById("related").innerHTML = list.map(n => `
+    <a href="news.html?id=${n.id}" class="card news-card">
+      <div class="card-img" style="background:${n.cover}"></div>
+      <div class="card-body">
+        <div class="meta"><span class="badge">${App.escapeHtml(n.category)}</span><time>${App.fmtDate(n.date)}</time></div>
+        <h3>${App.escapeHtml(n.title)}</h3>
+        <p class="excerpt">${App.escapeHtml(n.excerpt)}</p>
+        <span class="read-more">Czytaj więcej →</span>
+      </div>
+    </a>
+  `).join("");
+})();
+</script>
+</body>
+</html>

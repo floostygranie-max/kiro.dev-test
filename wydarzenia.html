@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Wydarzenia — Pustynia Błędowska</title>
+<meta name="description" content="Kalendarz wydarzeń na Pustyni Błędowskiej — koncerty, rekonstrukcje, biegi, warsztaty">
+<link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+<link rel="stylesheet" href="assets/css/main.css">
+<link rel="stylesheet" href="assets/css/header.css">
+<link rel="stylesheet" href="assets/css/home.css">
+<link rel="stylesheet" href="assets/css/pages.css">
+</head>
+<body>
+<div id="header-slot"></div>
+
+<main>
+  <section class="page-hero">
+    <div class="container">
+      <div class="breadcrumbs">
+        <a href="index.html">Strona główna</a> <span>›</span> <span>Wydarzenia</span>
+      </div>
+      <h1>Wydarzenia</h1>
+      <p class="lead">Rekonstrukcje historyczne, biegi przełajowe, warsztaty fotograficzne, obserwacje gwiazd. Każdy znajdzie tu coś dla siebie.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="events-tabs" id="view-tabs">
+        <button class="active" data-view="list">📋 Lista</button>
+        <button data-view="calendar">📅 Kalendarz</button>
+        <button data-view="grid">🎴 Karty</button>
+      </div>
+
+      <div class="filter-bar">
+        <input type="search" id="search" placeholder="Szukaj wydarzenia...">
+        <select id="category">
+          <option value="">Wszystkie kategorie</option>
+        </select>
+        <select id="filter">
+          <option value="upcoming">Nadchodzące</option>
+          <option value="past">Poprzednie</option>
+          <option value="all">Wszystkie</option>
+        </select>
+      </div>
+
+      <div id="events-content"></div>
+    </div>
+  </section>
+
+  <!-- Event detail modal -->
+  <div id="eventModal" class="modal-backdrop hidden">
+    <div class="modal" id="eventModalContent"></div>
+  </div>
+</main>
+
+<div id="footer-slot"></div>
+
+<style>
+.modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(15,15,15,.85);
+  z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+  padding: var(--s-5);
+}
+.modal {
+  background: var(--surface);
+  max-width: 640px;
+  width: 100%;
+  max-height: 90vh;
+  border-radius: var(--r-lg);
+  overflow: auto;
+  position: relative;
+  box-shadow: var(--shadow-xl);
+}
+.modal .cover { aspect-ratio: 21/9; background-size: cover; background-position: center; }
+.modal-body { padding: var(--s-6); }
+.modal-close {
+  position: absolute; top: 12px; right: 12px;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: rgba(0,0,0,.5);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1;
+}
+.event-grid-card {
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all var(--t-mid);
+}
+.event-grid-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+.event-grid-card .cover { aspect-ratio: 16/9; background-size: cover; background-position: center; }
+.event-grid-card .body { padding: var(--s-5); }
+.event-grid-card h3 { font-size: 1.1rem; margin-bottom: var(--s-2); }
+</style>
+
+<script src="assets/js/store.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+(function(){
+  const all = Store.all("events").filter(e => e.published);
+  let state = { view: "list", search: "", category: "", filter: "upcoming", calMonth: new Date().getMonth(), calYear: new Date().getFullYear() };
+
+  // Categories
+  const cats = [...new Set(all.map(e => e.category))];
+  document.getElementById("category").innerHTML += cats.map(c => `<option value="${c}">${c}</option>`).join("");
+
+  document.getElementById("view-tabs").addEventListener("click", e => {
+    if (!e.target.dataset.view) return;
+    state.view = e.target.dataset.view;
+    document.querySelectorAll("#view-tabs button").forEach(b => b.classList.toggle("active", b === e.target));
+    render();
+  });
+  document.getElementById("search").addEventListener("input", e => { state.search = e.target.value.toLowerCase(); render(); });
+  document.getElementById("category").addEventListener("change", e => { state.category = e.target.value; render(); });
+  document.getElementById("filter").addEventListener("change", e => { state.filter = e.target.value; render(); });
+
+  function filtered() {
+    const today = new Date().toISOString().slice(0,10);
+    return all.filter(e => {
+      if (state.search && !e.title.toLowerCase().includes(state.search) && !e.description.toLowerCase().includes(state.search)) return false;
+      if (state.category && e.category !== state.category) return false;
+      if (state.filter === "upcoming" && e.endDate < today) return false;
+      if (state.filter === "past" && e.endDate >= today) return false;
+      return true;
+    }).sort((a,b) => state.filter === "past" ? b.startDate.localeCompare(a.startDate) : a.startDate.localeCompare(b.startDate));
+  }
+
+  const months = ["Stycz", "Luty", "Marz", "Kwiec", "Maj", "Czerw", "Lipie", "Sierp", "Wrzes", "Paźdz", "Listo", "Grud"];
+  const monthsFull = ["Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień"];
+  const dayNames = ["Pn","Wt","Śr","Cz","Pt","Sb","Nd"];
+
+  function render() {
+    const list = filtered();
+    const root = document.getElementById("events-content");
+
+    if (state.view === "calendar") {
+      renderCalendar(root);
+      return;
+    }
+
+    if (!list.length) {
+      root.innerHTML = `<div class="empty-state">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        <h3>Brak wydarzeń</h3>
+        <p>W wybranym okresie nie ma żadnych wydarzeń. Zmień filtry lub sprawdź ponownie.</p>
+      </div>`;
+      return;
+    }
+
+    if (state.view === "grid") {
+      root.innerHTML = `<div class="cards-grid">${list.map(e => `
+        <div class="event-grid-card" data-id="${e.id}">
+          <div class="cover" style="background:${e.cover}"></div>
+          <div class="body">
+            <span class="badge badge-accent">${App.escapeHtml(e.category)}</span>
+            <h3 style="margin-top:8px">${App.escapeHtml(e.title)}</h3>
+            <div class="meta" style="font-size:.85rem;color:var(--text-muted);display:flex;gap:12px;flex-wrap:wrap;margin-bottom:8px">
+              <span>📅 ${App.fmtDateShort(e.startDate)}${e.endDate !== e.startDate ? ' – ' + App.fmtDateShort(e.endDate) : ''}</span>
+              <span>📍 ${App.escapeHtml(e.location)}</span>
+            </div>
+            <p style="color:var(--text-muted);font-size:.9rem">${App.escapeHtml(e.description.slice(0, 100))}...</p>
+            <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center">
+              <strong>${App.escapeHtml(e.price)}</strong>
+              <span class="read-more" style="color:var(--sun-500)">Szczegóły →</span>
+            </div>
+          </div>
+        </div>
+      `).join("")}</div>`;
+      root.querySelectorAll(".event-grid-card").forEach(c => c.addEventListener("click", () => openModal(c.dataset.id)));
+    } else {
+      // list view
+      root.innerHTML = list.map(e => {
+        const d = new Date(e.startDate);
+        const day = d.getDate();
+        const month = months[d.getMonth()];
+        const year = d.getFullYear();
+        const pct = e.capacity ? Math.round((e.registered || 0) / e.capacity * 100) : 0;
+        return `
+          <div class="event-card" data-id="${e.id}">
+            <div class="event-date-block">
+              <div class="day">${day}</div>
+              <div class="month">${month}</div>
+              <div class="year">${year}</div>
+            </div>
+            <div class="event-info">
+              <span class="badge badge-accent">${App.escapeHtml(e.category)}</span>
+              <h3>${App.escapeHtml(e.title)}</h3>
+              <div class="meta">
+                <span>📍 ${App.escapeHtml(e.location)}</span>
+                <span>🕐 ${App.escapeHtml(e.time || '')}</span>
+                <span>🎟 ${App.escapeHtml(e.price)}</span>
+              </div>
+              <p style="color:var(--text-muted);font-size:.9rem;margin-bottom:0">${App.escapeHtml(e.description.slice(0, 140))}${e.description.length > 140 ? '...' : ''}</p>
+            </div>
+            <div class="event-action">
+              <button class="btn btn-primary btn-sm">Szczegóły</button>
+              ${e.capacity ? `
+                <div class="event-progress"><div class="event-progress-fill" style="width:${pct}%"></div></div>
+                <small class="event-progress-label">${e.registered || 0} / ${e.capacity} (${pct}%)</small>
+              ` : ''}
+            </div>
+          </div>
+        `;
+      }).join("");
+      root.querySelectorAll(".event-card").forEach(c => c.addEventListener("click", () => openModal(c.dataset.id)));
+    }
+  }
+
+  function renderCalendar(root) {
+    const m = state.calMonth, y = state.calYear;
+    const first = new Date(y, m, 1);
+    const offset = (first.getDay() + 6) % 7; // start Monday
+    const daysInMonth = new Date(y, m+1, 0).getDate();
+    const daysPrev = new Date(y, m, 0).getDate();
+    const today = new Date().toISOString().slice(0,10);
+
+    // Map of date -> events
+    const map = {};
+    all.forEach(e => {
+      let d = new Date(e.startDate);
+      const end = new Date(e.endDate);
+      while (d <= end) {
+        const key = d.toISOString().slice(0,10);
+        (map[key] = map[key] || []).push(e);
+        d.setDate(d.getDate() + 1);
+      }
+    });
+
+    let cells = "";
+    for (let i = 0; i < offset; i++) {
+      const day = daysPrev - offset + i + 1;
+      cells += `<div class="calendar-day other-month">${day}</div>`;
+    }
+    for (let i = 1; i <= daysInMonth; i++) {
+      const dateStr = `${y}-${String(m+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
+      const events = map[dateStr] || [];
+      const cls = (dateStr === today ? " today" : "") + (events.length ? " has-event" : "");
+      cells += `<div class="calendar-day${cls}" data-date="${dateStr}" title="${events.map(e=>e.title).join(', ')}">${i}</div>`;
+    }
+    const total = offset + daysInMonth;
+    const trail = (7 - total % 7) % 7;
+    for (let i = 1; i <= trail; i++) cells += `<div class="calendar-day other-month">${i}</div>`;
+
+    root.innerHTML = `
+      <div class="calendar">
+        <div class="calendar-head">
+          <button class="nav-btn" id="cal-prev">‹</button>
+          <h3>${monthsFull[m]} ${y}</h3>
+          <button class="nav-btn" id="cal-next">›</button>
+        </div>
+        <div class="calendar-grid">
+          ${dayNames.map(d => `<div class="calendar-day-name">${d}</div>`).join("")}
+          ${cells}
+        </div>
+        <div id="cal-events" style="margin-top:24px"></div>
+      </div>
+    `;
+    document.getElementById("cal-prev").addEventListener("click", () => {
+      state.calMonth--; if (state.calMonth < 0) { state.calMonth = 11; state.calYear--; }
+      render();
+    });
+    document.getElementById("cal-next").addEventListener("click", () => {
+      state.calMonth++; if (state.calMonth > 11) { state.calMonth = 0; state.calYear++; }
+      render();
+    });
+    root.querySelectorAll(".calendar-day.has-event").forEach(d => {
+      d.addEventListener("click", () => {
+        const events = map[d.dataset.date] || [];
+        const evRoot = document.getElementById("cal-events");
+        evRoot.innerHTML = `<h4 style="margin-bottom:12px">Wydarzenia ${App.fmtDate(d.dataset.date)}</h4>` +
+          events.map(e => `
+            <div class="event-card" style="cursor:pointer" data-id="${e.id}">
+              <div class="event-date-block"><div class="day">${new Date(e.startDate).getDate()}</div><div class="month">${months[new Date(e.startDate).getMonth()]}</div></div>
+              <div class="event-info"><h3>${App.escapeHtml(e.title)}</h3><div class="meta"><span>📍 ${App.escapeHtml(e.location)}</span><span>🕐 ${App.escapeHtml(e.time||'')}</span></div></div>
+              <div class="event-action"><button class="btn btn-primary btn-sm">Szczegóły</button></div>
+            </div>
+          `).join("");
+        evRoot.querySelectorAll(".event-card").forEach(c => c.addEventListener("click", () => openModal(c.dataset.id)));
+      });
+    });
+  }
+
+  function openModal(id) {
+    const e = Store.get("events", id);
+    if (!e) return;
+    const pct = e.capacity ? Math.round((e.registered || 0) / e.capacity * 100) : 0;
+    const dateRange = e.startDate === e.endDate ? App.fmtDate(e.startDate) : `${App.fmtDate(e.startDate)} – ${App.fmtDate(e.endDate)}`;
+    document.getElementById("eventModalContent").innerHTML = `
+      <button class="modal-close" onclick="document.getElementById('eventModal').classList.add('hidden')">✕</button>
+      <div class="cover" style="background:${e.cover}"></div>
+      <div class="modal-body">
+        <span class="badge badge-accent">${App.escapeHtml(e.category)}</span>
+        <h2 style="margin: 12px 0">${App.escapeHtml(e.title)}</h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;font-size:.9rem">
+          <div><strong>📅 Termin</strong><br>${dateRange}</div>
+          <div><strong>🕐 Godzina</strong><br>${App.escapeHtml(e.time || 'cały dzień')}</div>
+          <div><strong>📍 Lokalizacja</strong><br>${App.escapeHtml(e.location)}</div>
+          <div><strong>🎟 Cena</strong><br>${App.escapeHtml(e.price)}</div>
+        </div>
+        <p>${App.escapeHtml(e.description)}</p>
+        ${e.capacity ? `
+          <div style="margin-top:20px">
+            <div class="progress-row"><span>Zapisanych</span><span>${e.registered || 0} / ${e.capacity}</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+          </div>
+        ` : ''}
+        <div style="display:flex;gap:12px;margin-top:24px;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="App.toast('Zapisano! Sprawdź email.', 'ok'); document.getElementById('eventModal').classList.add('hidden')">📝 Zapisz się</button>
+          <a class="btn btn-outline" href="data:text/calendar;charset=utf-8,${encodeURIComponent('BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nSUMMARY:'+e.title+'\nDTSTART:'+e.startDate.replace(/-/g,'')+'\nDTEND:'+e.endDate.replace(/-/g,'')+'\nLOCATION:'+e.location+'\nDESCRIPTION:'+e.description+'\nEND:VEVENT\nEND:VCALENDAR')}" download="${e.slug}.ics">📅 Dodaj do kalendarza</a>
+          <button class="btn btn-ghost" onclick="navigator.clipboard.writeText(location.origin+'/wydarzenia.html?id='+'${e.id}').then(()=>App.toast('Link skopiowany!','ok'))">🔗 Udostępnij</button>
+        </div>
+      </div>
+    `;
+    document.getElementById("eventModal").classList.remove("hidden");
+  }
+
+  document.getElementById("eventModal").addEventListener("click", e => {
+    if (e.target.id === "eventModal") e.currentTarget.classList.add("hidden");
+  });
+
+  // Open from URL ?id=
+  const initId = new URLSearchParams(location.search).get("id");
+  render();
+  if (initId) openModal(initId);
+})();
+</script>
+</body>
+</html>

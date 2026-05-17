@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Galeria — Pustynia Błędowska</title>
+<meta name="description" content="Galeria zdjęć Pustyni Błędowskiej — wydmy, wschody słońca, flora i fauna, wydarzenia">
+<link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+<link rel="stylesheet" href="assets/css/main.css">
+<link rel="stylesheet" href="assets/css/header.css">
+<link rel="stylesheet" href="assets/css/home.css">
+<link rel="stylesheet" href="assets/css/pages.css">
+</head>
+<body>
+<div id="header-slot"></div>
+
+<main>
+  <section class="page-hero">
+    <div class="container">
+      <div class="breadcrumbs" id="bc">
+        <a href="index.html">Strona główna</a> <span>›</span> <a href="galeria.html">Galeria</a>
+      </div>
+      <h1 id="page-title">Galeria</h1>
+      <p class="lead" id="page-lead">Pustynia w obiektywie najlepszych fotografów. Albumy uporządkowane tematycznie — od magicznych wschodów słońca po niezwykłą florę i faunę.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div id="gallery-root"></div>
+    </div>
+  </section>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lb-close" aria-label="Zamknij">✕</button>
+    <button class="lightbox-nav prev" id="lb-prev" aria-label="Poprzednie">‹</button>
+    <button class="lightbox-nav next" id="lb-next" aria-label="Następne">›</button>
+    <div class="lightbox-content" id="lb-content"></div>
+    <div class="lightbox-info" id="lb-info"></div>
+  </div>
+</main>
+
+<div id="footer-slot"></div>
+<script src="assets/js/store.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+(function(){
+  const params = new URLSearchParams(location.search);
+  const folderId = params.get("folder");
+  const root = document.getElementById("gallery-root");
+
+  if (!folderId) {
+    renderFolderList();
+  } else {
+    renderFolder(folderId);
+  }
+
+  function renderFolderList() {
+    const folders = Store.all("galleryFolders").sort((a,b) => (a.order||0) - (b.order||0));
+    const photos = Store.all("photos");
+    document.getElementById("page-title").textContent = "Galeria";
+
+    root.innerHTML = `
+      <div class="folder-grid">
+        ${folders.map(f => {
+          const count = photos.filter(p => p.folderId === f.id).length;
+          return `
+            <a href="galeria.html?folder=${f.id}" class="folder-card reveal" style="background:${f.cover}">
+              <span class="count">${count} zdjęć</span>
+              <div class="folder-card-body">
+                <h3>${App.escapeHtml(f.name)}</h3>
+                <small>${App.escapeHtml(f.description || '')}</small>
+              </div>
+            </a>
+          `;
+        }).join("")}
+      </div>
+    `;
+  }
+
+  function renderFolder(fid) {
+    const folder = Store.get("galleryFolders", fid);
+    if (!folder) {
+      root.innerHTML = `<div class="empty-state"><h3>Album nie znaleziony</h3><a href="galeria.html" class="btn btn-outline">Wróć do galerii</a></div>`;
+      return;
+    }
+    const photos = Store.photosByFolder(fid).sort((a,b) => (b.date||"").localeCompare(a.date||""));
+
+    document.getElementById("page-title").textContent = folder.name;
+    document.getElementById("page-lead").textContent = folder.description || "";
+    document.getElementById("bc").innerHTML = `
+      <a href="index.html">Strona główna</a> <span>›</span>
+      <a href="galeria.html">Galeria</a> <span>›</span>
+      <span>${App.escapeHtml(folder.name)}</span>
+    `;
+
+    // Tag filter
+    const tags = [...new Set(photos.flatMap(p => p.tags || []))];
+
+    root.innerHTML = `
+      <div style="display:flex;gap:16px;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap">
+        <div>
+          <a href="galeria.html" class="btn btn-ghost btn-sm">← Wszystkie albumy</a>
+          <span style="margin-left:12px;color:var(--text-muted)">${photos.length} zdjęć</span>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-outline btn-sm" id="slideshow-btn">▶ Pokaz slajdów</button>
+        </div>
+      </div>
+      ${tags.length ? `<div class="tag-pills" id="tags">
+        <span class="tag-pill active" data-tag="">Wszystkie</span>
+        ${tags.map(t => `<span class="tag-pill" data-tag="${t}">#${t}</span>`).join("")}
+      </div>` : ''}
+      <div class="photo-grid" id="photos-grid"></div>
+    `;
+
+    let activeTag = "";
+    const grid = document.getElementById("photos-grid");
+    function paint() {
+      const list = activeTag ? photos.filter(p => (p.tags || []).includes(activeTag)) : photos;
+      window.__lbList = list;
+      grid.innerHTML = list.map((p, i) => `
+        <div class="photo-tile reveal" data-idx="${i}" style="background:${p.cover}">
+          <div class="photo-tile-info">
+            <strong>${App.escapeHtml(p.title)}</strong><br>
+            <small>${App.escapeHtml(p.author || '')} · ${App.fmtDateShort(p.date || '')}</small>
+          </div>
+        </div>
+      `).join("");
+      grid.querySelectorAll(".photo-tile").forEach(el => {
+        el.addEventListener("click", () => openLB(parseInt(el.dataset.idx)));
+        setTimeout(() => el.classList.add("in"), 50);
+      });
+    }
+    paint();
+    if (tags.length) {
+      document.getElementById("tags").addEventListener("click", e => {
+        if (!e.target.classList.contains("tag-pill")) return;
+        document.querySelectorAll("#tags .tag-pill").forEach(p => p.classList.remove("active"));
+        e.target.classList.add("active");
+        activeTag = e.target.dataset.tag;
+        paint();
+      });
+    }
+
+    document.getElementById("slideshow-btn").addEventListener("click", () => {
+      openLB(0);
+      window.__slideshow = setInterval(() => navLB(1), 3000);
+    });
+  }
+
+  // Lightbox
+  let lbIdx = 0;
+  const lb = document.getElementById("lightbox");
+  function openLB(idx) {
+    lbIdx = idx;
+    paintLB();
+    lb.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+  function closeLB() {
+    lb.classList.remove("open");
+    document.body.style.overflow = "";
+    if (window.__slideshow) { clearInterval(window.__slideshow); window.__slideshow = null; }
+  }
+  function navLB(d) {
+    const list = window.__lbList || [];
+    if (!list.length) return;
+    lbIdx = (lbIdx + d + list.length) % list.length;
+    paintLB();
+  }
+  function paintLB() {
+    const list = window.__lbList || [];
+    const p = list[lbIdx];
+    if (!p) return closeLB();
+    document.getElementById("lb-content").style.background = p.cover;
+    document.getElementById("lb-info").innerHTML = `<strong>${App.escapeHtml(p.title)}</strong><small>${App.escapeHtml(p.author || '')} · ${App.fmtDate(p.date || '')} · ${lbIdx+1} / ${list.length}</small>`;
+  }
+  document.getElementById("lb-close").addEventListener("click", closeLB);
+  document.getElementById("lb-prev").addEventListener("click", () => navLB(-1));
+  document.getElementById("lb-next").addEventListener("click", () => navLB(1));
+  lb.addEventListener("click", e => { if (e.target === lb) closeLB(); });
+  document.addEventListener("keydown", e => {
+    if (!lb.classList.contains("open")) return;
+    if (e.key === "Escape") closeLB();
+    if (e.key === "ArrowLeft") navLB(-1);
+    if (e.key === "ArrowRight") navLB(1);
+  });
+})();
+</script>
+</body>
+</html>

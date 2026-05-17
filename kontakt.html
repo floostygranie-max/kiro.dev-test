@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Kontakt — Pustynia Błędowska</title>
+<meta name="description" content="Skontaktuj się z nami. Telefon, email, adres, formularz kontaktowy, FAQ.">
+<link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+<link rel="stylesheet" href="assets/css/main.css">
+<link rel="stylesheet" href="assets/css/header.css">
+<link rel="stylesheet" href="assets/css/home.css">
+<link rel="stylesheet" href="assets/css/pages.css">
+</head>
+<body>
+<div id="header-slot"></div>
+
+<main>
+  <section class="page-hero">
+    <div class="container">
+      <div class="breadcrumbs">
+        <a href="index.html">Strona główna</a> <span>›</span> <span>Kontakt</span>
+      </div>
+      <h1>Kontakt</h1>
+      <p class="lead">Masz pytania? Chętnie pomożemy! Wybierz najwygodniejszą formę kontaktu.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="contact-grid">
+        <!-- Info column -->
+        <div class="contact-info">
+          <div class="contact-info-block reveal">
+            <h4>📞 Telefon</h4>
+            <p>Godziny pracy biura: Pn–Pt 8:00–16:00</p>
+            <a href="tel:+48326420302">+48 32 642 03 02</a>
+            <a href="tel:+48500123456" style="font-size:.85rem;color:var(--text-muted)">Awarie 24/7: +48 500 123 456</a>
+          </div>
+
+          <div class="contact-info-block reveal">
+            <h4>✉ Email</h4>
+            <p>Odpowiadamy w ciągu 24h w dni robocze</p>
+            <a href="mailto:kontakt@pustynia-bledowska.eu">kontakt@pustynia-bledowska.eu</a>
+            <a href="mailto:prasa@pustynia-bledowska.eu" style="font-size:.85rem">prasa@pustynia-bledowska.eu</a>
+          </div>
+
+          <div class="contact-info-block reveal">
+            <h4>📍 Adres</h4>
+            <p style="margin-bottom:8px">Centrum Informacji Turystycznej<br>ul. Pustynna 1<br>32-310 Klucze<br>woj. małopolskie</p>
+            <a href="https://maps.google.com/?q=50.346,19.487" target="_blank" rel="noopener">📍 Otwórz w Google Maps</a>
+          </div>
+
+          <div class="contact-info-block reveal">
+            <h4>🕒 Godziny otwarcia</h4>
+            <p style="font-size:.9rem">
+              <strong>Sezon letni</strong> (kwiecień–październik)<br>
+              Poniedziałek–Niedziela: 8:00 – 20:00<br><br>
+              <strong>Sezon zimowy</strong> (listopad–marzec)<br>
+              Poniedziałek–Niedziela: 9:00 – 16:00
+            </p>
+          </div>
+
+          <div class="contact-info-block reveal" style="background: linear-gradient(135deg, var(--sand-900), var(--sand-700)); color: var(--sand-50)">
+            <h4 style="color:#fff">🆘 Pomoc w terenie</h4>
+            <p style="color:var(--sand-300)">W razie wypadku lub zagrożenia w terenie:</p>
+            <a href="tel:112" style="color:var(--sun-400);font-size:1.4rem">112 — telefon alarmowy</a>
+            <a href="tel:601100300" style="color:var(--sand-200)">GOPR / TOPR: 601 100 300</a>
+          </div>
+        </div>
+
+        <!-- Form & FAQ -->
+        <div>
+          <div class="contact-form-card reveal">
+            <h2 style="margin-bottom:24px">Napisz do nas</h2>
+            <form id="contact-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="name">Imię i nazwisko *</label>
+                  <input type="text" id="name" required minlength="2">
+                </div>
+                <div class="form-group">
+                  <label for="email">Email *</label>
+                  <input type="email" id="email" required>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="phone">Telefon</label>
+                  <input type="tel" id="phone">
+                </div>
+                <div class="form-group">
+                  <label for="dept">Dział *</label>
+                  <select id="dept" required>
+                    <option value="">— Wybierz —</option>
+                    <option>Informacja ogólna</option>
+                    <option>Bilety i rezerwacje</option>
+                    <option>Wydarzenia i grupy</option>
+                    <option>Współpraca / sponsoring</option>
+                    <option>Media / prasa</option>
+                    <option>Wolontariat</option>
+                    <option>Reklamacja</option>
+                    <option>Inne</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="subject">Temat *</label>
+                <input type="text" id="subject" required>
+              </div>
+              <div class="form-group">
+                <label for="message">Wiadomość *</label>
+                <textarea id="message" rows="6" required minlength="10"></textarea>
+                <small class="help">Min. 10 znaków</small>
+              </div>
+              <div class="form-group">
+                <label style="display:flex;gap:8px;font-weight:400;font-size:.85rem;align-items:flex-start">
+                  <input type="checkbox" required style="width:auto;margin-top:4px">
+                  <span>Zgadzam się na przetwarzanie moich danych osobowych w celu odpowiedzi na zapytanie zgodnie z <a href="#" style="color:var(--sun-500);text-decoration:underline">polityką prywatności</a>.</span>
+                </label>
+              </div>
+              <button type="submit" class="btn btn-primary" style="width:100%">Wyślij wiadomość</button>
+            </form>
+          </div>
+
+          <!-- FAQ -->
+          <div style="margin-top: 64px">
+            <h2 style="margin-bottom: 24px">Najczęściej zadawane pytania</h2>
+            <div id="faq-root">
+              <div class="faq-item">
+                <button class="faq-q">Czy w pustyni jest dużo do chodzenia?</button>
+                <div class="faq-a"><div class="faq-a-inner"><p>Mamy szlaki o długości od 1,5 do 18,6 km. Najpopularniejszy szlak edukacyjny ma 7,2 km i jest dostępny dla rodzin z dziećmi oraz osób z ograniczoną mobilnością.</p></div></div>
+              </div>
+              <div class="faq-item">
+                <button class="faq-q">Czy można wjechać na pustynię samochodem?</button>
+                <div class="faq-a"><div class="faq-a-inner"><p>Nie. Pustynia to rezerwat Natura 2000 — wjazd pojazdami jest zabroniony. Mamy duży, wygodny parking 200 m od wejścia. Wyjątek to autoryzowane pojazdy serwisowe i wojskowe.</p></div></div>
+              </div>
+              <div class="faq-item">
+                <button class="faq-q">Czy psy są mile widziane?</button>
+                <div class="faq-a"><div class="faq-a-inner"><p>Tak! Psy są mile widziane na smyczy. Prosimy o sprzątanie po pupilach. W okresie lęgowym ptaków (kwiecień–czerwiec) obowiązują dodatkowe ograniczenia w niektórych strefach.</p></div></div>
+              </div>
+              <div class="faq-item">
+                <button class="faq-q">Co warto zabrać ze sobą?</button>
+                <div class="faq-a"><div class="faq-a-inner"><p>Latem: woda (min. 1,5 l/os.), nakrycie głowy, krem z filtrem UV, wygodne buty zamknięte (gorący piasek!). Zimą: ciepła odzież, bo wiatr na pustyni potrafi być dotkliwy. Aparat fotograficzny — zawsze!</p></div></div>
+              </div>
+              <div class="faq-item">
+                <button class="faq-q">Czy są toalety i punkty gastronomiczne?</button>
+                <div class="faq-a"><div class="faq-a-inner"><p>Mamy 3 zespoły toalet w terenie. W Centrum Informacji znajduje się kawiarnia, a w sezonie letnim także food trucki. W pobliżu są też restauracje regionalne w Kluczach.</p></div></div>
+              </div>
+              <div class="faq-item">
+                <button class="faq-q">Jak najlepiej dojechać?</button>
+                <div class="faq-a"><div class="faq-a-inner"><p><strong>Samochodem:</strong> z A4, zjazd Olkusz, dalej DW791 do Klucz. Z Krakowa ~1h, z Katowic ~30 min.<br><strong>Pociągiem:</strong> stacja Klucze, dalej 2 km pieszo lub taxi.<br><strong>Autobusem:</strong> linie z Olkusza i Dąbrowy Górniczej.</p></div></div>
+              </div>
+              <div class="faq-item">
+                <button class="faq-q">Czy są zniżki dla grup szkolnych?</button>
+                <div class="faq-a"><div class="faq-a-inner"><p>Tak! Grupy szkolne (powyżej 10 uczniów) płacą 5 zł/os. + 1 opiekun gratis na 10 uczniów. Oferujemy też dedykowane lekcje terenowe z naszymi edukatorami.</p></div></div>
+              </div>
+              <div class="faq-item">
+                <button class="faq-q">Czy można nocować na pustyni?</button>
+                <div class="faq-a"><div class="faq-a-inner"><p>Tak — mamy oficjalne pole namiotowe. Dzikie biwakowanie jest zabronione (rezerwat). Na polu są prysznice, kuchnia letnia i miejsce na ognisko.</p></div></div>
+              </div>
+              <div class="faq-item">
+                <button class="faq-q">Co zrobić w razie wypadku?</button>
+                <div class="faq-a"><div class="faq-a-inner"><p>Zadzwoń 112 (telefon alarmowy) lub do naszego dyżurnego: 500 123 456 (24/7). Mamy patrol ratowniczy w sezonie letnim, AED w Centrum Informacji oraz w pojazdach patrolujących.</p></div></div>
+              </div>
+              <div class="faq-item">
+                <button class="faq-q">Czy organizujecie urodziny / imprezy firmowe?</button>
+                <div class="faq-a"><div class="faq-a-inner"><p>Oczywiście! Oferujemy pakiety eventowe od 500 zł. W ofercie: warsztaty, integracja, jazda quadami, wielbłądy, food trucki, namiot eventowy. Skontaktuj się z naszym działem wydarzeń.</p></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Map embed (visual mock) -->
+      <div style="margin-top: 64px; background: var(--surface); border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--shadow-md); border: 1px solid var(--border)">
+        <div style="height: 360px; background:
+            radial-gradient(circle at 50% 50%, #FBF6EE, #F4E9D4 30%, #D9BC8E 70%);
+            position: relative; display: flex; align-items: center; justify-content: center;">
+          <div style="text-align:center;color:var(--sand-800)">
+            <div style="font-size:4rem">📍</div>
+            <h3>Klucze, woj. małopolskie</h3>
+            <p style="color:var(--text-muted)">Współrzędne: 50.346°N, 19.487°E</p>
+            <a href="https://maps.google.com/?q=50.346,19.487" target="_blank" rel="noopener" class="btn btn-primary" style="margin-top:12px">Otwórz w Google Maps</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+<script src="assets/js/store.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+(function(){
+  // FAQ accordion
+  document.querySelectorAll(".faq-q").forEach(q => {
+    q.addEventListener("click", () => {
+      q.parentElement.classList.toggle("open");
+    });
+  });
+
+  // Form submission
+  document.getElementById("contact-form").addEventListener("submit", e => {
+    e.preventDefault();
+    const data = {
+      name: document.getElementById("name").value,
+      email: document.getElementById("email").value,
+      phone: document.getElementById("phone").value,
+      dept: document.getElementById("dept").value,
+      subject: document.getElementById("subject").value,
+      message: document.getElementById("message").value,
+      date: new Date().toISOString(),
+      read: false
+    };
+    Store.add("messages", data);
+    e.target.reset();
+    App.toast("Wiadomość wysłana! Odpowiemy w ciągu 24h.", "ok");
+  });
+})();
+</script>
+</body>
+</html>

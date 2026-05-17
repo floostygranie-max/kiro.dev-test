@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Galeria — Panel admina</title>
+<link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+<link rel="stylesheet" href="../assets/css/main.css">
+<link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body>
+<div id="admin-sidebar-slot"></div>
+<div class="admin-main">
+  <div id="admin-topbar-slot"></div>
+  <div class="admin-content">
+
+    <div class="events-tabs" id="g-tabs" style="margin-bottom: 24px">
+      <button class="active" data-tab="folders">📁 Albumy</button>
+      <button data-tab="photos">🖼 Zdjęcia</button>
+    </div>
+
+    <!-- FOLDERS TAB -->
+    <div id="tab-folders">
+      <div class="admin-card">
+        <div class="admin-card-head">
+          <h3>Albumy (<span id="f-count">0</span>)</h3>
+          <button class="btn btn-primary" id="btnNewF">+ Nowy album</button>
+        </div>
+        <table class="admin-table">
+          <thead><tr><th></th><th>Nazwa</th><th>Opis</th><th>Zdjęcia</th><th>Kolejność</th><th></th></tr></thead>
+          <tbody id="folders-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PHOTOS TAB -->
+    <div id="tab-photos" style="display:none">
+      <div class="admin-card">
+        <div class="admin-card-head">
+          <h3>Zdjęcia (<span id="p-count">0</span>)</h3>
+          <button class="btn btn-primary" id="btnNewP">+ Dodaj zdjęcie</button>
+        </div>
+        <div class="admin-card-body" style="padding-bottom:0">
+          <div class="page-filters">
+            <input type="search" id="p-search" placeholder="Szukaj...">
+            <select id="p-folder"><option value="">Wszystkie albumy</option></select>
+          </div>
+        </div>
+        <table class="admin-table">
+          <thead><tr><th></th><th>Tytuł</th><th>Album</th><th>Autor</th><th>Data</th><th>Tagi</th><th></th></tr></thead>
+          <tbody id="photos-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="../assets/js/store.js"></script>
+<script src="../assets/js/app.js"></script>
+<script src="../assets/js/admin.js"></script>
+<script>
+if (Admin.init({ title: "Galeria" })) {
+
+  // ---- Tabs
+  document.getElementById("g-tabs").addEventListener("click", e => {
+    if (!e.target.dataset.tab) return;
+    document.querySelectorAll("#g-tabs button").forEach(b => b.classList.toggle("active", b === e.target));
+    document.getElementById("tab-folders").style.display = e.target.dataset.tab === "folders" ? "" : "none";
+    document.getElementById("tab-photos").style.display = e.target.dataset.tab === "photos" ? "" : "none";
+  });
+
+  // ---- Folders
+  function renderFolders() {
+    const list = Store.all("galleryFolders").sort((a,b) => (a.order||0) - (b.order||0));
+    const photos = Store.all("photos");
+    document.getElementById("f-count").textContent = list.length;
+    const tb = document.getElementById("folders-tbody");
+    if (!list.length) { tb.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--text-muted)">Brak albumów</td></tr>`; return; }
+    tb.innerHTML = list.map(f => `
+      <tr>
+        <td><div class="thumb" style="background:${f.cover}"></div></td>
+        <td><strong>${App.escapeHtml(f.name)}</strong><br><small style="color:var(--text-muted)">/${f.slug}</small></td>
+        <td><small>${App.escapeHtml(f.description||"")}</small></td>
+        <td><strong>${photos.filter(p => p.folderId === f.id).length}</strong></td>
+        <td>${f.order||0}</td>
+        <td><div class="row-actions">
+          <a class="row-action-btn" href="../galeria.html?folder=${f.id}" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></a>
+          <button class="row-action-btn" data-edit-f="${f.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+          <button class="row-action-btn delete" data-del-f="${f.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button>
+        </div></td>
+      </tr>
+    `).join("");
+    tb.querySelectorAll("[data-edit-f]").forEach(b => b.addEventListener("click", () => openFolderForm(b.dataset.editF)));
+    tb.querySelectorAll("[data-del-f]").forEach(b => b.addEventListener("click", async () => {
+      const photoCount = Store.all("photos").filter(p => p.folderId === b.dataset.delF).length;
+      if (await Admin.confirmDialog(`Usunąć album? ${photoCount > 0 ? `Zostanie też usuniętych ${photoCount} zdjęć.` : ''}`)) {
+        // Delete photos first
+        Store.all("photos").filter(p => p.folderId === b.dataset.delF).forEach(p => Store.remove("photos", p.id));
+        Store.remove("galleryFolders", b.dataset.delF);
+        App.toast("Usunięto","ok"); renderFolders(); renderPhotosFilter(); renderPhotos();
+      }
+    }));
+  }
+
+  function openFolderForm(id) {
+    const isNew = !id;
+    const item = isNew ? { name:"", slug:"", description:"", cover: Admin.GRADIENT_PRESETS[0], order: Store.all("galleryFolders").length+1 } : Store.get("galleryFolders", id);
+    if (!item) return;
+    const form = document.createElement("div");
+    form.innerHTML = `
+      <div class="form-group"><label>Nazwa albumu *</label><input id="f-name" value="${App.escapeHtml(item.name)}" required></div>
+      <div class="form-group"><label>Opis</label><textarea id="f-desc" rows="2">${App.escapeHtml(item.description||"")}</textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label>Slug (URL)</label><input id="f-slug" value="${App.escapeHtml(item.slug||"")}" placeholder="auto-generated"></div>
+        <div class="form-group"><label>Kolejność</label><input type="number" id="f-order" value="${item.order||0}" min="0"></div>
+      </div>
+      <div class="form-group"><label>Okładka</label><div id="f-cover-wrap"></div></div>
+    `;
+    let cover = item.cover;
+    form.querySelector("#f-cover-wrap").appendChild(Admin.gradientPicker(item.cover, v => cover = v));
+
+    const m = Admin.modal({
+      title: isNew ? "Nowy album" : "Edytuj album",
+      body: form,
+      footer: `<button class="btn btn-ghost" data-close>Anuluj</button><button class="btn btn-primary" id="save">Zapisz</button>`
+    });
+    m.root.querySelector("#save").addEventListener("click", () => {
+      const name = form.querySelector("#f-name").value.trim();
+      if (!name) return App.toast("Nazwa wymagana","err");
+      const data = {
+        name,
+        slug: form.querySelector("#f-slug").value.trim() || Admin.slugify(name),
+        description: form.querySelector("#f-desc").value,
+        order: parseInt(form.querySelector("#f-order").value) || 0,
+        cover
+      };
+      if (isNew) Store.add("galleryFolders", data); else Store.update("galleryFolders", id, data);
+      App.toast(isNew?"Dodano!":"Zapisano!","ok"); m.close(); renderFolders(); renderPhotosFilter();
+    });
+  }
+
+  // ---- Photos
+  let pState = { search: "", folder: "" };
+  function renderPhotosFilter() {
+    const sel = document.getElementById("p-folder");
+    const cur = sel.value;
+    sel.innerHTML = `<option value="">Wszystkie albumy</option>` + Store.all("galleryFolders").map(f => `<option value="${f.id}">${App.escapeHtml(f.name)}</option>`).join("");
+    sel.value = cur;
+  }
+  function renderPhotos() {
+    let list = Store.all("photos");
+    if (pState.search) list = list.filter(p => (p.title||"").toLowerCase().includes(pState.search) || (p.author||"").toLowerCase().includes(pState.search));
+    if (pState.folder) list = list.filter(p => p.folderId === pState.folder);
+    list.sort((a,b) => (b.date||"").localeCompare(a.date||""));
+    document.getElementById("p-count").textContent = list.length;
+    const tb = document.getElementById("photos-tbody");
+    if (!list.length) { tb.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-muted)">Brak zdjęć</td></tr>`; return; }
+    tb.innerHTML = list.map(p => {
+      const folder = Store.get("galleryFolders", p.folderId);
+      return `
+      <tr>
+        <td><div class="thumb" style="background:${p.cover}"></div></td>
+        <td><strong>${App.escapeHtml(p.title)}</strong></td>
+        <td><span class="badge">${folder ? App.escapeHtml(folder.name) : '—'}</span></td>
+        <td>${App.escapeHtml(p.author||"—")}</td>
+        <td>${App.fmtDateShort(p.date)}</td>
+        <td>${(p.tags||[]).map(t => `<span class="badge" style="font-size:.65rem">#${t}</span>`).join(" ")}</td>
+        <td><div class="row-actions">
+          <button class="row-action-btn" data-edit-p="${p.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+          <button class="row-action-btn delete" data-del-p="${p.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button>
+        </div></td>
+      </tr>`;
+    }).join("");
+    tb.querySelectorAll("[data-edit-p]").forEach(b => b.addEventListener("click", () => openPhotoForm(b.dataset.editP)));
+    tb.querySelectorAll("[data-del-p]").forEach(b => b.addEventListener("click", async () => {
+      if (await Admin.confirmDialog("Usunąć zdjęcie?")) { Store.remove("photos", b.dataset.delP); App.toast("Usunięto","ok"); renderPhotos(); }
+    }));
+  }
+
+  function openPhotoForm(id) {
+    const isNew = !id;
+    const folders = Store.all("galleryFolders");
+    if (!folders.length) { App.toast("Najpierw utwórz album!", "err"); return; }
+    const item = isNew ? { title:"", folderId: folders[0].id, author: Store.session().name, date: new Date().toISOString().slice(0,10), tags: [], cover: Admin.GRADIENT_PRESETS[0] } : Store.get("photos", id);
+    if (!item) return;
+
+    const form = document.createElement("div");
+    form.innerHTML = `
+      <div class="form-group"><label>Tytuł *</label><input id="p-title" value="${App.escapeHtml(item.title)}" required></div>
+      <div class="form-row">
+        <div class="form-group"><label>Album</label><select id="p-folder">${folders.map(f => `<option value="${f.id}" ${f.id===item.folderId?'selected':''}>${App.escapeHtml(f.name)}</option>`).join("")}</select></div>
+        <div class="form-group"><label>Data</label><input type="date" id="p-date" value="${item.date}"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Autor</label><input id="p-author" value="${App.escapeHtml(item.author||'')}"></div>
+        <div class="form-group"><label>Tagi (przecinek)</label><input id="p-tags" value="${(item.tags||[]).join(', ')}"></div>
+      </div>
+      <div class="form-group"><label>Zdjęcie / okładka</label><div id="p-cover-wrap"></div></div>
+      <div class="alert alert-info" style="font-size:.85rem">💡 W tej wersji demo używamy gradientów zamiast rzeczywistych zdjęć. W produkcji można podpiąć Cloudinary, Uploadthing lub własny serwer plików.</div>
+    `;
+    let cover = item.cover;
+    form.querySelector("#p-cover-wrap").appendChild(Admin.gradientPicker(item.cover, v => cover = v));
+
+    const m = Admin.modal({
+      title: isNew ? "Nowe zdjęcie" : "Edytuj zdjęcie",
+      body: form,
+      footer: `<button class="btn btn-ghost" data-close>Anuluj</button><button class="btn btn-primary" id="save">Zapisz</button>`
+    });
+    m.root.querySelector("#save").addEventListener("click", () => {
+      const title = form.querySelector("#p-title").value.trim();
+      if (!title) return App.toast("Tytuł wymagany","err");
+      const data = {
+        title,
+        folderId: form.querySelector("#p-folder").value,
+        date: form.querySelector("#p-date").value,
+        author: form.querySelector("#p-author").value.trim(),
+        tags: form.querySelector("#p-tags").value.split(",").map(t => t.trim()).filter(Boolean),
+        cover
+      };
+      if (isNew) Store.add("photos", data); else Store.update("photos", id, data);
+      App.toast(isNew?"Dodano!":"Zapisano!","ok"); m.close(); renderPhotos();
+    });
+  }
+
+  document.getElementById("btnNewF").addEventListener("click", () => openFolderForm(null));
+  document.getElementById("btnNewP").addEventListener("click", () => openPhotoForm(null));
+  document.getElementById("p-search").addEventListener("input", e => { pState.search = e.target.value.toLowerCase(); renderPhotos(); });
+  document.getElementById("p-folder").addEventListener("change", e => { pState.folder = e.target.value; renderPhotos(); });
+
+  renderFolders();
+  renderPhotosFilter();
+  renderPhotos();
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Strony stałe — Panel admina</title>
+<link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+<link rel="stylesheet" href="../assets/css/main.css">
+<link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body>
+<div id="admin-sidebar-slot"></div>
+<div class="admin-main">
+  <div id="admin-topbar-slot"></div>
+  <div class="admin-content">
+
+    <div class="admin-card">
+      <div class="admin-card-head"><h3>Strony stałe</h3></div>
+      <div class="admin-card-body">
+        <p style="color:var(--text-muted);margin-bottom:16px">Strony stałe witryny — historia, regulaminy, polityka prywatności. Edycja treści.</p>
+        <table class="admin-table" style="border:none;box-shadow:none">
+          <thead><tr><th>Nazwa strony</th><th>URL</th><th>Status</th><th></th></tr></thead>
+          <tbody>
+            <tr><td><strong>Strona główna</strong></td><td><code>/index.html</code></td><td><span class="status-pill published">Aktywna</span></td><td><a href="../index.html" target="_blank" class="btn btn-outline btn-sm">Otwórz</a></td></tr>
+            <tr><td><strong>Polska Sahara</strong></td><td><code>/polska-sahara.html</code></td><td><span class="status-pill published">Aktywna</span></td><td><a href="../polska-sahara.html" target="_blank" class="btn btn-outline btn-sm">Otwórz</a></td></tr>
+            <tr><td><strong>Cennik</strong></td><td><code>/cennik.html</code></td><td><span class="status-pill published">Aktywna</span></td><td><a href="../cennik.html" target="_blank" class="btn btn-outline btn-sm">Otwórz</a></td></tr>
+            <tr><td><strong>Mapa</strong></td><td><code>/mapa.html</code></td><td><span class="status-pill published">Aktywna</span></td><td><a href="../mapa.html" target="_blank" class="btn btn-outline btn-sm">Otwórz</a></td></tr>
+            <tr><td><strong>Kontakt</strong></td><td><code>/kontakt.html</code></td><td><span class="status-pill published">Aktywna</span></td><td><a href="../kontakt.html" target="_blank" class="btn btn-outline btn-sm">Otwórz</a></td></tr>
+            <tr><td><strong>Polityka prywatności</strong></td><td><code>—</code></td><td><span class="status-pill draft">Do utworzenia</span></td><td><button class="btn btn-outline btn-sm" disabled>Wkrótce</button></td></tr>
+            <tr><td><strong>Regulamin</strong></td><td><code>—</code></td><td><span class="status-pill draft">Do utworzenia</span></td><td><button class="btn btn-outline btn-sm" disabled>Wkrótce</button></td></tr>
+          </tbody>
+        </table>
+        <div class="alert alert-info" style="margin-top: 24px">
+          💡 Dynamicznie edytowalne sekcje znajdziesz w panelach <a href="news.html">Aktualności</a>, <a href="events.html">Wydarzenia</a>, <a href="gallery.html">Galeria</a>, <a href="projects.html">Projekty</a>, <a href="prices.html">Cennik</a>, <a href="poi.html">Mapa/POI</a>.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="../assets/js/store.js"></script>
+<script src="../assets/js/app.js"></script>
+<script src="../assets/js/admin.js"></script>
+<script>Admin.init({ title: "Strony stałe" });</script>
+</body>
+</html>

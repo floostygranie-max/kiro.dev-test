@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Wiadomości — Panel admina</title>
+<link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+<link rel="stylesheet" href="../assets/css/main.css">
+<link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body>
+<div id="admin-sidebar-slot"></div>
+<div class="admin-main">
+  <div id="admin-topbar-slot"></div>
+  <div class="admin-content">
+    <div class="admin-card">
+      <div class="admin-card-head">
+        <h3>Wiadomości (<span id="count">0</span>)</h3>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost" id="markAll">✓ Oznacz wszystkie jako przeczytane</button>
+        </div>
+      </div>
+      <div class="admin-card-body" style="padding-bottom:0">
+        <div class="page-filters">
+          <input type="search" id="search" placeholder="Szukaj...">
+          <select id="filter-status"><option value="">Wszystkie</option><option value="unread">Nieprzeczytane</option><option value="read">Przeczytane</option></select>
+          <select id="filter-dept"><option value="">Wszystkie działy</option></select>
+        </div>
+      </div>
+      <table class="admin-table">
+        <thead><tr><th>Status</th><th>Nadawca</th><th>Dział</th><th>Temat</th><th>Data</th><th></th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/js/store.js"></script>
+<script src="../assets/js/app.js"></script>
+<script src="../assets/js/admin.js"></script>
+<script>
+if (Admin.init({ title: "Wiadomości" })) {
+  let state = { search: "", status: "", dept: "" };
+
+  function render() {
+    let list = Store.all("messages");
+    if (state.search) list = list.filter(m => m.name.toLowerCase().includes(state.search) || m.email.toLowerCase().includes(state.search) || (m.subject||"").toLowerCase().includes(state.search));
+    if (state.status === "unread") list = list.filter(m => !m.read);
+    if (state.status === "read") list = list.filter(m => m.read);
+    if (state.dept) list = list.filter(m => m.dept === state.dept);
+    list.sort((a,b) => (b.date||"").localeCompare(a.date||""));
+
+    const depts = [...new Set(Store.all("messages").map(m => m.dept).filter(Boolean))];
+    const sel = document.getElementById("filter-dept");
+    if (sel.options.length === 1 && depts.length) depts.forEach(d => { const o = document.createElement("option"); o.value = d; o.textContent = d; sel.appendChild(o); });
+
+    document.getElementById("count").textContent = list.length;
+    const tb = document.getElementById("tbody");
+    if (!list.length) { tb.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--text-muted)">Brak wiadomości</td></tr>`; return; }
+    tb.innerHTML = list.map(m => `
+      <tr style="${m.read ? '' : 'background: var(--sand-50)'}">
+        <td>${m.read ? '<span style="color:var(--text-muted)">✓ Przecz.</span>' : '<span class="status-pill draft">● Nowa</span>'}</td>
+        <td><strong>${App.escapeHtml(m.name)}</strong><br><small style="color:var(--text-muted)">${App.escapeHtml(m.email)}</small></td>
+        <td><span class="badge">${App.escapeHtml(m.dept||"—")}</span></td>
+        <td>${App.escapeHtml(m.subject||"—")}</td>
+        <td><small>${App.fmtDateShort(m.date)}</small></td>
+        <td><div class="row-actions">
+          <button class="row-action-btn" data-view="${m.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+          <button class="row-action-btn delete" data-del="${m.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button>
+        </div></td>
+      </tr>
+    `).join("");
+    tb.querySelectorAll("[data-view]").forEach(b => b.addEventListener("click", () => openView(b.dataset.view)));
+    tb.querySelectorAll("[data-del]").forEach(b => b.addEventListener("click", async () => {
+      if (await Admin.confirmDialog("Usunąć wiadomość?")) { Store.remove("messages", b.dataset.del); App.toast("Usunięto","ok"); render(); }
+    }));
+  }
+
+  function openView(id) {
+    const m = Store.get("messages", id);
+    if (!m) return;
+    if (!m.read) { Store.update("messages", id, { read: true }); }
+    Admin.modal({
+      title: "Wiadomość",
+      body: `
+        <div style="display:grid;grid-template-columns:auto 1fr;gap:8px 16px;font-size:.9rem;margin-bottom:16px">
+          <strong>Od:</strong><div>${App.escapeHtml(m.name)} &lt;${App.escapeHtml(m.email)}&gt;</div>
+          ${m.phone ? `<strong>Telefon:</strong><div>${App.escapeHtml(m.phone)}</div>` : ''}
+          <strong>Dział:</strong><div>${App.escapeHtml(m.dept||"—")}</div>
+          <strong>Temat:</strong><div>${App.escapeHtml(m.subject||"—")}</div>
+          <strong>Data:</strong><div>${App.fmtDate(m.date)}</div>
+        </div>
+        <hr style="margin: 16px 0; border: none; border-top: 1px solid var(--border)">
+        <div style="white-space:pre-wrap;line-height:1.7">${App.escapeHtml(m.message||"")}</div>
+      `,
+      footer: `
+        <a class="btn btn-outline" href="mailto:${m.email}?subject=Re: ${encodeURIComponent(m.subject||"")}">📧 Odpowiedz</a>
+        <button class="btn btn-primary" data-close>Zamknij</button>
+      `
+    });
+    render();
+  }
+
+  document.getElementById("markAll").addEventListener("click", () => {
+    Store.all("messages").forEach(m => { if (!m.read) Store.update("messages", m.id, { read: true }); });
+    App.toast("Oznaczono wszystkie jako przeczytane", "ok");
+    render();
+  });
+  document.getElementById("search").addEventListener("input", e => { state.search = e.target.value.toLowerCase(); render(); });
+  document.getElementById("filter-status").addEventListener("change", e => { state.status = e.target.value; render(); });
+  document.getElementById("filter-dept").addEventListener("change", e => { state.dept = e.target.value; render(); });
+
+  render();
+}
+</script>
+</body>
+</html>

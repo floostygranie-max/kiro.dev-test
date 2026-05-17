@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Backup / Eksport — Panel admina</title>
+<link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+<link rel="stylesheet" href="../assets/css/main.css">
+<link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body>
+<div id="admin-sidebar-slot"></div>
+<div class="admin-main">
+  <div id="admin-topbar-slot"></div>
+  <div class="admin-content">
+
+    <div class="admin-card">
+      <div class="admin-card-head"><h3>📥 Eksport danych</h3></div>
+      <div class="admin-card-body">
+        <p style="margin-bottom:16px;color:var(--text-muted)">Eksportuje całą bazę danych witryny do pliku JSON. Możesz to wykorzystać jako kopię zapasową.</p>
+        <button class="btn btn-primary" id="exportBtn">💾 Pobierz pełny backup (JSON)</button>
+        <button class="btn btn-outline" id="exportCsv">📊 Eksport newsów (CSV)</button>
+        <button class="btn btn-outline" id="exportEvents">📅 Eksport wydarzeń (ICS)</button>
+      </div>
+    </div>
+
+    <div class="admin-card">
+      <div class="admin-card-head"><h3>📤 Import danych</h3></div>
+      <div class="admin-card-body">
+        <p style="margin-bottom:16px;color:var(--text-muted)">Wgranie pliku JSON nadpisze obecną zawartość bazy. Najpierw zalecamy zrobić backup!</p>
+        <input type="file" id="importFile" accept=".json" style="margin-bottom:12px">
+        <button class="btn btn-primary" id="importBtn">⬆ Importuj z pliku</button>
+      </div>
+    </div>
+
+    <div class="admin-card" style="border-color: var(--danger)">
+      <div class="admin-card-head"><h3 style="color: var(--danger)">⚠ Strefa niebezpieczna</h3></div>
+      <div class="admin-card-body">
+        <div class="alert alert-danger" style="margin-bottom:16px">
+          <strong>Reset danych witryny</strong><br>
+          Spowoduje przywrócenie domyślnych danych i usunięcie wszystkich Twoich treści. Tej operacji nie da się cofnąć.
+        </div>
+        <button class="btn btn-danger" id="resetBtn">🗑 Resetuj wszystkie dane</button>
+      </div>
+    </div>
+
+    <div class="admin-card">
+      <div class="admin-card-head"><h3>📊 Statystyki bazy</h3></div>
+      <div class="admin-card-body">
+        <table class="admin-table" style="border:none;box-shadow:none">
+          <tbody id="db-stats"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="../assets/js/store.js"></script>
+<script src="../assets/js/app.js"></script>
+<script src="../assets/js/admin.js"></script>
+<script>
+if (Admin.init({ title: "Backup / Eksport" })) {
+  const collections = ["news","events","galleryFolders","photos","projects","prices","poi","trails","messages","subscribers","users"];
+  const labels = { news:"Aktualności", events:"Wydarzenia", galleryFolders:"Albumy galerii", photos:"Zdjęcia", projects:"Projekty", prices:"Pozycje cennika", poi:"Punkty mapy", trails:"Szlaki", messages:"Wiadomości", subscribers:"Subskrybenci", users:"Użytkownicy" };
+
+  document.getElementById("db-stats").innerHTML = collections.map(c => `
+    <tr><td>${labels[c]}</td><td style="text-align:right"><strong>${Store.all(c).length}</strong> rekordów</td></tr>
+  `).join("");
+
+  document.getElementById("exportBtn").addEventListener("click", () => {
+    const data = Store.export();
+    const blob = new Blob([data], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `pustynia-backup-${new Date().toISOString().slice(0,10)}.json`;
+    a.click(); URL.revokeObjectURL(a.href);
+    App.toast("Backup pobrany!","ok");
+  });
+
+  document.getElementById("exportCsv").addEventListener("click", () => {
+    const news = Store.all("news");
+    const csv = "Tytuł,Kategoria,Data,Autor,Wyświetlenia,Opublikowany\n" + news.map(n => `"${n.title}","${n.category}","${n.date}","${n.author||''}",${n.views||0},${n.published}`).join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "aktualnosci.csv"; a.click();
+    App.toast("CSV pobrany!","ok");
+  });
+
+  document.getElementById("exportEvents").addEventListener("click", () => {
+    const events = Store.all("events");
+    const ics = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Pustynia Bledowska//Calendar//PL\n" +
+      events.map(e => `BEGIN:VEVENT\nUID:${e.id}@pustynia\nSUMMARY:${e.title}\nDTSTART:${e.startDate.replace(/-/g,'')}\nDTEND:${e.endDate.replace(/-/g,'')}\nLOCATION:${e.location}\nDESCRIPTION:${e.description.replace(/\n/g,'\\n')}\nEND:VEVENT`).join("\n") +
+      "\nEND:VCALENDAR";
+    const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "wydarzenia.ics"; a.click();
+    App.toast("ICS pobrany!","ok");
+  });
+
+  document.getElementById("importBtn").addEventListener("click", async () => {
+    const file = document.getElementById("importFile").files[0];
+    if (!file) return App.toast("Wybierz plik!", "err");
+    if (!await Admin.confirmDialog("Czy na pewno chcesz nadpisać obecne dane?")) return;
+    const text = await file.text();
+    if (Store.import(text)) {
+      App.toast("Zaimportowano!","ok");
+      setTimeout(() => location.reload(), 1000);
+    } else {
+      App.toast("Błąd importu — sprawdź format pliku","err");
+    }
+  });
+
+  document.getElementById("resetBtn").addEventListener("click", async () => {
+    if (!await Admin.confirmDialog("Czy NA PEWNO chcesz przywrócić dane domyślne? Wszystkie zmiany zostaną utracone!")) return;
+    if (!await Admin.confirmDialog("To naprawdę OSTATNIE pytanie. Wszystko zniknie. Kontynuować?")) return;
+    Store.reset();
+    App.toast("Dane zresetowane do domyślnych","ok");
+    setTimeout(() => location.reload(), 1000);
+  });
+}
+</script>
+</body>
+</html>

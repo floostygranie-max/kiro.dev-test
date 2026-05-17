@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Projekty — Pustynia Błędowska</title>
+<meta name="description" content="Projekty realizowane na Pustyni Błędowskiej — modernizacja, ochrona przyrody, edukacja, dofinansowania UE">
+<link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+<link rel="stylesheet" href="assets/css/main.css">
+<link rel="stylesheet" href="assets/css/header.css">
+<link rel="stylesheet" href="assets/css/home.css">
+<link rel="stylesheet" href="assets/css/pages.css">
+</head>
+<body>
+<div id="header-slot"></div>
+
+<main>
+  <section class="page-hero">
+    <div class="container">
+      <div class="breadcrumbs">
+        <a href="index.html">Strona główna</a> <span>›</span> <span>Projekty</span>
+      </div>
+      <h1>Projekty</h1>
+      <p class="lead">Inwestycje w infrastrukturę, ochronę przyrody, edukację i nowe technologie. Wszystkie nasze działania są transparentne — sprawdź, co aktualnie realizujemy.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="events-tabs" id="status-tabs">
+        <button class="active" data-status="">Wszystkie</button>
+        <button data-status="in-progress">W trakcie</button>
+        <button data-status="planned">Planowane</button>
+        <button data-status="completed">Zakończone</button>
+      </div>
+
+      <!-- Stats overview -->
+      <div class="stats-grid" id="proj-stats" style="margin-bottom: 48px; background: var(--surface); padding: 24px; border-radius: var(--r-lg); box-shadow: var(--shadow-sm);"></div>
+
+      <div class="cards-grid" id="projects-list"></div>
+    </div>
+  </section>
+</main>
+
+<style>
+#proj-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; text-align: center; }
+#proj-stats .stat-item .stat-value { color: var(--sun-500); font-size: 2.5rem; font-family: var(--font-display); font-weight: 700; line-height: 1; }
+#proj-stats .stat-item .stat-label { color: var(--text-muted); font-size: .85rem; margin-top: 4px; }
+@media (max-width: 700px) { #proj-stats { grid-template-columns: 1fr 1fr; } }
+</style>
+
+<div id="footer-slot"></div>
+<script src="assets/js/store.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+(function(){
+  const all = Store.all("projects");
+  let filterStatus = "";
+
+  // Stats
+  const stats = [
+    { label: "Projektów łącznie", value: all.length },
+    { label: "W trakcie", value: all.filter(p => p.status === "in-progress").length },
+    { label: "Zakończonych", value: all.filter(p => p.status === "completed").length },
+    { label: "Łączny budżet", value: all.reduce((s,p) => s + (parseInt((p.budget||"0").replace(/\D/g,"")) || 0), 0).toLocaleString("pl-PL") + " zł" }
+  ];
+  document.getElementById("proj-stats").innerHTML = stats.map(s => `
+    <div class="stat-item">
+      <div class="stat-value">${s.value}</div>
+      <div class="stat-label">${s.label}</div>
+    </div>
+  `).join("");
+
+  document.getElementById("status-tabs").addEventListener("click", e => {
+    if (!e.target.dataset || !("status" in e.target.dataset)) return;
+    filterStatus = e.target.dataset.status;
+    document.querySelectorAll("#status-tabs button").forEach(b => b.classList.toggle("active", b === e.target));
+    render();
+  });
+
+  const statusLabels = {
+    "completed": "✅ Zakończone",
+    "in-progress": "🔧 W trakcie",
+    "planned": "📋 Planowane"
+  };
+
+  function render() {
+    const list = filterStatus ? all.filter(p => p.status === filterStatus) : all;
+    const root = document.getElementById("projects-list");
+    if (!list.length) {
+      root.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><h3>Brak projektów</h3><p>W tej kategorii nie ma żadnych projektów.</p></div>`;
+      return;
+    }
+    root.innerHTML = list.map(p => `
+      <div class="project-card reveal">
+        <div class="cover" style="background:${p.cover}">
+          <span class="status status-${p.status}">${statusLabels[p.status] || p.status}</span>
+        </div>
+        <div class="body">
+          <h3>${App.escapeHtml(p.title)}</h3>
+          <p class="desc">${App.escapeHtml(p.description)}</p>
+          <div class="progress-row">
+            <span>Postęp</span>
+            <strong>${p.progress}%</strong>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill ${p.progress === 100 ? 'done' : ''}" style="width:${p.progress}%"></div>
+          </div>
+          <div class="project-meta">
+            <div><span>Budżet</span><strong>${App.escapeHtml(p.budget)}</strong></div>
+            <div><span>Finansowanie</span><strong>${App.escapeHtml(p.funding)}</strong></div>
+            <div><span>Start</span><strong>${App.fmtDateShort(p.startDate)}</strong></div>
+            <div><span>Koniec</span><strong>${App.fmtDateShort(p.endDate)}</strong></div>
+          </div>
+        </div>
+      </div>
+    `).join("");
+    root.querySelectorAll(".reveal").forEach(el => setTimeout(() => el.classList.add("in"), 50));
+  }
+  render();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Cennik — Pustynia Błędowska</title>
+<meta name="description" content="Bilety, karnety, atrakcje — kompletny cennik Pustyni Błędowskiej">
+<link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+<link rel="stylesheet" href="assets/css/main.css">
+<link rel="stylesheet" href="assets/css/header.css">
+<link rel="stylesheet" href="assets/css/home.css">
+<link rel="stylesheet" href="assets/css/pages.css">
+</head>
+<body>
+<div id="header-slot"></div>
+
+<main>
+  <section class="page-hero">
+    <div class="container">
+      <div class="breadcrumbs">
+        <a href="index.html">Strona główna</a> <span>›</span> <span>Cennik</span>
+      </div>
+      <h1>Cennik</h1>
+      <p class="lead">Transparentne ceny biletów, atrakcji i usług. Dzieci do 7 lat — wstęp bezpłatny. Karnety i bilety rodzinne — duże oszczędności!</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+
+      <!-- Pricing categories -->
+      <div id="pricing-root"></div>
+
+      <!-- Calculator -->
+      <div class="section-head reveal" style="margin-top: 64px">
+        <span class="eyebrow">Kalkulator wizyty</span>
+        <h2>Oszacuj koszt</h2>
+        <p>Wybierz, kogo zabierasz i co chcesz robić — pokażemy podsumowanie</p>
+      </div>
+
+      <div class="price-calc reveal" style="max-width: 780px; margin: 0 auto;" id="calc-card">
+        <div id="calc-rows"></div>
+        <div class="calc-total">
+          <span style="font-weight:600">Łącznie do zapłaty:</span>
+          <strong id="calc-sum">0 zł</strong>
+        </div>
+        <div style="display:flex;gap:12px;margin-top:24px;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="App.toast('Bilety zarezerwowane! Sprawdź email.', 'ok')">💳 Kup bilety online</button>
+          <button class="btn btn-ghost" onclick="document.querySelectorAll('.qty-input').forEach(i => { i.value = 0; i.dispatchEvent(new Event('input')); })">🗑 Wyczyść</button>
+        </div>
+      </div>
+
+      <!-- Info banner -->
+      <div class="alert alert-info reveal" style="margin-top: 48px">
+        <strong>💡 Dobre wiadomości</strong>
+        <ul style="margin: 8px 0 0 24px">
+          <li>Dzieci do 7 lat — <strong>bezpłatnie</strong> (z opiekunem)</li>
+          <li>Karnet sezonowy zwraca się już po 8 wizytach</li>
+          <li>Zniżki dla grup zorganizowanych powyżej 20 osób — skontaktuj się z nami</li>
+          <li>Karta Dużej Rodziny — 20% zniżki na wszystkie bilety</li>
+          <li>Płatność: gotówka, karta, BLIK, przelew online</li>
+        </ul>
+      </div>
+
+      <!-- Payment methods -->
+      <div class="section-head" style="margin-top: 64px">
+        <span class="eyebrow">Metody płatności</span>
+        <h2>Płać jak Ci wygodnie</h2>
+      </div>
+      <div class="cards-grid">
+        <div class="card" style="text-align:center;padding:32px"><div style="font-size:3rem">💳</div><h4 style="margin-top:12px">Karta</h4><p style="color:var(--text-muted);font-size:.85rem">Visa, Mastercard, Maestro</p></div>
+        <div class="card" style="text-align:center;padding:32px"><div style="font-size:3rem">📱</div><h4 style="margin-top:12px">BLIK</h4><p style="color:var(--text-muted);font-size:.85rem">Szybko i wygodnie</p></div>
+        <div class="card" style="text-align:center;padding:32px"><div style="font-size:3rem">💵</div><h4 style="margin-top:12px">Gotówka</h4><p style="color:var(--text-muted);font-size:.85rem">W kasie biletowej</p></div>
+        <div class="card" style="text-align:center;padding:32px"><div style="font-size:3rem">🏦</div><h4 style="margin-top:12px">Przelew</h4><p style="color:var(--text-muted);font-size:.85rem">Dla grup i firm</p></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+<script src="assets/js/store.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+(function(){
+  const all = Store.all("prices").sort((a,b) => (a.order||0) - (b.order||0));
+  const categories = [...new Set(all.map(p => p.category))];
+
+  // Build pricing sections
+  const root = document.getElementById("pricing-root");
+  const featuredIds = ["pc4", "pc5", "pc6"]; // family + carnets featured
+  root.innerHTML = categories.map(cat => {
+    const items = all.filter(p => p.category === cat);
+    return `
+      <div class="price-section">
+        <h3>${App.escapeHtml(cat)}</h3>
+        <div class="price-card-grid">
+          ${items.map(p => `
+            <div class="price-card ${featuredIds.includes(p.id) ? 'featured' : ''} reveal">
+              <h4>${App.escapeHtml(p.name)}</h4>
+              <div class="price">${p.price === 0 ? 'Gratis' : p.price + '<small> zł / ' + App.escapeHtml(p.unit) + '</small>'}</div>
+              <div class="desc">${App.escapeHtml(p.description || '')}</div>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  // Calculator
+  const calcRows = document.getElementById("calc-rows");
+  calcRows.innerHTML = all.filter(p => p.price > 0).map(p => `
+    <div class="calc-row">
+      <div>
+        <strong>${App.escapeHtml(p.name)}</strong><br>
+        <small style="color:var(--text-muted)">${p.price} zł / ${App.escapeHtml(p.unit)}</small>
+      </div>
+      <div class="qty">
+        <button type="button" data-action="dec" data-id="${p.id}">−</button>
+        <input type="number" class="qty-input" data-id="${p.id}" data-price="${p.price}" value="0" min="0" max="99">
+        <button type="button" data-action="inc" data-id="${p.id}">+</button>
+      </div>
+    </div>
+  `).join("");
+
+  function recalc() {
+    let sum = 0;
+    document.querySelectorAll(".qty-input").forEach(i => {
+      sum += (parseInt(i.value) || 0) * parseFloat(i.dataset.price);
+    });
+    document.getElementById("calc-sum").textContent = sum.toLocaleString("pl-PL") + " zł";
+  }
+
+  calcRows.addEventListener("click", e => {
+    const btn = e.target.closest("button[data-action]");
+    if (!btn) return;
+    const input = calcRows.querySelector(`input[data-id="${btn.dataset.id}"]`);
+    const cur = parseInt(input.value) || 0;
+    input.value = btn.dataset.action === "inc" ? cur + 1 : Math.max(0, cur - 1);
+    recalc();
+  });
+  calcRows.addEventListener("input", recalc);
+})();
+</script>
+</body>
+</html>
