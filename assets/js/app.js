@@ -29,6 +29,7 @@
       ["wydarzenia.html", "Wydarzenia"],
       ["polska-sahara.html", "Polska Sahara"],
       ["projekty.html", "Projekty"],
+      ["trasy-rowerowe.html", "Trasy rowerowe"],
       ["cennik.html", "Cennik"],
       ["galeria.html", "Galeria"],
       ["mapa.html", "Mapa"],

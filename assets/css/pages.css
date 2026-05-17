@@ -1948,3 +1948,321 @@
   margin-bottom: 4px;
 }
 .proj-tl-item small { color: var(--text-muted); font-size: .8rem; }
+
+
+
+/* =========================================================
+   BIKE TRAILS PAGE
+   ========================================================= */
+.bike-hero {
+  background:
+    radial-gradient(ellipse at 30% 70%, rgba(110,154,92,.3), transparent 50%),
+    linear-gradient(135deg, var(--green-300) 0%, var(--green-500) 50%, var(--green-700) 100%);
+  color: #fff;
+  position: relative;
+}
+.bike-hero::after {
+  content: "🚴";
+  position: absolute;
+  top: 50%; right: 8%;
+  font-size: 8rem;
+  opacity: .15;
+  transform: translateY(-50%);
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,.3));
+}
+.bike-hero h1 { color: #fff; }
+.bike-hero .lead { color: rgba(255,255,255,.95); max-width: 720px; }
+.bike-hero .breadcrumbs a { color: rgba(255,255,255,.8); }
+.bike-hero .breadcrumbs span { color: rgba(255,255,255,.6); }
+
+.bike-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--s-3);
+  margin-top: var(--s-5);
+  position: relative;
+  z-index: 1;
+}
+@media (max-width: 700px) { .bike-stats { grid-template-columns: 1fr 1fr; } }
+.bike-stat {
+  background: rgba(255,255,255,.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: var(--r-md);
+  padding: var(--s-3);
+  text-align: center;
+  border: 1px solid rgba(255,255,255,.2);
+}
+.bike-stat strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 800;
+  line-height: 1;
+}
+.bike-stat small {
+  font-size: .75rem;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  opacity: .85;
+}
+
+/* Difficulty filter pills */
+.difficulty-filters {
+  display: flex;
+  gap: var(--s-2);
+  flex-wrap: wrap;
+  margin-bottom: var(--s-5);
+}
+.diff-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 2px solid var(--border);
+  border-radius: var(--r-full);
+  background: var(--surface);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: .9rem;
+  transition: all var(--t-fast);
+}
+.diff-pill:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+.diff-pill.active { background: var(--sand-900); color: var(--sand-50); border-color: var(--sand-900); }
+.diff-pill .dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+}
+.diff-pill[data-diff="bardzo łatwy"] .dot { background: #F4A340; }
+.diff-pill[data-diff="łatwy"]        .dot { background: #6E9A5C; }
+.diff-pill[data-diff="średni"]       .dot { background: #4A9BC4; }
+.diff-pill[data-diff="trudny"]       .dot { background: #1F1F1F; }
+.diff-pill[data-diff=""]             .dot { background: linear-gradient(135deg, #F4A340, #6E9A5C, #4A9BC4, #1F1F1F); }
+
+/* Bike trail card */
+.bike-trail-card {
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  margin-bottom: var(--s-5);
+  overflow: hidden;
+  transition: all var(--t-mid);
+}
+.bike-trail-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+.bike-trail-head {
+  display: grid;
+  grid-template-columns: 200px 1fr auto;
+  gap: var(--s-5);
+  padding: var(--s-5);
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+}
+.bike-trail-mini-map {
+  aspect-ratio: 1;
+  border-radius: var(--r-md);
+  background:
+    radial-gradient(ellipse at 50% 60%, #FBF6EE 0%, #E8D5B7 70%);
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+.bike-trail-mini-map svg { width: 100%; height: 100%; display: block; }
+.bike-trail-info h3 {
+  margin-bottom: 4px;
+  font-size: 1.3rem;
+}
+.bike-trail-info .meta {
+  display: flex;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+  margin: 8px 0;
+}
+.bike-trail-info .meta-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  background: var(--sand-50);
+  border-radius: var(--r-full);
+  font-size: .8rem;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+.bike-trail-info .meta-pill strong { color: var(--text); }
+.bike-trail-info p {
+  color: var(--text-muted);
+  font-size: .9rem;
+  margin: 8px 0 0;
+}
+.difficulty-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: var(--r-full);
+  font-size: .75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+.difficulty-badge[data-diff="bardzo łatwy"] { background: #FEF3C7; color: var(--warn); }
+.difficulty-badge[data-diff="łatwy"]        { background: #DCFCE7; color: var(--green-700); }
+.difficulty-badge[data-diff="średni"]       { background: var(--sky-100); color: var(--sky-500); }
+.difficulty-badge[data-diff="trudny"]       { background: var(--sand-200); color: var(--sand-900); }
+
+.bike-trail-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  align-items: flex-end;
+}
+
+.bike-trail-body {
+  padding: var(--s-5);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s-5);
+}
+@media (max-width: 800px) {
+  .bike-trail-head { grid-template-columns: 1fr; }
+  .bike-trail-actions { align-items: stretch; }
+  .bike-trail-body { grid-template-columns: 1fr; }
+}
+
+.elevation-chart {
+  background: var(--sand-50);
+  padding: var(--s-3);
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+}
+.elevation-chart h5 {
+  font-family: var(--font-body);
+  font-size: .8rem;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--text-muted);
+  margin-bottom: var(--s-2);
+}
+.elevation-svg {
+  width: 100%;
+  height: 80px;
+}
+.elev-fill {
+  fill: url(#elev-gradient);
+  opacity: .6;
+}
+.elev-line {
+  fill: none;
+  stroke: var(--sand-700);
+  stroke-width: 2;
+}
+.elev-stats {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  font-size: .75rem;
+  color: var(--text-muted);
+}
+.elev-stats strong { color: var(--text); }
+
+.highlights-list {
+  background: var(--sand-50);
+  padding: var(--s-3);
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+}
+.highlights-list h5 {
+  font-family: var(--font-body);
+  font-size: .8rem;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--text-muted);
+  margin-bottom: var(--s-2);
+}
+.highlights-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.highlights-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  font-size: .9rem;
+}
+.highlights-list li::before {
+  content: "📍";
+  font-size: .9rem;
+}
+
+/* Bike rental promo */
+.bike-rental-promo {
+  background: linear-gradient(135deg, var(--sand-900) 0%, #2A1F14 100%);
+  color: var(--sand-50);
+  border-radius: var(--r-xl);
+  padding: var(--s-7);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s-5);
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+.bike-rental-promo::before {
+  content: "🚴‍♀️";
+  position: absolute;
+  top: 50%; right: 5%;
+  font-size: 10rem;
+  opacity: .12;
+  transform: translateY(-50%);
+}
+.bike-rental-promo h2 { color: #fff; }
+.bike-rental-promo p { color: var(--sand-300); }
+.bike-rental-promo .btn { position: relative; }
+.rental-prices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s-3);
+  margin-top: var(--s-3);
+  position: relative;
+  z-index: 1;
+}
+.rental-price-card {
+  background: rgba(255,255,255,.08);
+  border-radius: var(--r-md);
+  padding: var(--s-3);
+  border: 1px solid rgba(255,255,255,.15);
+}
+.rental-price-card strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--sun-400);
+}
+.rental-price-card small {
+  color: var(--sand-300);
+  font-size: .8rem;
+}
+@media (max-width: 800px) {
+  .bike-rental-promo { grid-template-columns: 1fr; }
+}
+
+/* Tips section */
+.tips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--s-4);
+}
+.tip-card {
+  background: var(--surface);
+  border-radius: var(--r-md);
+  padding: var(--s-5);
+  border: 1px solid var(--border);
+  border-top: 4px solid var(--green-500);
+  transition: all var(--t-mid);
+}
+.tip-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-top-color: var(--sun-500); }
+.tip-card .icon { font-size: 2.5rem; line-height: 1; margin-bottom: var(--s-2); }
+.tip-card h4 { margin-bottom: var(--s-2); font-size: 1rem; }
+.tip-card p { color: var(--text-muted); font-size: .9rem; margin: 0; }
