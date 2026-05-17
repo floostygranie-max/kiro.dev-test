@@ -23,17 +23,17 @@
     <div class="hero-content">
       <div class="container">
         <h1>
-          Pustynia Błędowska
-          <span class="accent">· Polska Sahara ·</span>
+          <span data-i18n="hero.title1">Pustynia Błędowska</span>
+          <span class="accent" data-i18n="hero.subtitle">· Polska Sahara ·</span>
         </h1>
-        <p class="hero-lead">
+        <p class="hero-lead" data-i18n="hero.lead">
           Największy obszar lotnych piasków w Europie Środkowej. 32 km² niezwykłego krajobrazu,
           rezerwat Natura 2000 — miejsce, w którym Polska wygląda jak Afryka.
         </p>
         <div class="hero-cta">
-          <a href="cennik.html" class="btn btn-primary">Zaplanuj wizytę</a>
-          <a href="polska-sahara.html" class="btn btn-outline">Poznaj historię</a>
-          <a href="galeria.html" class="btn btn-ghost">Zobacz galerię →</a>
+          <a href="cennik.html" class="btn btn-primary" data-i18n="hero.cta.plan">Zaplanuj wizytę</a>
+          <a href="polska-sahara.html" class="btn btn-outline" data-i18n="hero.cta.history">Poznaj historię</a>
+          <a href="galeria.html" class="btn btn-ghost"><span data-i18n="hero.cta.gallery">Zobacz galerię</span> →</a>
         </div>
         <div class="hero-info-chips">
           <div class="hero-chip"><span class="live-pulse"></span> Otwarte teraz</div>
@@ -44,7 +44,7 @@
       </div>
     </div>
     <div class="hero-scroll">
-      <span>Przewiń</span>
+      <span data-i18n="hero.scroll">Przewiń</span>
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
     </div>
   </section>
@@ -196,9 +196,9 @@
   <section class="section">
     <div class="container">
       <div class="section-head reveal">
-        <span class="eyebrow">Dlaczego warto</span>
-        <h2>Miejsce, którego nie zapomnisz</h2>
-        <p>Sześć powodów, dla których Pustynia Błędowska przyciąga ponad 100 tysięcy odwiedzających rocznie</p>
+        <span class="eyebrow" data-i18n="sec.whyVisit.eyebrow">Dlaczego warto</span>
+        <h2 data-i18n="sec.whyVisit.title">Miejsce, którego nie zapomnisz</h2>
+        <p data-i18n="sec.whyVisit.lead">Sześć powodów, dla których Pustynia Błędowska przyciąga ponad 100 tysięcy odwiedzających rocznie</p>
       </div>
       <div class="why-grid">
         <div class="why-card reveal">
@@ -239,8 +239,8 @@
   <section class="section dunes-bg">
     <div class="container">
       <div class="section-head reveal">
-        <span class="eyebrow">Najbliższe wydarzenie</span>
-        <h2>Nie przegap!</h2>
+        <span class="eyebrow" data-i18n="sec.nextEvent.eyebrow">Najbliższe wydarzenie</span>
+        <h2 data-i18n="sec.nextEvent.title">Nie przegap!</h2>
       </div>
       <div id="next-event-slot" class="reveal"></div>
     </div>
@@ -250,8 +250,8 @@
   <section class="section">
     <div class="container">
       <div class="section-head reveal">
-        <span class="eyebrow">Aktualności</span>
-        <h2>Co nowego na pustyni?</h2>
+        <span class="eyebrow" data-i18n="sec.news.eyebrow">Aktualności</span>
+        <h2 data-i18n="sec.news.title">Co nowego na pustyni?</h2>
         <p>Najnowsze wiadomości, ogłoszenia i ciekawostki z naszego rezerwatu</p>
       </div>
       <div id="featured-news" class="featured-news-grid"></div>
@@ -292,8 +292,8 @@
   <section class="section dunes-bg">
     <div class="container">
       <div class="section-head reveal">
-        <span class="eyebrow">Opinie odwiedzających</span>
-        <h2>Co mówią nasi goście</h2>
+        <span class="eyebrow" data-i18n="sec.testimonials.eyebrow">Opinie odwiedzających</span>
+        <h2 data-i18n="sec.testimonials.title">Co mówią nasi goście</h2>
       </div>
       <div class="testimonials-track">
         <div class="testimonial reveal">
@@ -328,12 +328,12 @@
   <section class="section-sm">
     <div class="container">
       <div class="section-head">
-        <span class="eyebrow">Partnerzy i fundatorzy</span>
-        <h2 style="font-size: 1.6rem">Razem dbamy o pustynię</h2>
+        <span class="eyebrow" data-i18n="sec.partners.eyebrow">Partnerzy i fundatorzy</span>
+        <h2 style="font-size: 1.6rem" data-i18n="sec.partners.title">Razem dbamy o pustynię</h2>
       </div>
       <div class="partners-marquee" id="partners-strip"></div>
       <div class="text-center mt-6">
-        <a href="partnerzy.html" class="btn btn-outline">Wszyscy partnerzy →</a>
+        <a href="partnerzy.html" class="btn btn-outline"><span data-i18n="sec.partners.viewAll">Wszyscy partnerzy</span> →</a>
       </div>
     </div>
   </section>
@@ -343,6 +343,7 @@
 <div id="footer-slot"></div>
 
 <script src="assets/js/store.js"></script>
+<script src="assets/js/i18n.js"></script>
 <script src="assets/js/app.js"></script>
 <script>
 (function(){

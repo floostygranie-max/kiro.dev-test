@@ -24,16 +24,16 @@
   function buildHeader() {
     const path = location.pathname.split("/").pop() || "index.html";
     const links = [
-      ["index.html", "Strona główna"],
-      ["aktualnosci.html", "Aktualności"],
-      ["wydarzenia.html", "Wydarzenia"],
-      ["polska-sahara.html", "Polska Sahara"],
-      ["projekty.html", "Projekty"],
-      ["trasy-rowerowe.html", "Trasy rowerowe"],
-      ["cennik.html", "Cennik"],
-      ["galeria.html", "Galeria"],
-      ["mapa.html", "Mapa"],
-      ["kontakt.html", "Kontakt"]
+      ["index.html",            "nav.home",     "Strona główna"],
+      ["aktualnosci.html",      "nav.news",     "Aktualności"],
+      ["wydarzenia.html",       "nav.events",   "Wydarzenia"],
+      ["polska-sahara.html",    "nav.about",    "Polska Sahara"],
+      ["projekty.html",         "nav.projects", "Projekty"],
+      ["trasy-rowerowe.html",   "nav.bikes",    "Trasy rowerowe"],
+      ["cennik.html",           "nav.pricing",  "Cennik"],
+      ["galeria.html",          "nav.gallery",  "Galeria"],
+      ["mapa.html",             "nav.map",      "Mapa"],
+      ["kontakt.html",          "nav.contact",  "Kontakt"]
     ];
 
     const isOpen = (() => {
@@ -49,8 +49,8 @@
           <a href="kontakt.html">✉ kontakt@pustynia-bledowska.eu</a>
         </div>
         <div class="top-bar-right">
-          <span class="open-status"><span class="dot"></span> ${isOpen ? "Otwarte teraz" : "Zamknięte"}</span>
-          <span>Pn–Nd: 8:00–20:00</span>
+          <span class="open-status"><span class="dot"></span> <span data-i18n="${isOpen ? 'topbar.openNow' : 'topbar.closed'}">${isOpen ? 'Otwarte teraz' : 'Zamknięte'}</span></span>
+          <span data-i18n="topbar.hours">Pn–Nd: 8:00–20:00</span>
         </div>
       </div>
     </div>
@@ -65,8 +65,8 @@
         </a>
 
         <nav class="main-nav" id="mainNav">
-          ${links.map(([href, label]) => `
-            <a href="${href}" class="${href === path ? "active" : ""}">${label}</a>
+          ${links.map(([href, key, label]) => `
+            <a href="${href}" class="${href === path ? "active" : ""}" data-i18n="${key}">${label}</a>
           `).join("")}
         </nav>
 
@@ -98,7 +98,7 @@
               <span class="brand-logo" style="color:#FBF6EE">${LOGO_SVG}</span>
               <span class="brand-text">PUSTYNIA BŁĘDOWSKA<small>POLSKA SAHARA</small></span>
             </a>
-            <p>Największy obszar lotnych piasków w Europie Środkowej. Unikalny rezerwat przyrody, który od wieków fascynuje przyrodników, artystów i podróżników.</p>
+            <p data-i18n="footer.about">Największy obszar lotnych piasków w Europie Środkowej. Unikalny rezerwat przyrody, który od wieków fascynuje przyrodników, artystów i podróżników.</p>
             <div class="social-links">
               <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.5 2.9h-2.4V22A10 10 0 0 0 22 12z"/></svg></a>
               <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
@@ -108,43 +108,43 @@
           </div>
 
           <div class="footer-col">
-            <h4>Zwiedzanie</h4>
+            <h4 data-i18n="footer.visit">Zwiedzanie</h4>
             <ul>
-              <li><a href="cennik.html">Cennik i bilety</a></li>
-              <li><a href="mapa.html">Mapa i szlaki</a></li>
-              <li><a href="wydarzenia.html">Wydarzenia</a></li>
-              <li><a href="galeria.html">Galeria</a></li>
+              <li><a href="cennik.html" data-i18n="footer.tickets">Cennik i bilety</a></li>
+              <li><a href="mapa.html" data-i18n="footer.mapTrails">Mapa i szlaki</a></li>
+              <li><a href="wydarzenia.html" data-i18n="footer.events">Wydarzenia</a></li>
+              <li><a href="galeria.html" data-i18n="footer.gallery">Galeria</a></li>
             </ul>
           </div>
 
           <div class="footer-col">
-            <h4>O pustyni</h4>
+            <h4 data-i18n="footer.about_section">O pustyni</h4>
             <ul>
-              <li><a href="polska-sahara.html">Polska Sahara</a></li>
-              <li><a href="aktualnosci.html">Aktualności</a></li>
-              <li><a href="projekty.html">Projekty</a></li>
-              <li><a href="kontakt.html">Kontakt</a></li>
+              <li><a href="polska-sahara.html" data-i18n="footer.about_link">Polska Sahara</a></li>
+              <li><a href="aktualnosci.html" data-i18n="footer.news">Aktualności</a></li>
+              <li><a href="projekty.html" data-i18n="footer.projects">Projekty</a></li>
+              <li><a href="kontakt.html" data-i18n="footer.contact">Kontakt</a></li>
             </ul>
           </div>
 
           <div class="footer-col">
-            <h4>Newsletter</h4>
-            <p style="font-size:.85rem;color:var(--sand-300);margin-bottom:8px">Zapisz się — otrzymasz info o wydarzeniach.</p>
+            <h4 data-i18n="footer.newsletter">Newsletter</h4>
+            <p style="font-size:.85rem;color:var(--sand-300);margin-bottom:8px" data-i18n="footer.newsletterText">Zapisz się — otrzymasz info o wydarzeniach.</p>
             <form class="newsletter-form" onsubmit="App.subscribeNewsletter(event)">
-              <input type="email" placeholder="Twój email" required aria-label="Email">
-              <button type="submit">Zapisz</button>
+              <input type="email" data-i18n-attr="placeholder:footer.email,aria-label:footer.email" placeholder="Twój email" required aria-label="Email">
+              <button type="submit" data-i18n="footer.subscribe">Zapisz</button>
             </form>
             <p style="margin-top:16px;font-size:.85rem;color:var(--sand-300)">📍 Klucze, woj. małopolskie<br>📞 +48 32 642 03 02</p>
           </div>
         </div>
 
         <div class="footer-bottom">
-          <span>© ${year} Pustynia Błędowska. Wszelkie prawa zastrzeżone.</span>
+          <span>© ${year} Pustynia Błędowska. <span data-i18n="footer.allRights">Wszelkie prawa zastrzeżone.</span></span>
           <div class="footer-bottom-links">
-            <a href="#">Polityka prywatności</a>
-            <a href="#">Regulamin</a>
-            <a href="#">Cookies</a>
-            <a href="admin/login.html">Panel administratora</a>
+            <a href="#" data-i18n="footer.privacy">Polityka prywatności</a>
+            <a href="#" data-i18n="footer.terms">Regulamin</a>
+            <a href="#" data-i18n="footer.cookies">Cookies</a>
+            <a href="admin/login.html" data-i18n="footer.admin">Panel administratora</a>
           </div>
         </div>
       </div>
@@ -197,6 +197,12 @@
       document.documentElement.setAttribute("data-theme", next);
       localStorage.setItem("pustynia_theme", next);
     });
+
+    // Apply i18n now that header/footer are in DOM
+    if (window.I18n) {
+      I18n.applyAll();
+      I18n.bindLangSwitch();
+    }
   }
 
   // ---------------- Reveal-on-scroll ----------------
