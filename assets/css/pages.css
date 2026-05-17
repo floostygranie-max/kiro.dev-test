@@ -2864,3 +2864,279 @@
   margin-top: 4px;
   display: block;
 }
+
+
+
+/* =========================================================
+   ENHANCED MAP — Routing, POI search, photo points
+   ========================================================= */
+.map-search {
+  position: relative;
+  margin-bottom: var(--s-4);
+}
+.map-search input {
+  padding: 10px 12px 10px 36px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--sand-50);
+  font-size: .9rem;
+}
+.map-search::before {
+  content: "🔍";
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  pointer-events: none;
+}
+
+.layer-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-2);
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: background var(--t-fast);
+  font-size: .85rem;
+}
+.layer-toggle:hover { background: var(--sand-50); }
+.layer-toggle input { width: auto; flex-shrink: 0; }
+.layer-toggle .swatch {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.layer-toggle .count {
+  margin-left: auto;
+  background: var(--sand-100);
+  color: var(--sand-800);
+  padding: 1px 8px;
+  border-radius: var(--r-full);
+  font-size: .7rem;
+  font-weight: 700;
+}
+
+/* POI list as clickable items */
+.poi-list-section {
+  margin-top: var(--s-5);
+}
+.poi-list-section h4 {
+  font-size: .8rem;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--text-muted);
+  margin-bottom: var(--s-2);
+}
+.poi-list-item {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-2);
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: all var(--t-fast);
+  border: 1px solid transparent;
+}
+.poi-list-item:hover {
+  background: var(--sand-50);
+  border-color: var(--border);
+}
+.poi-list-item.highlighted {
+  background: var(--sun-300);
+  border-color: var(--sun-500);
+}
+.poi-list-item .icon-wrap {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: .9rem;
+}
+.poi-list-item strong {
+  display: block;
+  font-size: .85rem;
+  font-weight: 600;
+}
+.poi-list-item small {
+  color: var(--text-muted);
+  font-size: .7rem;
+}
+
+/* Routing card */
+.routing-card {
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  padding: var(--s-5);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  margin-top: var(--s-5);
+}
+.routing-card h3 {
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  margin-bottom: var(--s-3);
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+.routing-card .route-input {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: var(--s-2);
+  margin-bottom: var(--s-3);
+  align-items: center;
+}
+.routing-card .route-input .marker {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--sand-100);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.routing-card .route-input .marker.from { background: var(--green-300); color: var(--green-700); }
+.routing-card .route-input .marker.to   { background: var(--sun-400); color: var(--sand-900); }
+.routing-card .route-input input,
+.routing-card .route-input select {
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--sand-50);
+}
+.routing-card .route-buttons {
+  display: flex;
+  gap: var(--s-2);
+  margin-top: var(--s-3);
+  flex-wrap: wrap;
+}
+.routing-modes {
+  display: flex;
+  gap: 4px;
+  background: var(--sand-100);
+  border-radius: var(--r-sm);
+  padding: 2px;
+  margin-bottom: var(--s-3);
+}
+.routing-modes button {
+  flex: 1;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: .85rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.routing-modes button.active {
+  background: var(--sand-900);
+  color: var(--sand-50);
+}
+
+/* Photo points highlight section */
+.photo-points-section {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(244,163,64,.15), transparent 50%),
+    linear-gradient(180deg, var(--sand-50), var(--bg));
+}
+.photo-points-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--s-5);
+}
+.photo-point-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  transition: all var(--t-mid);
+  display: flex;
+  flex-direction: column;
+}
+.photo-point-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--sun-400);
+}
+.photo-point-card .card-cover {
+  aspect-ratio: 16/10;
+  background: linear-gradient(135deg, #FFD27A 0%, #F4A340 50%, #8B5A2B 100%);
+  position: relative;
+  overflow: hidden;
+}
+.photo-point-card .card-cover::before {
+  content: attr(data-icon);
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 4rem;
+  opacity: .55;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,.3));
+}
+.photo-point-card .card-cover .num {
+  position: absolute;
+  top: 12px; left: 12px;
+  background: rgba(31,31,31,.85);
+  color: var(--sun-400);
+  padding: 4px 12px;
+  border-radius: var(--r-full);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: .9rem;
+}
+.photo-point-card .body {
+  padding: var(--s-4);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.photo-point-card h4 {
+  margin-bottom: var(--s-2);
+  font-size: 1.1rem;
+}
+.photo-point-card .desc {
+  color: var(--text-muted);
+  font-size: .85rem;
+  margin-bottom: var(--s-3);
+}
+.photo-tips-grid {
+  background: var(--sand-50);
+  border-radius: var(--r-sm);
+  padding: var(--s-3);
+  margin-bottom: var(--s-3);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-2);
+  font-size: .8rem;
+}
+.photo-tips-grid .row { display: flex; gap: 8px; align-items: flex-start; }
+.photo-tips-grid .row .ico { flex-shrink: 0; font-size: 1.1rem; line-height: 1.2; }
+.photo-tips-grid .row strong { display: inline-block; color: var(--text); }
+.photo-tips-grid .row span { color: var(--text-muted); }
+
+/* Map quick action chips */
+.map-action-chips {
+  display: flex;
+  gap: var(--s-2);
+  margin-top: var(--s-3);
+  flex-wrap: wrap;
+}
+.map-action-chips a, .map-action-chips button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  background: var(--sand-100);
+  border-radius: var(--r-full);
+  font-size: .8rem;
+  font-weight: 600;
+  color: var(--text);
+  border: 1px solid transparent;
+  transition: all var(--t-fast);
+}
+.map-action-chips a:hover, .map-action-chips button:hover {
+  background: var(--sand-900);
+  color: var(--sand-50);
+  transform: translateY(-1px);
+}

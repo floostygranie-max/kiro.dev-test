@@ -648,18 +648,34 @@
     },
 
     poi: [
-      { id: "poi1", name: "Punkt widokowy Czubatka", type: "viewpoint", x: 65, y: 35, description: "Najwyższy punkt pustyni — 382 m n.p.m. Panorama 360°." },
-      { id: "poi2", name: "Parking główny", type: "parking", x: 25, y: 60, description: "200 miejsc, monitoring." },
-      { id: "poi3", name: "Centrum informacji", type: "info", x: 28, y: 58, description: "Bilety, mapy, pamiątki, toalety." },
-      { id: "poi4", name: "Strefa rodzinna", type: "family", x: 35, y: 55, description: "Plac zabaw, dmuchańce, food trucki." },
-      { id: "poi5", name: "Punkt widokowy Wschód", type: "viewpoint", x: 80, y: 50, description: "Idealne miejsce na wschody słońca." },
-      { id: "poi6", name: "Wypożyczalnia rowerów", type: "rental", x: 30, y: 62, description: "Rowery MTB i elektryczne." },
-      { id: "poi7", name: "Stajnia pustynna", type: "horse", x: 45, y: 75, description: "Przejażdżki konne i wielbłądy." },
-      { id: "poi8", name: "Pole namiotowe", type: "camping", x: 55, y: 78, description: "Camping z prysznicami i kuchnią." },
-      { id: "poi9", name: "Strefa quadów", type: "quad", x: 70, y: 65, description: "Tor crossowy 2,4 km." },
-      { id: "poi10", name: "Toalety publiczne #1", type: "wc", x: 32, y: 60, description: "Dostępne 24/7" },
-      { id: "poi11", name: "Toalety publiczne #2", type: "wc", x: 65, y: 40, description: "Dostępne w sezonie" },
-      { id: "poi12", name: "Strefa fotograficzna", type: "photo", x: 50, y: 30, description: "Najpiękniejsze ujęcia wydm." }
+      { id: "poi1", name: "Punkt widokowy Czubatka", type: "viewpoint", x: 65, y: 35, description: "Najwyższy punkt pustyni — 382 m n.p.m. Panorama 360°. Idealne na wschody słońca i Mleczną Drogę.", lat: 50.346, lon: 19.487, openHours: "24/7", icon: "🟡" },
+      { id: "poi2", name: "Parking główny", type: "parking", x: 25, y: 60, description: "200 miejsc, monitoring, parkomat. Pierwsze 15 min gratis.", lat: 50.341, lon: 19.482, openHours: "24/7", icon: "🅿" },
+      { id: "poi3", name: "Centrum informacji", type: "info", x: 28, y: 58, description: "Bilety, mapy, pamiątki, toalety. Personel mówi PL/EN/DE.", lat: 50.342, lon: 19.483, openHours: "8:00-20:00", icon: "ℹ" },
+      { id: "poi4", name: "Strefa rodzinna", type: "family", x: 35, y: 55, description: "Plac zabaw, dmuchańce, food trucki, animacje dla dzieci w sezonie.", lat: 50.343, lon: 19.484, openHours: "9:00-19:00", icon: "👨‍👩‍👧" },
+      { id: "poi5", name: "Punkt widokowy Wschód", type: "viewpoint", x: 80, y: 50, description: "Drugi co do wysokości punkt — 365 m. Idealne miejsce na wschody słońca, mniej zatłoczone.", lat: 50.344, lon: 19.495, openHours: "24/7", icon: "🟡" },
+      { id: "poi6", name: "Wypożyczalnia rowerów", type: "rental", x: 30, y: 62, description: "Rowery MTB, gravel, miejskie i e-bike. Kaski w cenie.", lat: 50.341, lon: 19.483, openHours: "8:30-18:00", icon: "🚴" },
+      { id: "poi7", name: "Stajnia pustynna", type: "horse", x: 45, y: 75, description: "Przejażdżki konne i wielbłądy. Sesje fotograficzne w sezonie.", lat: 50.339, lon: 19.487, openHours: "9:00-17:00", icon: "🐎" },
+      { id: "poi8", name: "Pole namiotowe", type: "camping", x: 55, y: 78, description: "Camping z prysznicami, kuchnią letnią i wyznaczonym paleniskiem. Wymaga rezerwacji.", lat: 50.338, lon: 19.490, openHours: "Sezon V-IX", icon: "⛺" },
+      { id: "poi9", name: "Strefa quadów", type: "quad", x: 70, y: 65, description: "Tor crossowy 2,4 km. Quady z instruktorem dla osób 16+.", lat: 50.341, lon: 19.493, openHours: "10:00-18:00", icon: "🏍" },
+      { id: "poi10", name: "Toalety przy kasach", type: "wc", x: 32, y: 60, description: "Cały rok. Płatność BLIK/karta/gotówka — 3 zł. Dzieci do 120 cm gratis.", lat: 50.342, lon: 19.483, openHours: "24/7", icon: "🚻" },
+      { id: "poi11", name: "Toalety Food Truck", type: "wc", x: 65, y: 40, description: "Cały rok poza zimą. Czynne 8:00-22:00 w sezonie.", lat: 50.345, lon: 19.490, openHours: "8:00-22:00", icon: "🚻" },
+      { id: "poi12", name: "Punkt fotograficzny — Wydma Główna", type: "photo", x: 50, y: 30, description: "Najpiękniejsze ujęcia wydm. Idealna złota godzina i wschody.", lat: 50.346, lon: 19.487, openHours: "24/7", icon: "📷", photoTips: { bestTime: "Wschód i zachód słońca", lens: "16-35mm szerokokątny", tip: "Ustaw się 100m przed wydmą — załapiesz całą perspektywę" } },
+
+      // ===== Nowe POI =====
+      { id: "poi13", name: "Food Truck Park", type: "food", x: 38, y: 56, description: "5-8 food trucków w sezonie: burgery, pierogi, lody, kawa. Stoły i parasole.", lat: 50.343, lon: 19.485, openHours: "11:00-21:00", icon: "🍔" },
+      { id: "poi14", name: "Restauracja „Sahara Polska"", type: "food", x: 27, y: 65, description: "Tradycyjna kuchnia regionalna, dania mięsne i wegańskie. Bezpłatne WiFi.", lat: 50.339, lon: 19.481, openHours: "12:00-22:00", icon: "🍴" },
+      { id: "poi15", name: "Wieża widokowa Sokole Oko", type: "viewpoint", x: 75, y: 60, description: "Drewniana wieża 18 m wysokości. Lornetki w cenie wstępu, panorama na bory i pustynię.", lat: 50.339, lon: 19.493, openHours: "8:00-20:00", icon: "🗼" },
+      { id: "poi16", name: "Centrum Edukacyjne", type: "education", x: 30, y: 56, description: "Wystawa o historii, geologii i przyrodzie pustyni. Wstęp w bilecie głównym. Sale warsztatowe.", lat: 50.343, lon: 19.483, openHours: "9:00-17:00", icon: "🎓" },
+      { id: "poi17", name: "Strefa WiFi #1", type: "wifi", x: 30, y: 60, description: "Bezpłatne WiFi w okolicy parkingu i centrum. Sieć: PustyniaB-Free.", lat: 50.342, lon: 19.482, openHours: "24/7", icon: "📶" },
+      { id: "poi18", name: "Strefa WiFi #2", type: "wifi", x: 40, y: 55, description: "Bezpłatne WiFi przy strefie rodzinnej i Food Truck Park.", lat: 50.343, lon: 19.486, openHours: "11:00-22:00", icon: "📶" },
+      { id: "poi19", name: "Punkt pierwszej pomocy", type: "medical", x: 33, y: 58, description: "AED, apteczka, dyżurny ratownik w sezonie letnim. Tel. ratunkowy: 500 123 456.", lat: 50.342, lon: 19.484, openHours: "Sezon V-IX 9-19", icon: "⚕" },
+
+      // ===== Punkty fotograficzne (rozbudowane) =====
+      { id: "poi20", name: "Punkt foto — Spirala Wydm", type: "photo", x: 60, y: 38, description: "Niesamowite wzory piasku tworzące naturalną spiralę.", lat: 50.346, lon: 19.490, openHours: "24/7", icon: "📷", photoTips: { bestTime: "Świt (1h po wschodzie) i godziny popołudniowe", lens: "70-200mm telezoom", tip: "Cienie podkreślają fakturę — wybierz słońce z boku" } },
+      { id: "poi21", name: "Punkt foto — Drone Spot Czubatka", type: "photo", x: 67, y: 33, description: "Najlepsze miejsce do startu drona. Brak drzew i przeszkód.", lat: 50.347, lon: 19.488, openHours: "Wymaga zezwolenia", icon: "🚁", photoTips: { bestTime: "Złota godzina, zachód", lens: "Dron z kamerą min. 4K", tip: "Zarejestruj lot zgodnie z przepisami PAŻP. Opłata 500 zł/dzień." } },
+      { id: "poi22", name: "Punkt foto — Wschód nad lasem", type: "photo", x: 78, y: 25, description: "Słońce wschodzi dokładnie zza linii lasu — magiczny widok.", lat: 50.348, lon: 19.494, openHours: "24/7", icon: "📷", photoTips: { bestTime: "20-30 min przed wschodem słońca", lens: "24-70mm uniwersalny", tip: "Ekspozycja wielokrotna — utrzymaj detal w jasnościach" } },
+      { id: "poi23", name: "Punkt foto — Mleczna Droga", type: "photo", x: 50, y: 50, description: "Środek pustyni — minimalne zanieczyszczenie świetlne. Najlepiej w lipcu-wrześniu.", lat: 50.343, lon: 19.487, openHours: "Po zmierzchu", icon: "🌌", photoTips: { bestTime: "23:00-03:00 (bez Księżyca)", lens: "Szerokokątny f/1.4-2.8", tip: "ISO 3200, 20s ekspozycji, ostrość ręczna na nieskończoność" } },
+      { id: "poi24", name: "Punkt foto — Sandboarder Spot", type: "photo", x: 55, y: 45, description: "Idealne miejsce na zdjęcia akcyjne sandboardingu — wysoki, gładki stok.", lat: 50.344, lon: 19.488, openHours: "Sezon", icon: "📷", photoTips: { bestTime: "Popołudnie (cień podkreśla ruch)", lens: "70-200mm + szybki AF", tip: "Tryb seryjny min. 10kl/s, ISO 400-800" } }
     ],
 
     trails: [
