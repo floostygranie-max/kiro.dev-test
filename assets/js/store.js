@@ -663,7 +663,7 @@
 
       // ===== Nowe POI =====
       { id: "poi13", name: "Food Truck Park", type: "food", x: 38, y: 56, description: "5-8 food trucków w sezonie: burgery, pierogi, lody, kawa. Stoły i parasole.", lat: 50.343, lon: 19.485, openHours: "11:00-21:00", icon: "🍔" },
-      { id: "poi14", name: "Restauracja „Sahara Polska"", type: "food", x: 27, y: 65, description: "Tradycyjna kuchnia regionalna, dania mięsne i wegańskie. Bezpłatne WiFi.", lat: 50.339, lon: 19.481, openHours: "12:00-22:00", icon: "🍴" },
+      { id: "poi14", name: 'Restauracja „Sahara Polska"', type: "food", x: 27, y: 65, description: "Tradycyjna kuchnia regionalna, dania mięsne i wegańskie. Bezpłatne WiFi.", lat: 50.339, lon: 19.481, openHours: "12:00-22:00", icon: "🍴" },
       { id: "poi15", name: "Wieża widokowa Sokole Oko", type: "viewpoint", x: 75, y: 60, description: "Drewniana wieża 18 m wysokości. Lornetki w cenie wstępu, panorama na bory i pustynię.", lat: 50.339, lon: 19.493, openHours: "8:00-20:00", icon: "🗼" },
       { id: "poi16", name: "Centrum Edukacyjne", type: "education", x: 30, y: 56, description: "Wystawa o historii, geologii i przyrodzie pustyni. Wstęp w bilecie głównym. Sale warsztatowe.", lat: 50.343, lon: 19.483, openHours: "9:00-17:00", icon: "🎓" },
       { id: "poi17", name: "Strefa WiFi #1", type: "wifi", x: 30, y: 60, description: "Bezpłatne WiFi w okolicy parkingu i centrum. Sieć: PustyniaB-Free.", lat: 50.342, lon: 19.482, openHours: "24/7", icon: "📶" },
@@ -786,6 +786,117 @@
 
     messages: [],
     subscribers: [],
+
+    // ---- Działy kontaktowe ----
+    departments: [
+      {
+        id: "general",
+        name: "Informacja ogólna",
+        description: "Pytania ogólne, organizacja, zwiedzanie",
+        email: "kontakt@pustynia-bledowska.eu",
+        phone: "+48 32 642 03 02",
+        person: "Anna Nowak",
+        role: "Specjalistka ds. obsługi gości",
+        icon: "ℹ️",
+        responseTime: "24h"
+      },
+      {
+        id: "tickets",
+        name: "Bilety i rezerwacje",
+        description: "Bilety online, grupy, karnety, faktury",
+        email: "bilety@pustynia-bledowska.eu",
+        phone: "+48 32 642 03 03",
+        person: "Marek Kowalski",
+        role: "Kierownik kasy biletowej",
+        icon: "🎟",
+        responseTime: "12h"
+      },
+      {
+        id: "events",
+        name: "Wydarzenia i grupy",
+        description: "Organizacja imprez, grup szkolnych, integracji firmowych",
+        email: "wydarzenia@pustynia-bledowska.eu",
+        phone: "+48 32 642 03 04",
+        person: "Joanna Wiśniewska",
+        role: "Koordynatorka wydarzeń",
+        icon: "🎉",
+        responseTime: "24h"
+      },
+      {
+        id: "press",
+        name: "Media / prasa",
+        description: "Akredytacje, materiały prasowe, wywiady, sesje filmowe",
+        email: "prasa@pustynia-bledowska.eu",
+        phone: "+48 32 642 03 05",
+        person: "Tomasz Lewandowski",
+        role: "Rzecznik prasowy",
+        icon: "📰",
+        responseTime: "48h"
+      },
+      {
+        id: "sponsorship",
+        name: "Współpraca / sponsoring",
+        description: "Partnerstwa, sponsoring, oferty B2B",
+        email: "wspolpraca@pustynia-bledowska.eu",
+        phone: "+48 32 642 03 06",
+        person: "Piotr Dąbrowski",
+        role: "Dyrektor marketingu",
+        icon: "🤝",
+        responseTime: "72h"
+      },
+      {
+        id: "volunteer",
+        name: "Wolontariat",
+        description: "Pomoc przy wydarzeniach, programy edukacyjne, inwentaryzacja",
+        email: "wolontariat@pustynia-bledowska.eu",
+        phone: "+48 32 642 03 07",
+        person: "Magdalena Kaczmarek",
+        role: "Koordynatorka wolontariatu",
+        icon: "🙋",
+        responseTime: "1 tydz."
+      },
+      {
+        id: "complaint",
+        name: "Reklamacje i skargi",
+        description: "Zwroty, problemy z usługami, sugestie",
+        email: "reklamacje@pustynia-bledowska.eu",
+        phone: "+48 32 642 03 08",
+        person: "Biuro Obsługi Klienta",
+        role: "Zespół 3 osób",
+        icon: "⚠️",
+        responseTime: "Zgodnie z regulaminem (30 dni)"
+      },
+      {
+        id: "admin",
+        name: "Administracja",
+        description: "Zarząd, sprawy formalne, oficjalne",
+        email: "biuro@pustynia-bledowska.eu",
+        phone: "+48 32 642 03 09",
+        person: "Sekretariat zarządu",
+        role: "",
+        icon: "🏛",
+        responseTime: "5 dni roboczych"
+      }
+    ],
+
+    // ---- FAQ ----
+    faq: [
+      { id: "f1", q: "Czy w pustyni jest dużo do chodzenia?", a: "Mamy szlaki o długości od 1,5 do 18,6 km. Najpopularniejszy szlak edukacyjny ma 7,2 km i jest dostępny dla rodzin z dziećmi oraz osób z ograniczoną mobilnością.", category: "Zwiedzanie" },
+      { id: "f2", q: "Czy można wjechać na pustynię samochodem?", a: "Nie. Pustynia to rezerwat Natura 2000 — wjazd pojazdami jest zabroniony. Mamy duży, wygodny parking 200 m od wejścia. Wyjątek to autoryzowane pojazdy serwisowe i wojskowe.", category: "Dojazd" },
+      { id: "f3", q: "Czy psy są mile widziane?", a: "Tak! Psy są mile widziane na smyczy. Prosimy o sprzątanie po pupilach. W okresie lęgowym ptaków (kwiecień–czerwiec) obowiązują dodatkowe ograniczenia w niektórych strefach.", category: "Zwiedzanie" },
+      { id: "f4", q: "Co warto zabrać ze sobą?", a: "Latem: woda (min. 1,5 l/os.), nakrycie głowy, krem z filtrem UV, wygodne buty zamknięte (gorący piasek!). Zimą: ciepła odzież, bo wiatr na pustyni potrafi być dotkliwy. Aparat fotograficzny — zawsze!", category: "Zwiedzanie" },
+      { id: "f5", q: "Czy są toalety i punkty gastronomiczne?", a: "Mamy 2 zespoły toalet w terenie (3 zł). W Centrum Informacji znajduje się kawiarnia, a w sezonie letnim także Food Truck Park (5–8 truckujów). W pobliżu są też restauracje regionalne w Kluczach.", category: "Infrastruktura" },
+      { id: "f6", q: "Jak najlepiej dojechać?", a: "**Samochodem:** z A4, zjazd Olkusz, dalej DW791 do Klucz. Z Krakowa ~1h, z Katowic ~30 min.\n**Pociągiem:** stacja Klucze, dalej 2 km pieszo lub taxi.\n**Autobusem:** linie z Olkusza i Dąbrowy Górniczej.", category: "Dojazd" },
+      { id: "f7", q: "Czy są zniżki dla grup szkolnych?", a: "Tak! Grupy szkolne (powyżej 10 uczniów) płacą 5 zł/os. + 1 opiekun gratis na 10 uczniów. Oferujemy też dedykowane lekcje terenowe z naszymi edukatorami.", category: "Bilety" },
+      { id: "f8", q: "Czy można nocować na pustyni?", a: "Tak — mamy oficjalne pole namiotowe (50 zł / nocleg do 10 osób). Dzikie biwakowanie jest zabronione (rezerwat). Na polu są prysznice, kuchnia letnia i miejsce na ognisko.", category: "Infrastruktura" },
+      { id: "f9", q: "Co zrobić w razie wypadku?", a: "Zadzwoń 112 (telefon alarmowy) lub do naszego dyżurnego: 500 123 456 (24/7). Mamy patrol ratowniczy w sezonie letnim, AED w Centrum Informacji oraz w pojazdach patrolujących.", category: "Bezpieczeństwo" },
+      { id: "f10", q: "Czy organizujecie urodziny / imprezy firmowe?", a: "Oczywiście! Oferujemy pakiety eventowe od 500 zł. W ofercie: warsztaty, integracja, jazda quadami, wielbłądy, food trucki, namiot eventowy. Skontaktuj się z naszym działem wydarzeń.", category: "Wydarzenia" },
+      { id: "f11", q: "Czy potrzebuję rezerwacji?", a: "Bilety wstępu można kupić bezpośrednio w kasach (8:00–20:00 w sezonie). Rezerwacja jest wymagana dla grup powyżej 10 osób, wynajmu altany, sesji zdjęciowych i wynajmu terenu.", category: "Bilety" },
+      { id: "f12", q: "Czy korzystam z roweru elektrycznego?", a: "Tak! W naszej wypożyczalni mamy 12 e-bike z baterią starczającą na 80 km jazdy. Cena: 80 zł/godz., 250 zł/dzień. Idealne na trasę Maraton Pustynny.", category: "Atrakcje" },
+      { id: "f13", q: "Czy w sezonie zimowym jest otwarte?", a: "Tak — pustynia jest otwarta cały rok! Sezon zimowy (XI–III): 9:00–16:00. Atrakcje sezonowe (quady, wielbłądy, sandboarding) są ograniczone, ale spacery i fotografia w zimowej scenerii są niezapomnianą atrakcją.", category: "Zwiedzanie" },
+      { id: "f14", q: "Czy mogę latać dronem?", a: "Tak, ale wymaga zezwolenia (500 zł/dzień). Skontaktuj się z biurem co najmniej 7 dni przed planowanym lotem. Zarejestruj lot zgodnie z przepisami PAŻP.", category: "Atrakcje" },
+      { id: "f15", q: "Co z osobami z niepełnosprawnościami?", a: "Trasa edukacyjna 7,2 km jest dostępna dla wózków. Mamy toalety przystosowane, miejsca parkingowe i możemy wypożyczyć wózek terenowy. Projekt „Pustynia bez barier" trwa do 2026 r.", category: "Dostępność" }
+    ],
 
     users: [
       { id: "u1", username: "admin", password: "admin123", role: "admin", name: "Administrator" }
