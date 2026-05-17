@@ -53,6 +53,7 @@
         date: "2026-05-10",
         category: "Infrastruktura",
         tags: ["szlak", "edukacja", "rodzina"],
+        gallery: ["p1","p2","p3","p4","p7"],
         views: 1247,
         featured: true,
         published: true
@@ -68,6 +69,7 @@
         date: "2026-05-05",
         category: "Przyroda",
         tags: ["flora", "wiosna", "fotografia"],
+        gallery: ["p8","p9","p10"],
         views: 854,
         featured: true,
         published: true
@@ -83,6 +85,7 @@
         date: "2026-04-28",
         category: "Wydarzenia",
         tags: ["historia", "rekonstrukcja", "lato"],
+        gallery: ["p11","p12","p15","p16"],
         views: 3421,
         featured: true,
         published: true
@@ -98,6 +101,7 @@
         date: "2026-04-15",
         category: "Infrastruktura",
         tags: ["punkt widokowy", "modernizacja"],
+        gallery: ["p1","p5","p6"],
         views: 612,
         featured: false,
         published: true
@@ -113,6 +117,7 @@
         date: "2026-04-02",
         category: "Edukacja",
         tags: ["fotografia", "warsztaty"],
+        gallery: ["p2","p3","p4","p5","p6","p7"],
         views: 432,
         featured: false,
         published: true
@@ -128,6 +133,7 @@
         date: "2026-03-20",
         category: "Infrastruktura",
         tags: ["dostępność", "turystyka"],
+        gallery: [],
         views: 289,
         featured: false,
         published: true
@@ -137,6 +143,7 @@
     events: [
       {
         id: "e1",
+        seriesId: "inwazja",
         title: "Inwazja Pustynna 2026",
         slug: "inwazja-pustynna-2026",
         description: "Największa rekonstrukcja historyczna w południowej Polsce. Czołgi, pojazdy wojskowe, prelekcje, food trucki, koncerty.",
@@ -153,6 +160,7 @@
       },
       {
         id: "e2",
+        seriesId: "perseidy",
         title: "Noc spadających gwiazd — Perseidy",
         slug: "perseidy-2026",
         description: "Wspólna obserwacja roju Perseidów z najlepszego miejsca w okolicy. Zerowe zanieczyszczenie świetlne, ciepła czekolada w cenie biletu.",
@@ -169,6 +177,7 @@
       },
       {
         id: "e3",
+        seriesId: "maraton",
         title: "Maraton Pustynny — bieg uliczny 21 km",
         slug: "maraton-pustynny-2026",
         description: "Półmaraton z metą na szczycie najwyższej wydmy. Trasa atestowana PZLA. Pakiety startowe z medalem.",
@@ -201,6 +210,7 @@
       },
       {
         id: "e5",
+        seriesId: "dziecko",
         title: "Dzień Dziecka na Pustyni",
         slug: "dzien-dziecka-2026",
         description: "Gry, zabawy, jazda quadami, animacje, dmuchańce, lody. Wstęp dla dzieci do 12 lat bezpłatny!",
@@ -230,6 +240,133 @@
         price: "40 zł",
         cover: "linear-gradient(135deg,#3F5E32 0%,#1F1F1F 100%)",
         published: true
+      },
+      // ----- Past editions -----
+      {
+        id: "e_inv25",
+        seriesId: "inwazja",
+        title: "Inwazja Pustynna 2025",
+        slug: "inwazja-pustynna-2025",
+        description: "XXI edycja największej rekonstrukcji w południowej Polsce. Frekwencja: 4 600 osób.",
+        startDate: "2025-08-15",
+        endDate: "2025-08-17",
+        time: "10:00 - 20:00",
+        location: "Główne pole pustyni",
+        category: "Rekonstrukcja",
+        capacity: 5000,
+        registered: 4623,
+        price: "25 zł",
+        cover: "linear-gradient(135deg,#6B4422 0%,#1F1F1F 100%)",
+        gallery: ["p11","p12","p15","p16"],
+        published: true
+      },
+      {
+        id: "e_inv24",
+        seriesId: "inwazja",
+        title: "Inwazja Pustynna 2024",
+        slug: "inwazja-pustynna-2024",
+        description: "XX jubileuszowa edycja. Po raz pierwszy z udziałem czołgów Sherman z muzeum w Poznaniu.",
+        startDate: "2024-08-16",
+        endDate: "2024-08-18",
+        time: "10:00 - 20:00",
+        location: "Główne pole pustyni",
+        category: "Rekonstrukcja",
+        capacity: 4000,
+        registered: 3854,
+        price: "20 zł",
+        cover: "linear-gradient(135deg,#8B5A2B 0%,#4A2F18 100%)",
+        gallery: ["p11","p15"],
+        published: true
+      },
+      {
+        id: "e_per25",
+        seriesId: "perseidy",
+        title: "Perseidy 2025",
+        slug: "perseidy-2025",
+        description: "Obserwacja roju Perseidów z udziałem astronoma dr. Macieja Mikołajewskiego. Ponad 240 obserwacji w 4 godziny.",
+        startDate: "2025-08-12",
+        endDate: "2025-08-13",
+        time: "21:00 - 03:00",
+        location: "Punkt widokowy Czubatka",
+        category: "Astronomia",
+        capacity: 180,
+        registered: 178,
+        price: "20 zł",
+        cover: "linear-gradient(135deg,#1F1F1F 0%,#234567 100%)",
+        gallery: ["p13"],
+        published: true
+      },
+      {
+        id: "e_mar25",
+        seriesId: "maraton",
+        title: "Maraton Pustynny 2025",
+        slug: "maraton-pustynny-2025",
+        description: "Półmaraton z rekordową frekwencją 712 startujących. Zwycięzca: Bartłomiej Kowalik (1:18:23).",
+        startDate: "2025-09-06",
+        endDate: "2025-09-06",
+        time: "08:00",
+        location: "Start: Klucze, Meta: Czubatka",
+        category: "Sport",
+        capacity: 800,
+        registered: 712,
+        price: "100 zł",
+        cover: "linear-gradient(135deg,#E8841E 0%,#8B5A2B 100%)",
+        gallery: ["p12"],
+        published: true
+      },
+      {
+        id: "e_dz25",
+        seriesId: "dziecko",
+        title: "Dzień Dziecka 2025",
+        slug: "dzien-dziecka-2025",
+        description: "Świetna pogoda i 1 200 odwiedzających rodzin. Specjalna atrakcja: pokaz wielbłądzich wyścigów!",
+        startDate: "2025-06-01",
+        endDate: "2025-06-01",
+        time: "10:00 - 18:00",
+        location: "Strefa rodzinna",
+        category: "Rodzinne",
+        capacity: 1500,
+        registered: 1247,
+        price: "Bezpłatne",
+        cover: "linear-gradient(135deg,#A8C49B 0%,#FFD27A 100%)",
+        gallery: [],
+        published: true
+      }
+    ],
+
+    // ---- Series of recurring events ----
+    eventSeries: [
+      {
+        id: "inwazja",
+        name: "Inwazja Pustynna",
+        description: "Doroczna rekonstrukcja historyczna z udziałem czołgów i pojazdów wojskowych",
+        firstEdition: 2003,
+        editions: 22,
+        category: "Rekonstrukcja"
+      },
+      {
+        id: "perseidy",
+        name: "Noc Perseidów",
+        description: "Wspólna obserwacja roju Perseidów ze szczytu Czubatki",
+        firstEdition: 2015,
+        editions: 11,
+        category: "Astronomia"
+      },
+      {
+        id: "maraton",
+        name: "Maraton Pustynny",
+        description: "Półmaraton biegowy z metą na szczycie najwyższej wydmy",
+        firstEdition: 2017,
+        editions: 9,
+        category: "Sport"
+      },
+      {
+        id: "dziecko",
+        name: "Dzień Dziecka na Pustyni",
+        description: "Coroczna impreza rodzinna 1 czerwca",
+        firstEdition: 2010,
+        editions: 16,
+        category: "Rodzinne"
       }
     ],
 
@@ -239,32 +376,66 @@
       { id: "g3", name: "Flora i fauna", slug: "flora-fauna", description: "Życie na pustyni", cover: "linear-gradient(135deg,#A8C49B,#6E9A5C,#3F5E32)", order: 3 },
       { id: "g4", name: "Wydarzenia 2025", slug: "wydarzenia-2025", description: "Najciekawsze momenty zeszłego sezonu", cover: "linear-gradient(135deg,#F4A340,#C56812,#6B4422)", order: 4 },
       { id: "g5", name: "Zima na pustyni", slug: "zima", description: "Niesamowita biel, niesamowita cisza", cover: "linear-gradient(135deg,#DCEEF5,#8FC6E0,#4A9BC4)", order: 5 },
-      { id: "g6", name: "Zdjęcia historyczne", slug: "historyczne", description: "Archiwalne zdjęcia z XX wieku", cover: "linear-gradient(135deg,#D9BC8E,#8B5A2B,#1F1F1F)", order: 6 }
+      { id: "g6", name: "Zdjęcia historyczne", slug: "historyczne", description: "Archiwalne zdjęcia z XX wieku", cover: "linear-gradient(135deg,#D9BC8E,#8B5A2B,#1F1F1F)", order: 6 },
+      { id: "g7", name: "Trasy rowerowe", slug: "rowery", description: "Trasy rowerowe i sportowe", cover: "linear-gradient(135deg,#A8C49B,#6E9A5C,#1F1F1F)", order: 7 },
+      { id: "g8", name: "Nocna pustynia", slug: "noc", description: "Pustynia po zmroku — gwiazdy i Mleczna Droga", cover: "linear-gradient(135deg,#1F1F1F,#234567,#4A9BC4)", order: 8 }
     ],
 
     photos: [
       // Wydmy o świcie
-      { id: "p1",  folderId: "g1", title: "Świt nad Czubatką",       cover: "linear-gradient(135deg,#FFD27A 0%,#F4A340 60%,#8B5A2B 100%)", author: "Tomasz Nowak", date: "2026-05-01", tags: ["świt","panorama"] },
-      { id: "p2",  folderId: "g1", title: "Pierwsze promienie",      cover: "linear-gradient(180deg,#FFD27A 0%,#E8841E 50%,#6B4422 100%)", author: "Tomasz Nowak", date: "2026-05-02", tags: ["świt"] },
-      { id: "p3",  folderId: "g1", title: "Złota godzina",            cover: "linear-gradient(135deg,#F4A340 0%,#C56812 100%)", author: "Anna Wiśniewska", date: "2026-04-22", tags: ["zachód"] },
-      { id: "p4",  folderId: "g1", title: "Mgła w dolinie wydm",      cover: "linear-gradient(180deg,#F4E9D4 0%,#D9BC8E 50%,#8B5A2B 100%)", author: "Tomasz Nowak", date: "2026-04-15", tags: ["mgła","poranek"] },
+      { id: "p1",  folderId: "g1", title: "Świt nad Czubatką",       cover: "linear-gradient(135deg,#FFD27A 0%,#F4A340 60%,#8B5A2B 100%)", author: "Tomasz Nowak", date: "2026-05-01", tags: ["świt","panorama"], aspect: "landscape" },
+      { id: "p2",  folderId: "g1", title: "Pierwsze promienie",      cover: "linear-gradient(180deg,#FFD27A 0%,#E8841E 50%,#6B4422 100%)", author: "Tomasz Nowak", date: "2026-05-02", tags: ["świt"], aspect: "portrait" },
+      { id: "p3",  folderId: "g1", title: "Złota godzina",            cover: "linear-gradient(135deg,#F4A340 0%,#C56812 100%)", author: "Anna Wiśniewska", date: "2026-04-22", tags: ["zachód"], aspect: "landscape" },
+      { id: "p4",  folderId: "g1", title: "Mgła w dolinie wydm",      cover: "linear-gradient(180deg,#F4E9D4 0%,#D9BC8E 50%,#8B5A2B 100%)", author: "Tomasz Nowak", date: "2026-04-15", tags: ["mgła","poranek"], aspect: "square" },
+      { id: "p1a", folderId: "g1", title: "Promienie słońca przez wydmy", cover: "linear-gradient(45deg,#FFFBEA,#FFD27A 30%,#F4A340 60%,#8B5A2B)", author: "Marcin Lewandowski", date: "2025-09-12", tags: ["świt","promienie"], aspect: "landscape" },
+      { id: "p1b", folderId: "g1", title: "Cisza poranka", cover: "linear-gradient(180deg,#FBF6EE 0%,#F4E9D4 40%,#D9BC8E 100%)", author: "Anna Wiśniewska", date: "2025-08-20", tags: ["świt","cisza"], aspect: "portrait" },
+
       // Drone
-      { id: "p5",  folderId: "g2", title: "Lot nad pustynią",         cover: "linear-gradient(135deg,#8FC6E0 0%,#4A9BC4 50%,#D9BC8E 100%)", author: "Drone Studio PL", date: "2026-03-12", tags: ["drone"] },
-      { id: "p6",  folderId: "g2", title: "Spirala wydm z 200m",      cover: "radial-gradient(circle at 30% 70%,#F4A340 0%,#8B5A2B 60%,#1F1F1F 100%)", author: "Drone Studio PL", date: "2026-03-12", tags: ["drone","abstrakcja"] },
-      { id: "p7",  folderId: "g2", title: "Granica las-pustynia",     cover: "linear-gradient(90deg,#3F5E32 0%,#A8C49B 30%,#D9BC8E 60%,#8B5A2B 100%)", author: "Marcin Lewandowski", date: "2026-02-20", tags: ["drone","granice"] },
+      { id: "p5",  folderId: "g2", title: "Lot nad pustynią",         cover: "linear-gradient(135deg,#8FC6E0 0%,#4A9BC4 50%,#D9BC8E 100%)", author: "Drone Studio PL", date: "2026-03-12", tags: ["drone"], aspect: "landscape" },
+      { id: "p6",  folderId: "g2", title: "Spirala wydm z 200m",      cover: "radial-gradient(circle at 30% 70%,#F4A340 0%,#8B5A2B 60%,#1F1F1F 100%)", author: "Drone Studio PL", date: "2026-03-12", tags: ["drone","abstrakcja"], aspect: "square" },
+      { id: "p7",  folderId: "g2", title: "Granica las-pustynia",     cover: "linear-gradient(90deg,#3F5E32 0%,#A8C49B 30%,#D9BC8E 60%,#8B5A2B 100%)", author: "Marcin Lewandowski", date: "2026-02-20", tags: ["drone","granice"], aspect: "landscape" },
+      { id: "p7a", folderId: "g2", title: "Pustynia z 500m", cover: "radial-gradient(ellipse at 50% 50%,#F4E9D4 0%,#D9BC8E 30%,#A87A4A 70%,#6B4422)", author: "Drone Studio PL", date: "2026-01-15", tags: ["drone","panorama"], aspect: "square" },
+      { id: "p7b", folderId: "g2", title: "Wzór wydm o zachodzie", cover: "linear-gradient(135deg,#FFD27A,#F4A340 30%,#C56812 70%,#1F1F1F)", author: "Drone Studio PL", date: "2025-11-08", tags: ["drone","zachód"], aspect: "landscape" },
+
       // Flora & Fauna
-      { id: "p8",  folderId: "g3", title: "Szczotlicha siwa",         cover: "linear-gradient(135deg,#A8C49B 0%,#6E9A5C 100%)", author: "dr Anna Kowalska", date: "2026-05-05", tags: ["flora"] },
-      { id: "p9",  folderId: "g3", title: "Skowronek borowy",         cover: "linear-gradient(135deg,#D9BC8E 0%,#6B4422 100%)", author: "dr Anna Kowalska", date: "2026-04-22", tags: ["fauna","ptaki"] },
-      { id: "p10", folderId: "g3", title: "Mrówka sahara",            cover: "linear-gradient(135deg,#F4A340 0%,#1F1F1F 100%)", author: "dr Paweł Mazur", date: "2026-04-10", tags: ["fauna","makro"] },
+      { id: "p8",  folderId: "g3", title: "Szczotlicha siwa",         cover: "linear-gradient(135deg,#A8C49B 0%,#6E9A5C 100%)", author: "dr Anna Kowalska", date: "2026-05-05", tags: ["flora"], aspect: "square" },
+      { id: "p9",  folderId: "g3", title: "Skowronek borowy",         cover: "linear-gradient(135deg,#D9BC8E 0%,#6B4422 100%)", author: "dr Anna Kowalska", date: "2026-04-22", tags: ["fauna","ptaki"], aspect: "portrait" },
+      { id: "p10", folderId: "g3", title: "Mrówka sahara",            cover: "linear-gradient(135deg,#F4A340 0%,#1F1F1F 100%)", author: "dr Paweł Mazur", date: "2026-04-10", tags: ["fauna","makro"], aspect: "square" },
+      { id: "p10a", folderId: "g3", title: "Goździk piaskowy", cover: "linear-gradient(135deg,#FFD27A 0%,#F4A340 50%,#A8C49B 100%)", author: "dr Anna Kowalska", date: "2026-05-15", tags: ["flora","kwiaty"], aspect: "portrait" },
+      { id: "p10b", folderId: "g3", title: "Jaszczurka zwinka", cover: "linear-gradient(135deg,#E8D5B7 0%,#A87A4A 50%,#6B4422 100%)", author: "dr Paweł Mazur", date: "2026-05-08", tags: ["fauna","gady"], aspect: "landscape" },
+
       // Wydarzenia 2025
-      { id: "p11", folderId: "g4", title: "Inwazja Pustynna 2025",    cover: "linear-gradient(135deg,#8B5A2B 0%,#1F1F1F 100%)", author: "Foto Express", date: "2025-08-15", tags: ["rekonstrukcja"] },
-      { id: "p12", folderId: "g4", title: "Maraton 2025 — start",     cover: "linear-gradient(135deg,#F4A340 0%,#E8841E 100%)", author: "Foto Express", date: "2025-09-05", tags: ["sport"] },
+      { id: "p11", folderId: "g4", title: "Inwazja Pustynna 2025",    cover: "linear-gradient(135deg,#8B5A2B 0%,#1F1F1F 100%)", author: "Foto Express", date: "2025-08-15", tags: ["rekonstrukcja"], eventId: "e_inv25", aspect: "landscape" },
+      { id: "p12", folderId: "g4", title: "Maraton 2025 — start",     cover: "linear-gradient(135deg,#F4A340 0%,#E8841E 100%)", author: "Foto Express", date: "2025-09-05", tags: ["sport"], eventId: "e_mar25", aspect: "landscape" },
+      { id: "p11a", folderId: "g4", title: "Czołg T-34 w akcji", cover: "linear-gradient(135deg,#6B4422 0%,#1F1F1F 70%,#3F5E32)", author: "Foto Express", date: "2025-08-15", tags: ["rekonstrukcja","czołgi"], eventId: "e_inv25", aspect: "landscape" },
+      { id: "p11b", folderId: "g4", title: "Rekonstruktorzy", cover: "linear-gradient(135deg,#8B5A2B 0%,#A87A4A 50%,#D9BC8E)", author: "Foto Express", date: "2025-08-16", tags: ["rekonstrukcja","ludzie"], eventId: "e_inv25", aspect: "portrait" },
+      { id: "p12a", folderId: "g4", title: "Meta na Czubatce", cover: "linear-gradient(180deg,#F4A340 0%,#C56812 70%,#8B5A2B)", author: "Foto Express", date: "2025-09-05", tags: ["sport","meta"], eventId: "e_mar25", aspect: "landscape" },
+      { id: "perso25a", folderId: "g4", title: "Perseidy 2025 — moment maksimum", cover: "radial-gradient(circle at 50% 30%, #FFFBEA 0%, #FFD27A 5%, #234567 30%, #1F1F1F)", author: "Astronomia Klucze", date: "2025-08-12", tags: ["astronomia","gwiazdy"], eventId: "e_per25", aspect: "landscape" },
+      { id: "dz25a", folderId: "g4", title: "Wielbłądzie wyścigi 2025", cover: "linear-gradient(135deg,#FFD27A 0%,#F4A340 50%,#8B5A2B 100%)", author: "Foto Express", date: "2025-06-01", tags: ["rodzinne","wielbłądy"], eventId: "e_dz25", aspect: "square" },
+
       // Zima
-      { id: "p13", folderId: "g5", title: "Pierwszy śnieg",            cover: "linear-gradient(180deg,#FFFFFF 0%,#DCEEF5 50%,#8FC6E0 100%)", author: "Tomasz Nowak", date: "2025-12-10", tags: ["zima","śnieg"] },
-      { id: "p14", folderId: "g5", title: "Mróz na wydmach",           cover: "linear-gradient(135deg,#DCEEF5 0%,#D9BC8E 100%)", author: "Tomasz Nowak", date: "2025-12-22", tags: ["zima"] },
+      { id: "p13", folderId: "g5", title: "Pierwszy śnieg",            cover: "linear-gradient(180deg,#FFFFFF 0%,#DCEEF5 50%,#8FC6E0 100%)", author: "Tomasz Nowak", date: "2025-12-10", tags: ["zima","śnieg"], aspect: "landscape" },
+      { id: "p14", folderId: "g5", title: "Mróz na wydmach",           cover: "linear-gradient(135deg,#DCEEF5 0%,#D9BC8E 100%)", author: "Tomasz Nowak", date: "2025-12-22", tags: ["zima"], aspect: "square" },
+      { id: "p13a", folderId: "g5", title: "Szron na traw", cover: "linear-gradient(180deg,#FFFFFF,#DCEEF5 50%,#A8C49B 100%)", author: "Anna Wiśniewska", date: "2026-01-05", tags: ["zima","makro"], aspect: "portrait" },
+      { id: "p13b", folderId: "g5", title: "Niebieska godzina zimą", cover: "linear-gradient(180deg,#234567 0%,#4A9BC4 50%,#DCEEF5 100%)", author: "Tomasz Nowak", date: "2026-01-18", tags: ["zima","zmierzch"], aspect: "landscape" },
+
       // Historyczne
-      { id: "p15", folderId: "g6", title: "Pustynia 1925 (rekonstr.)", cover: "linear-gradient(135deg,#D9BC8E 0%,#4A2F18 100%)", author: "Archiwum", date: "1925-06-01", tags: ["archiwum"] },
-      { id: "p16", folderId: "g6", title: "Manewry wojskowe 1965",     cover: "linear-gradient(135deg,#8B5A2B 0%,#1F1F1F 100%)", author: "Archiwum MON", date: "1965-09-15", tags: ["wojsko","archiwum"] }
+      { id: "p15", folderId: "g6", title: "Pustynia 1925 (rekonstr.)", cover: "linear-gradient(135deg,#D9BC8E 0%,#4A2F18 100%)", author: "Archiwum", date: "1925-06-01", tags: ["archiwum"], aspect: "square" },
+      { id: "p16", folderId: "g6", title: "Manewry wojskowe 1965",     cover: "linear-gradient(135deg,#8B5A2B 0%,#1F1F1F 100%)", author: "Archiwum MON", date: "1965-09-15", tags: ["wojsko","archiwum"], aspect: "landscape" },
+      { id: "p15a", folderId: "g6", title: "Kawalerowicz na planie 'Faraona' (1965)", cover: "linear-gradient(135deg,#FFD27A 0%,#8B5A2B 60%,#1F1F1F)", author: "Archiwum Filmowe", date: "1965-08-15", tags: ["film","archiwum"], aspect: "landscape" },
+      { id: "p16a", folderId: "g6", title: "Hermaszewski przed misją (1978)", cover: "linear-gradient(135deg,#A87A4A 0%,#6B4422 50%,#1F1F1F)", author: "Archiwum CSK", date: "1978-04-20", tags: ["kosmos","archiwum"], aspect: "portrait" },
+
+      // Rowery (nowy album)
+      { id: "rb1", folderId: "g7", title: "MTB na wydmach", cover: "linear-gradient(135deg,#A8C49B,#6E9A5C 50%,#3F5E32)", author: "Bike Klucze", date: "2026-04-10", tags: ["sport","rower"], aspect: "landscape" },
+      { id: "rb2", folderId: "g7", title: "Family Loop weekend", cover: "linear-gradient(135deg,#FFD27A,#F4A340 50%,#A8C49B)", author: "Foto Express", date: "2026-05-04", tags: ["rodzinne","rower"], aspect: "landscape" },
+      { id: "rb3", folderId: "g7", title: "Sunset Tour grupa", cover: "linear-gradient(135deg,#FFD27A,#C56812 50%,#1F1F1F)", author: "Bike Klucze", date: "2026-05-18", tags: ["zachód","rower"], aspect: "square" },
+      { id: "rb4", folderId: "g7", title: "Maraton — pętla 2025", cover: "linear-gradient(135deg,#C0392B,#8B5A2B 70%,#1F1F1F)", author: "Foto Express", date: "2025-09-06", tags: ["sport","rower","maraton"], eventId: "e_mar25", aspect: "landscape" },
+
+      // Nocna pustynia (nowy album)
+      { id: "n1pho", folderId: "g8", title: "Mleczna Droga nad wydmami", cover: "radial-gradient(ellipse at 50% 30%,#234567 0%,#1F1F1F 60%,#000 100%)", author: "Astronomia Klucze", date: "2025-08-12", tags: ["astronomia","mleczna droga"], aspect: "landscape" },
+      { id: "n2pho", folderId: "g8", title: "Spadająca gwiazda", cover: "linear-gradient(180deg,#1F1F1F 0%,#234567 50%,#4A9BC4 100%)", author: "Astronomia Klucze", date: "2025-08-12", tags: ["astronomia","perseidy"], eventId: "e_per25", aspect: "portrait" },
+      { id: "n3pho", folderId: "g8", title: "Pełnia nad pustynią", cover: "radial-gradient(circle at 70% 30%,#FFFBEA 0%,#FFD27A 5%,#234567 40%,#1F1F1F)", author: "Tomasz Nowak", date: "2025-12-15", tags: ["księżyc","noc"], aspect: "landscape" },
+      { id: "n4pho", folderId: "g8", title: "Light painting na wydmach", cover: "linear-gradient(135deg,#1F1F1F 0%,#F4A340 30%,#234567 70%,#1F1F1F)", author: "Marcin Lewandowski", date: "2026-03-22", tags: ["noc","sztuka"], aspect: "square" }
     ],
 
     projects: [
@@ -276,10 +447,15 @@
         progress: 65,
         budget: "2 400 000 zł",
         funding: "EFRR / NFOŚiGW",
+        fundingCodes: ["efrr", "nfos"],
         startDate: "2025-03-01",
         endDate: "2026-12-31",
         cover: "linear-gradient(135deg,#A8C49B 0%,#6E9A5C 100%)",
-        gallery: []
+        gallery: [],
+        docs: [
+          { name: "Karta projektu (PDF)", url: "#" },
+          { name: "Sprawozdanie 2025", url: "#" }
+        ]
       },
       {
         id: "pr2",
@@ -289,10 +465,15 @@
         progress: 15,
         budget: "8 200 000 zł",
         funding: "Fundusz Spójności UE",
+        fundingCodes: ["coh"],
         startDate: "2026-09-01",
         endDate: "2028-06-30",
         cover: "linear-gradient(135deg,#F4A340 0%,#8B5A2B 100%)",
-        gallery: []
+        gallery: [],
+        docs: [
+          { name: "Studium wykonalności", url: "#" },
+          { name: "Wizualizacje", url: "#" }
+        ]
       },
       {
         id: "pr3",
@@ -302,10 +483,15 @@
         progress: 100,
         budget: "950 000 zł",
         funding: "LIFE+ UE",
+        fundingCodes: ["life"],
         startDate: "2023-04-01",
         endDate: "2025-10-31",
         cover: "linear-gradient(135deg,#3F5E32 0%,#A8C49B 100%)",
-        gallery: []
+        gallery: [],
+        docs: [
+          { name: "Raport końcowy LIFE+", url: "#" },
+          { name: "Mapa przed/po", url: "#" }
+        ]
       },
       {
         id: "pr4",
@@ -315,10 +501,14 @@
         progress: 40,
         budget: "1 100 000 zł",
         funding: "WFOŚiGW Małopolska",
+        fundingCodes: ["wfos"],
         startDate: "2025-06-01",
         endDate: "2027-05-31",
         cover: "linear-gradient(135deg,#4A9BC4 0%,#1F1F1F 100%)",
-        gallery: []
+        gallery: [],
+        docs: [
+          { name: "Specyfikacja techniczna", url: "#" }
+        ]
       },
       {
         id: "pr5",
@@ -328,10 +518,12 @@
         progress: 5,
         budget: "480 000 zł",
         funding: "Fundusz Innowacji",
+        fundingCodes: ["inn"],
         startDate: "2026-11-01",
         endDate: "2027-08-31",
         cover: "linear-gradient(135deg,#8FC6E0 0%,#4A9BC4 100%)",
-        gallery: []
+        gallery: [],
+        docs: []
       },
       {
         id: "pr6",
@@ -341,12 +533,60 @@
         progress: 100,
         budget: "320 000 zł",
         funding: "Program Rozwoju Obszarów Wiejskich",
+        fundingCodes: ["prow"],
         startDate: "2024-04-01",
         endDate: "2024-11-30",
         cover: "linear-gradient(135deg,#D9BC8E 0%,#8B5A2B 100%)",
-        gallery: []
+        gallery: [],
+        docs: [
+          { name: "Mapa szlaków po modernizacji", url: "#" }
+        ]
       }
     ],
+
+    fundingSources: [
+      { code: "efrr", name: "EFRR — Europejski Fundusz Rozwoju Regionalnego", org: "Unia Europejska", description: "Wspiera rozwój regionalny — infrastruktura, innowacje, środowisko.", totalReceived: "8 600 000 zł", projects: 1 },
+      { code: "life", name: "LIFE+", org: "Komisja Europejska", description: "Program ochrony środowiska i klimatu UE — czynna ochrona siedlisk Natura 2000.", totalReceived: "1 200 000 zł", projects: 1 },
+      { code: "coh",  name: "Fundusz Spójności", org: "Unia Europejska", description: "Duże inwestycje infrastrukturalne i ochrona środowiska.", totalReceived: "8 200 000 zł", projects: 1 },
+      { code: "nfos", name: "NFOŚiGW", org: "Narodowy Fundusz Ochrony Środowiska", description: "Krajowy fundusz finansujący ochronę przyrody i edukację ekologiczną.", totalReceived: "2 400 000 zł", projects: 1 },
+      { code: "wfos", name: "WFOŚiGW Małopolska", org: "Wojewódzki Fundusz Ochrony Środowiska", description: "Regionalny fundusz wspierający lokalne projekty ekologiczne.", totalReceived: "1 100 000 zł", projects: 1 },
+      { code: "prow", name: "PROW", org: "Program Rozwoju Obszarów Wiejskich", description: "Wsparcie rozwoju obszarów wiejskich — turystyka, infrastruktura, dziedzictwo.", totalReceived: "320 000 zł", projects: 1 },
+      { code: "inn",  name: "Fundusz Innowacji", org: "PARP / Narodowe Centrum Badań", description: "Wsparcie projektów cyfrowych i innowacyjnych w turystyce i kulturze.", totalReceived: "480 000 zł", projects: 1 },
+      { code: "nca",  name: "Granty NCN", org: "Narodowe Centrum Nauki", description: "Granty badawcze — m.in. inwentaryzacja gatunków na pustyni.", totalReceived: "180 000 zł", projects: 0 }
+    ],
+
+    // ---- Partnerzy / Sponsorzy ----
+    partners: [
+      // Instytucje publiczne
+      { id: "p_natura",   name: "Natura 2000",            tier: "platinum", category: "Instytucje", description: "Europejska sieć obszarów chronionych — pustynia jest częścią od 2008 r. (kod PLH120014). Współpraca przy monitoringu siedlisk, raportowanie do Komisji Europejskiej.", website: "https://natura2000.eea.europa.eu", since: 2008, logo: { kind: "leaf", colors: ["#3F5E32","#6E9A5C"] } },
+      { id: "p_malopolska", name: "Województwo Małopolskie", tier: "platinum", category: "Instytucje", description: "Regionalny patron i partner. Współfinansowanie projektów infrastrukturalnych i edukacyjnych. Promocja w materiałach turystycznych regionu.", website: "https://www.malopolska.pl", since: 2010, logo: { kind: "shield", colors: ["#C0392B","#FFD27A"] } },
+      { id: "p_klucze",   name: "Gmina Klucze",            tier: "platinum", category: "Instytucje", description: "Lokalny partner założycielski — pustynia leży na terenie gminy. Wspólne planowanie infrastruktury, zezwolenia, koordynacja imprez masowych.", website: "https://klucze.pl", since: 2003, logo: { kind: "key", colors: ["#8B5A2B","#F4A340"] } },
+      { id: "p_ndap",     name: "Nadleśnictwo Olkusz",     tier: "gold",     category: "Instytucje", description: "Lasy Państwowe — zarządzanie obszarami leśnymi otaczającymi pustynię. Wspólne projekty renaturyzacji.", website: "https://olkusz.katowice.lasy.gov.pl", since: 2014, logo: { kind: "tree", colors: ["#3F5E32","#A8C49B"] } },
+      { id: "p_rdo",      name: "RDOŚ Kraków",             tier: "gold",     category: "Instytucje", description: "Regionalna Dyrekcja Ochrony Środowiska — nadzór formalny nad obszarem Natura 2000.", website: "https://krakow.rdos.gov.pl", since: 2008, logo: { kind: "leaf", colors: ["#6E9A5C","#3F5E32"] } },
+
+      // Fundatorzy / Sponsorzy strategiczni
+      { id: "p_efrr",     name: "EFRR / Fundusze UE",      tier: "platinum", category: "Fundatorzy", description: "Główny fundator inwestycji infrastrukturalnych. Łącznie ponad 16,8 mln zł w projektach 2014–2026.", website: "https://www.funduszeeuropejskie.gov.pl", since: 2014, logo: { kind: "stars", colors: ["#003399","#FFCC00"] } },
+      { id: "p_life",     name: "LIFE+ Komisja Europ.",    tier: "gold",     category: "Fundatorzy", description: "Program ochrony klimatu — finansowanie czynnej ochrony siedlisk pustynnych. 1,2 mln zł od 2014.", website: "https://cinea.ec.europa.eu/programmes/life", since: 2014, logo: { kind: "leaf", colors: ["#6E9A5C","#FFCC00"] } },
+      { id: "p_nfos",     name: "NFOŚiGW",                 tier: "gold",     category: "Fundatorzy", description: "Narodowy Fundusz Ochrony Środowiska — 2,4 mln zł na infrastrukturę dla osób z niepełnosprawnościami.", website: "https://www.nfosigw.gov.pl", since: 2018, logo: { kind: "drop", colors: ["#4A9BC4","#234567"] } },
+      { id: "p_wfos",     name: "WFOŚiGW Małopolska",      tier: "silver",   category: "Fundatorzy", description: "Regionalny fundusz — 1,1 mln zł na monitoring przyrodniczy.", website: "https://www.wfos.krakow.pl", since: 2020, logo: { kind: "drop", colors: ["#A8C49B","#6E9A5C"] } },
+
+      // Media partnerzy
+      { id: "p_natgeo",   name: "National Geographic Polska", tier: "silver", category: "Media", description: "Patronat medialny nad warsztatami fotografii krajobrazu. Reportaże o pustyni w wydaniach drukowanych i online.", website: "https://www.national-geographic.pl", since: 2022, logo: { kind: "rect", colors: ["#FFCC00","#1F1F1F"] } },
+      { id: "p_focus",    name: "Focus / Focus Wiedza",    tier: "silver",   category: "Media", description: "Magazyn naukowo-popularny. Dwa duże reportaże o Pustyni Błędowskiej w 2023–2024.", website: "https://www.focus.pl", since: 2023, logo: { kind: "circle", colors: ["#C0392B","#1F1F1F"] } },
+      { id: "p_radio",    name: "Radio Kraków",            tier: "silver",   category: "Media", description: "Patronat radiowy nad cyklicznymi wydarzeniami — Inwazja Pustynna, Maraton, Perseidy.", website: "https://www.radiokrakow.pl", since: 2019, logo: { kind: "wave", colors: ["#F4A340","#C0392B"] } },
+      { id: "p_tvp3",     name: "TVP3 Kraków",             tier: "silver",   category: "Media", description: "Reportaże telewizyjne z największych imprez. Pełen patronat nad sezonem 2025.", website: "https://krakow.tvp.pl", since: 2020, logo: { kind: "rect", colors: ["#234567","#FFCC00"] } },
+
+      // Lokalni
+      { id: "p_olkuz",    name: 'Lokalna Grupa Działania „Nad Białą Przemszą"', tier: "bronze", category: "Lokalni", description: "Lokalna grupa działania w ramach PROW — wspólne projekty turystyczne i kulturalne dla mieszkańców regionu.", website: "https://lgd-przemsza.pl", since: 2016, logo: { kind: "rect", colors: ["#A8C49B","#3F5E32"] } },
+      { id: "p_pttkkr",   name: "PTTK Oddział Olkusz",     tier: "bronze",   category: "Lokalni", description: "Polskie Towarzystwo Turystyczno-Krajoznawcze — szkolenia przewodników, wytyczanie szlaków pieszych.", website: "https://www.pttk-olkusz.pl", since: 2012, logo: { kind: "circle", colors: ["#1F1F1F","#F4A340"] } },
+      { id: "p_studio",   name: "Drone Studio PL",         tier: "bronze",   category: "Lokalni", description: "Lokalne studio drone — partner technologiczny przy filmach promocyjnych i monitoringu z lotu ptaka.", website: "#", since: 2021, logo: { kind: "circle", colors: ["#4A9BC4","#1F1F1F"] } },
+      { id: "p_natfoto",  name: "Foto Express Olkusz",     tier: "bronze",   category: "Lokalni", description: "Studio fotograficzne — fotograf etatowy wszystkich naszych imprez od 2018 r.", website: "#", since: 2018, logo: { kind: "circle", colors: ["#F4A340","#8B5A2B"] } },
+      { id: "p_uagh",     name: "AGH — Wydz. Geol., Geofizyki i Ochrony Środ.", tier: "silver", category: "Naukowi", description: "Akademia Górniczo-Hutnicza w Krakowie — partner naukowy. Inwentaryzacja roślin, badania geologiczne.", website: "https://www.geol.agh.edu.pl", since: 2015, logo: { kind: "shield", colors: ["#C0392B","#1F1F1F"] } },
+      { id: "p_uj",       name: "Uniwersytet Jagielloński — Wydz. Biol.",   tier: "silver",   category: "Naukowi", description: "UJ Kraków — partner naukowy w badaniach awifauny i bezkręgowców. Cykliczne praktyki studenckie.", website: "https://biologia.uj.edu.pl", since: 2017, logo: { kind: "shield", colors: ["#234567","#FFCC00"] } }
+    ],
+
+    // ---- Aplikacje partnerskie (sample) ----
+    partnerApplications: [],
 
     prices: [
       { id: "pc1", category: "Bilety wstępu", name: "Bilet normalny", price: 15, unit: "os.", description: "Dorośli powyżej 18 lat", order: 1 },
@@ -370,19 +610,105 @@
       { id: "pc16", category: "Parking", name: "Rower / motocykl", price: 0, unit: "doba", description: "Bezpłatnie", order: 16 }
     ],
 
+    // ---- Strukturalne dane cennikowe — szczegółowe tabele ----
+    pricingDetailed: {
+      // Udostępnianie terenu
+      areaUsage: [
+        { no: 1,  name: "Impreza masowa",                                                              price: 4000, unit: "wydarzenie",   featured: true },
+        { no: 2,  name: "Impreza firmowa",                                                             price: 2500, unit: "wydarzenie" },
+        { no: 3,  name: "Trening sportowy z wykorzystaniem pojazdów",                                  price: 300,  unit: "pojazd" },
+        { no: 4,  name: "Przejazd turystyczny z wykorzystaniem pojazdów",                              price: 60,   unit: "pojazd",       footnote: "*" },
+        { no: 5,  name: "Loty widokowe i skoki spadochronowe",                                         price: 300,  unit: "przelot/zrzut" },
+        { no: 6,  name: "Sesja zdjęciowa w celach reklamowych",                                        price: 700,  unit: "sesja",        group: "Sesje zdjęciowe" },
+        { no: 6, name: "Sesja zdjęciowa w celach niekomercyjnych",                                     price: 300,  unit: "sesja",        group: "Sesje zdjęciowe" },
+        { no: 6, name: "Sesja zdjęciowa uroczystości rodzinnych",                                      price: 100,  unit: "sesja",        group: "Sesje zdjęciowe" },
+        { no: 6, name: "Sesja zdjęciowa w celach prasowych i reportażowych",                           price: 0,    unit: "—",            group: "Sesje zdjęciowe", priceLabel: "bez opłat" },
+        { no: 7, name: "Filmy komercyjne, fabularne i reklamowe",                                      price: 2500, unit: "produkcja",    group: "Działalność filmowa" },
+        { no: 7, name: "Filmy rozrywkowe i teledyski",                                                 price: 1000, unit: "produkcja",    group: "Działalność filmowa" },
+        { no: 7, name: "Filmy edukacyjne i rekreacyjne",                                               price: 300,  unit: "produkcja",    group: "Działalność filmowa" },
+        { no: 7, name: "Filmy promocyjne i reportaże",                                                 price: 0,    unit: "—",            group: "Działalność filmowa", priceLabel: "bez opłat" },
+        { no: 8,  name: "Używanie bezzałogowych statków powietrznych (drony)",                         price: 500,  unit: "lot/dzień" },
+        { no: 9, name: "Nocleg — do 10 osób",                                                          price: 50,   unit: "nocleg",       group: "Biwakowanie" },
+        { no: 9, name: "Rozpalenie ogniska/grilla w wyznaczonym miejscu",                              price: 50,   unit: "ognisko",      group: "Biwakowanie" },
+        { no: 9, name: "Rozpalenie ogniska/grilla — dodatkowo do aktywności z poz. 1–16",              price: 100,  unit: "ognisko",      group: "Biwakowanie" },
+        { no: 9, name: "Rozpalenie ogniska/grilla w miejscu innym niż wyznaczone",                     price: 300,  unit: "ognisko",      group: "Biwakowanie" },
+        { no: 10, name: "Wynajęcie altany turystycznej na wyłączność",                                 price: 250,  unit: "altana/dzień" },
+        { no: 11, name: "Wynajęcie przewodnika turystycznego",                                         price: 300,  unit: "wycieczka" },
+        { no: 12, name: "Wynajęcie powierzchni do 50 m² pod usługi handlowe",                          price: 200,  unit: "1 dzień" },
+        { no: 13, name: "Wynajęcie długoterminowe (>30 dni do 3 lat) — 1 m² pod usługi handlowe",      price: 1,    unit: "1 m²/dzień" },
+        { no: 14, name: "Udostępnienie mediów — wydarzenia do 500 osób",                               price: 50,   unit: "wydarzenie",   group: "Media (opcja)" },
+        { no: 14, name: "Udostępnienie mediów — wydarzenia powyżej 500 osób",                          price: 100,  unit: "wydarzenie",   group: "Media (opcja)" },
+        { no: 15, name: "Wynajęcie miejsca postojowego na wyłączność",                                 price: 50,   unit: "doba" },
+        { no: 16, name: "Inne rodzajowo podobne imprezy/typy aktywności (poza pkt. 1–15)",             price: 500,  unit: "wydarzenie" }
+      ],
+      areaUsageNote: "* Pozycja 4: stawka za pojedynczy pojazd. Wszystkie ceny brutto. Ceny mogą podlegać negocjacji dla wydarzeń długoterminowych.",
+
+      // Parking
+      parking: [
+        { name: "Pierwsze 15 minut",                  price: 0,  unit: "—",   priceLabel: "Darmowe", featured: true },
+        { name: "Samochody osobowe i motocykle",      price: 5,  unit: "godz." },
+        { name: "Autobusy",                           price: 15, unit: "godz." },
+        { name: "Kampery i przyczepy kempingowe",     price: 15, unit: "godz." }
+      ],
+
+      // Toilets
+      toilets: {
+        price: 3,
+        currency: "zł",
+        payment: "karta / gotówka",
+        locations: [
+          {
+            name: "Toaleta przy kasach parkingowych",
+            availability: "Cały rok",
+            type: "męska / damska / dla niepełnosprawnych",
+            features: [
+              "Przewijak dla dzieci w toalecie dla niepełnosprawnych",
+              "Dzieci do 120 cm wzrostu — bez opłat",
+              "Płatność BLIK / karta / gotówka"
+            ]
+          },
+          {
+            name: "Toaleta przy strefie Food Truck Park",
+            availability: "Cały rok poza sezonem zimowym",
+            type: "męska / damska / dla niepełnosprawnych",
+            features: [
+              "Czynna 8:00 – 22:00 w sezonie",
+              "Płatność BLIK / karta / gotówka"
+            ]
+          }
+        ]
+      }
+    },
+
     poi: [
-      { id: "poi1", name: "Punkt widokowy Czubatka", type: "viewpoint", x: 65, y: 35, description: "Najwyższy punkt pustyni — 382 m n.p.m. Panorama 360°." },
-      { id: "poi2", name: "Parking główny", type: "parking", x: 25, y: 60, description: "200 miejsc, monitoring." },
-      { id: "poi3", name: "Centrum informacji", type: "info", x: 28, y: 58, description: "Bilety, mapy, pamiątki, toalety." },
-      { id: "poi4", name: "Strefa rodzinna", type: "family", x: 35, y: 55, description: "Plac zabaw, dmuchańce, food trucki." },
-      { id: "poi5", name: "Punkt widokowy Wschód", type: "viewpoint", x: 80, y: 50, description: "Idealne miejsce na wschody słońca." },
-      { id: "poi6", name: "Wypożyczalnia rowerów", type: "rental", x: 30, y: 62, description: "Rowery MTB i elektryczne." },
-      { id: "poi7", name: "Stajnia pustynna", type: "horse", x: 45, y: 75, description: "Przejażdżki konne i wielbłądy." },
-      { id: "poi8", name: "Pole namiotowe", type: "camping", x: 55, y: 78, description: "Camping z prysznicami i kuchnią." },
-      { id: "poi9", name: "Strefa quadów", type: "quad", x: 70, y: 65, description: "Tor crossowy 2,4 km." },
-      { id: "poi10", name: "Toalety publiczne #1", type: "wc", x: 32, y: 60, description: "Dostępne 24/7" },
-      { id: "poi11", name: "Toalety publiczne #2", type: "wc", x: 65, y: 40, description: "Dostępne w sezonie" },
-      { id: "poi12", name: "Strefa fotograficzna", type: "photo", x: 50, y: 30, description: "Najpiękniejsze ujęcia wydm." }
+      { id: "poi1", name: "Punkt widokowy Czubatka", type: "viewpoint", x: 65, y: 35, description: "Najwyższy punkt pustyni — 382 m n.p.m. Panorama 360°. Idealne na wschody słońca i Mleczną Drogę.", lat: 50.346, lon: 19.487, openHours: "24/7", icon: "🟡" },
+      { id: "poi2", name: "Parking główny", type: "parking", x: 25, y: 60, description: "200 miejsc, monitoring, parkomat. Pierwsze 15 min gratis.", lat: 50.341, lon: 19.482, openHours: "24/7", icon: "🅿" },
+      { id: "poi3", name: "Centrum informacji", type: "info", x: 28, y: 58, description: "Bilety, mapy, pamiątki, toalety. Personel mówi PL/EN/DE.", lat: 50.342, lon: 19.483, openHours: "8:00-20:00", icon: "ℹ" },
+      { id: "poi4", name: "Strefa rodzinna", type: "family", x: 35, y: 55, description: "Plac zabaw, dmuchańce, food trucki, animacje dla dzieci w sezonie.", lat: 50.343, lon: 19.484, openHours: "9:00-19:00", icon: "👨‍👩‍👧" },
+      { id: "poi5", name: "Punkt widokowy Wschód", type: "viewpoint", x: 80, y: 50, description: "Drugi co do wysokości punkt — 365 m. Idealne miejsce na wschody słońca, mniej zatłoczone.", lat: 50.344, lon: 19.495, openHours: "24/7", icon: "🟡" },
+      { id: "poi6", name: "Wypożyczalnia rowerów", type: "rental", x: 30, y: 62, description: "Rowery MTB, gravel, miejskie i e-bike. Kaski w cenie.", lat: 50.341, lon: 19.483, openHours: "8:30-18:00", icon: "🚴" },
+      { id: "poi7", name: "Stajnia pustynna", type: "horse", x: 45, y: 75, description: "Przejażdżki konne i wielbłądy. Sesje fotograficzne w sezonie.", lat: 50.339, lon: 19.487, openHours: "9:00-17:00", icon: "🐎" },
+      { id: "poi8", name: "Pole namiotowe", type: "camping", x: 55, y: 78, description: "Camping z prysznicami, kuchnią letnią i wyznaczonym paleniskiem. Wymaga rezerwacji.", lat: 50.338, lon: 19.490, openHours: "Sezon V-IX", icon: "⛺" },
+      { id: "poi9", name: "Strefa quadów", type: "quad", x: 70, y: 65, description: "Tor crossowy 2,4 km. Quady z instruktorem dla osób 16+.", lat: 50.341, lon: 19.493, openHours: "10:00-18:00", icon: "🏍" },
+      { id: "poi10", name: "Toalety przy kasach", type: "wc", x: 32, y: 60, description: "Cały rok. Płatność BLIK/karta/gotówka — 3 zł. Dzieci do 120 cm gratis.", lat: 50.342, lon: 19.483, openHours: "24/7", icon: "🚻" },
+      { id: "poi11", name: "Toalety Food Truck", type: "wc", x: 65, y: 40, description: "Cały rok poza zimą. Czynne 8:00-22:00 w sezonie.", lat: 50.345, lon: 19.490, openHours: "8:00-22:00", icon: "🚻" },
+      { id: "poi12", name: "Punkt fotograficzny — Wydma Główna", type: "photo", x: 50, y: 30, description: "Najpiękniejsze ujęcia wydm. Idealna złota godzina i wschody.", lat: 50.346, lon: 19.487, openHours: "24/7", icon: "📷", photoTips: { bestTime: "Wschód i zachód słońca", lens: "16-35mm szerokokątny", tip: "Ustaw się 100m przed wydmą — załapiesz całą perspektywę" } },
+
+      // ===== Nowe POI =====
+      { id: "poi13", name: "Food Truck Park", type: "food", x: 38, y: 56, description: "5-8 food trucków w sezonie: burgery, pierogi, lody, kawa. Stoły i parasole.", lat: 50.343, lon: 19.485, openHours: "11:00-21:00", icon: "🍔" },
+      { id: "poi14", name: 'Restauracja „Sahara Polska"', type: "food", x: 27, y: 65, description: "Tradycyjna kuchnia regionalna, dania mięsne i wegańskie. Bezpłatne WiFi.", lat: 50.339, lon: 19.481, openHours: "12:00-22:00", icon: "🍴" },
+      { id: "poi15", name: "Wieża widokowa Sokole Oko", type: "viewpoint", x: 75, y: 60, description: "Drewniana wieża 18 m wysokości. Lornetki w cenie wstępu, panorama na bory i pustynię.", lat: 50.339, lon: 19.493, openHours: "8:00-20:00", icon: "🗼" },
+      { id: "poi16", name: "Centrum Edukacyjne", type: "education", x: 30, y: 56, description: "Wystawa o historii, geologii i przyrodzie pustyni. Wstęp w bilecie głównym. Sale warsztatowe.", lat: 50.343, lon: 19.483, openHours: "9:00-17:00", icon: "🎓" },
+      { id: "poi17", name: "Strefa WiFi #1", type: "wifi", x: 30, y: 60, description: "Bezpłatne WiFi w okolicy parkingu i centrum. Sieć: PustyniaB-Free.", lat: 50.342, lon: 19.482, openHours: "24/7", icon: "📶" },
+      { id: "poi18", name: "Strefa WiFi #2", type: "wifi", x: 40, y: 55, description: "Bezpłatne WiFi przy strefie rodzinnej i Food Truck Park.", lat: 50.343, lon: 19.486, openHours: "11:00-22:00", icon: "📶" },
+      { id: "poi19", name: "Punkt pierwszej pomocy", type: "medical", x: 33, y: 58, description: "AED, apteczka, dyżurny ratownik w sezonie letnim. Tel. ratunkowy: 500 123 456.", lat: 50.342, lon: 19.484, openHours: "Sezon V-IX 9-19", icon: "⚕" },
+
+      // ===== Punkty fotograficzne (rozbudowane) =====
+      { id: "poi20", name: "Punkt foto — Spirala Wydm", type: "photo", x: 60, y: 38, description: "Niesamowite wzory piasku tworzące naturalną spiralę.", lat: 50.346, lon: 19.490, openHours: "24/7", icon: "📷", photoTips: { bestTime: "Świt (1h po wschodzie) i godziny popołudniowe", lens: "70-200mm telezoom", tip: "Cienie podkreślają fakturę — wybierz słońce z boku" } },
+      { id: "poi21", name: "Punkt foto — Drone Spot Czubatka", type: "photo", x: 67, y: 33, description: "Najlepsze miejsce do startu drona. Brak drzew i przeszkód.", lat: 50.347, lon: 19.488, openHours: "Wymaga zezwolenia", icon: "🚁", photoTips: { bestTime: "Złota godzina, zachód", lens: "Dron z kamerą min. 4K", tip: "Zarejestruj lot zgodnie z przepisami PAŻP. Opłata 500 zł/dzień." } },
+      { id: "poi22", name: "Punkt foto — Wschód nad lasem", type: "photo", x: 78, y: 25, description: "Słońce wschodzi dokładnie zza linii lasu — magiczny widok.", lat: 50.348, lon: 19.494, openHours: "24/7", icon: "📷", photoTips: { bestTime: "20-30 min przed wschodem słońca", lens: "24-70mm uniwersalny", tip: "Ekspozycja wielokrotna — utrzymaj detal w jasnościach" } },
+      { id: "poi23", name: "Punkt foto — Mleczna Droga", type: "photo", x: 50, y: 50, description: "Środek pustyni — minimalne zanieczyszczenie świetlne. Najlepiej w lipcu-wrześniu.", lat: 50.343, lon: 19.487, openHours: "Po zmierzchu", icon: "🌌", photoTips: { bestTime: "23:00-03:00 (bez Księżyca)", lens: "Szerokokątny f/1.4-2.8", tip: "ISO 3200, 20s ekspozycji, ostrość ręczna na nieskończoność" } },
+      { id: "poi24", name: "Punkt foto — Sandboarder Spot", type: "photo", x: 55, y: 45, description: "Idealne miejsce na zdjęcia akcyjne sandboardingu — wysoki, gładki stok.", lat: 50.344, lon: 19.488, openHours: "Sezon", icon: "📷", photoTips: { bestTime: "Popołudnie (cień podkreśla ruch)", lens: "70-200mm + szybki AF", tip: "Tryb seryjny min. 10kl/s, ISO 400-800" } }
     ],
 
     trails: [
@@ -392,8 +718,218 @@
       { id: "t4", name: "Szlak ekstremalny czarny", color: "#1F1F1F", length: "18,6 km", difficulty: "trudny", time: "5h", points: "30,62 45,75 55,78 70,65 80,50 65,35 50,30 35,30 25,40 25,60 30,62" }
     ],
 
+    bikeTrails: [
+      {
+        id: "bt1",
+        name: "Pętla wydmowa",
+        color: "#6E9A5C",
+        difficulty: "łatwy",
+        length: 8.4,
+        elevationGain: 65,
+        time: "45 min - 1h",
+        surface: "Twarda nawierzchnia + piasek",
+        startPoint: "Parking główny",
+        description: "Idealna trasa dla początkujących i rodzin z dziećmi. Prowadzi obrzeżem pustyni przez utwardzone ścieżki, omijając najbardziej miękkie odcinki piasku. W trakcie trasy mijasz dwa punkty widokowe i strefę rodzinną.",
+        highlights: ["Punkt widokowy Czubatka", "Strefa rodzinna", "Centrum informacji"],
+        points: "30,62 35,55 50,30 65,35 70,50 60,55 45,65 30,62",
+        elevation: [318, 322, 340, 358, 368, 372, 365, 350, 332, 320, 318],
+        recommended: ["dzieci", "rodziny", "MTB"]
+      },
+      {
+        id: "bt2",
+        name: "Trasa Czerwona — przez serce pustyni",
+        color: "#C0392B",
+        difficulty: "średni",
+        length: 14.6,
+        elevationGain: 145,
+        time: "1h 30min - 2h",
+        surface: "Mieszana — szuter, piasek, single-track",
+        startPoint: "Wypożyczalnia rowerów",
+        description: "Klasyczna trasa średniozaawansowana, przebiegająca przez najbardziej charakterystyczne miejsca pustyni. Wymaga roweru MTB lub gravelowego z szerszymi oponami. Trzy sekcje przez czysty piasek (~2 km łącznie).",
+        highlights: ["Wydmy parabolicze", "Niecka deflacyjna", "Punkt fotograficzny", "Punkt widokowy Wschód"],
+        points: "30,62 25,55 35,40 50,30 70,30 80,40 80,55 65,70 45,75 30,68 30,62",
+        elevation: [320, 325, 345, 365, 380, 378, 360, 340, 325, 318, 322, 320],
+        recommended: ["MTB", "gravel", "doświadczeni"]
+      },
+      {
+        id: "bt3",
+        name: "Maraton Pustynny — szlak treningowy",
+        color: "#1F1F1F",
+        difficulty: "trudny",
+        length: 28.2,
+        elevationGain: 380,
+        time: "3h - 5h",
+        surface: "MTB — głównie piasek i szuter",
+        startPoint: "Klucze, wjazd główny",
+        description: "Pełna pętla okołopustynna dla doświadczonych rowerzystów. Trasa wymaga dobrej kondycji i sprzętu MTB. Pokrywa się częściowo ze szlakiem maratońskim. UWAGA: weź minimum 2L wody i przekąski!",
+        highlights: ["Wszystkie szczyty wydm", "Stara wieża obserwacyjna", "Granica las/pustynia", "Pole namiotowe"],
+        points: "30,62 20,50 25,35 40,25 55,20 70,25 85,35 88,55 80,70 65,80 50,82 35,78 25,70 20,60 30,62",
+        elevation: [320, 335, 360, 382, 378, 360, 348, 340, 325, 320, 332, 350, 365, 348, 320],
+        recommended: ["MTB", "trening", "ekstremum"]
+      },
+      {
+        id: "bt4",
+        name: "Family Loop — trasa rodzinna",
+        color: "#F4A340",
+        difficulty: "bardzo łatwy",
+        length: 3.6,
+        elevationGain: 18,
+        time: "20 - 40 min",
+        surface: "Utwardzona, dostępna dla dzieci",
+        startPoint: "Strefa rodzinna",
+        description: "Krótka, w pełni utwardzona pętla idealna dla najmłodszych rowerzystów (5+) i osób na rowerach miejskich. Bez piaszczystych odcinków, z tablicami edukacyjnymi co 500 m.",
+        highlights: ["Plac zabaw", "5 tablic edukacyjnych", "Strefa fotograficzna"],
+        points: "32,60 38,55 45,55 50,58 50,65 42,68 35,65 32,60",
+        elevation: [318, 322, 326, 330, 328, 322, 320, 318],
+        recommended: ["dzieci", "rower miejski", "rodziny"]
+      },
+      {
+        id: "bt5",
+        name: "Trasa zachodnia — leśne ścieżki",
+        color: "#4A9BC4",
+        difficulty: "średni",
+        length: 11.8,
+        elevationGain: 95,
+        time: "1h - 1h 30min",
+        surface: "Single-track leśny + szuter",
+        startPoint: "Parking zachodni",
+        description: "Trasa głównie przez bory sosnowe otaczające pustynię, z wjazdem na wydmy w 2 punktach. Idealna w upalne dni — większość pod cieniem drzew.",
+        highlights: ["Leśne single-tracki", "Pola lessowe", "Punkt widokowy Zachód"],
+        points: "20,50 18,40 25,30 38,28 45,35 40,48 28,55 20,50",
+        elevation: [328, 340, 352, 358, 362, 348, 332, 328],
+        recommended: ["MTB", "leśne ścieżki", "lato"]
+      },
+      {
+        id: "bt6",
+        name: "Sunset Tour — wieczorny przejazd",
+        color: "#E8841E",
+        difficulty: "łatwy",
+        length: 6.5,
+        elevationGain: 42,
+        time: "40 min - 1h",
+        surface: "Mieszana — utwardzona + krótkie odcinki piasku",
+        startPoint: "Parking główny (start 1h przed zachodem)",
+        description: "Specjalna trasa zaplanowana tak, by wjechać na najwyższy punkt widokowy dokładnie podczas zachodu słońca. Dostępna z usługą przewodnika i e-bike.",
+        highlights: ["Czubatka — wschód słońca", "Strefa fotograficzna", "Powrót przez podświetlone ścieżki"],
+        points: "30,62 40,55 55,40 65,35 70,42 60,55 45,62 30,62",
+        elevation: [318, 328, 358, 380, 365, 340, 328, 318],
+        recommended: ["fotografowie", "pary", "e-bike"]
+      }
+    ],
+
     messages: [],
     subscribers: [],
+
+    // ---- Działy kontaktowe ----
+    departments: [
+      {
+        id: "general",
+        name: "Informacja ogólna",
+        description: "Pytania ogólne, organizacja, zwiedzanie",
+        email: "kontakt@pustynia-bledowska.eu",
+        phone: "+48 32 642 03 02",
+        person: "Anna Nowak",
+        role: "Specjalistka ds. obsługi gości",
+        icon: "ℹ️",
+        responseTime: "24h"
+      },
+      {
+        id: "tickets",
+        name: "Bilety i rezerwacje",
+        description: "Bilety online, grupy, karnety, faktury",
+        email: "bilety@pustynia-bledowska.eu",
+        phone: "+48 32 642 03 03",
+        person: "Marek Kowalski",
+        role: "Kierownik kasy biletowej",
+        icon: "🎟",
+        responseTime: "12h"
+      },
+      {
+        id: "events",
+        name: "Wydarzenia i grupy",
+        description: "Organizacja imprez, grup szkolnych, integracji firmowych",
+        email: "wydarzenia@pustynia-bledowska.eu",
+        phone: "+48 32 642 03 04",
+        person: "Joanna Wiśniewska",
+        role: "Koordynatorka wydarzeń",
+        icon: "🎉",
+        responseTime: "24h"
+      },
+      {
+        id: "press",
+        name: "Media / prasa",
+        description: "Akredytacje, materiały prasowe, wywiady, sesje filmowe",
+        email: "prasa@pustynia-bledowska.eu",
+        phone: "+48 32 642 03 05",
+        person: "Tomasz Lewandowski",
+        role: "Rzecznik prasowy",
+        icon: "📰",
+        responseTime: "48h"
+      },
+      {
+        id: "sponsorship",
+        name: "Współpraca / sponsoring",
+        description: "Partnerstwa, sponsoring, oferty B2B",
+        email: "wspolpraca@pustynia-bledowska.eu",
+        phone: "+48 32 642 03 06",
+        person: "Piotr Dąbrowski",
+        role: "Dyrektor marketingu",
+        icon: "🤝",
+        responseTime: "72h"
+      },
+      {
+        id: "volunteer",
+        name: "Wolontariat",
+        description: "Pomoc przy wydarzeniach, programy edukacyjne, inwentaryzacja",
+        email: "wolontariat@pustynia-bledowska.eu",
+        phone: "+48 32 642 03 07",
+        person: "Magdalena Kaczmarek",
+        role: "Koordynatorka wolontariatu",
+        icon: "🙋",
+        responseTime: "1 tydz."
+      },
+      {
+        id: "complaint",
+        name: "Reklamacje i skargi",
+        description: "Zwroty, problemy z usługami, sugestie",
+        email: "reklamacje@pustynia-bledowska.eu",
+        phone: "+48 32 642 03 08",
+        person: "Biuro Obsługi Klienta",
+        role: "Zespół 3 osób",
+        icon: "⚠️",
+        responseTime: "Zgodnie z regulaminem (30 dni)"
+      },
+      {
+        id: "admin",
+        name: "Administracja",
+        description: "Zarząd, sprawy formalne, oficjalne",
+        email: "biuro@pustynia-bledowska.eu",
+        phone: "+48 32 642 03 09",
+        person: "Sekretariat zarządu",
+        role: "",
+        icon: "🏛",
+        responseTime: "5 dni roboczych"
+      }
+    ],
+
+    // ---- FAQ ----
+    faq: [
+      { id: "f1", q: "Czy w pustyni jest dużo do chodzenia?", a: "Mamy szlaki o długości od 1,5 do 18,6 km. Najpopularniejszy szlak edukacyjny ma 7,2 km i jest dostępny dla rodzin z dziećmi oraz osób z ograniczoną mobilnością.", category: "Zwiedzanie" },
+      { id: "f2", q: "Czy można wjechać na pustynię samochodem?", a: "Nie. Pustynia to rezerwat Natura 2000 — wjazd pojazdami jest zabroniony. Mamy duży, wygodny parking 200 m od wejścia. Wyjątek to autoryzowane pojazdy serwisowe i wojskowe.", category: "Dojazd" },
+      { id: "f3", q: "Czy psy są mile widziane?", a: "Tak! Psy są mile widziane na smyczy. Prosimy o sprzątanie po pupilach. W okresie lęgowym ptaków (kwiecień–czerwiec) obowiązują dodatkowe ograniczenia w niektórych strefach.", category: "Zwiedzanie" },
+      { id: "f4", q: "Co warto zabrać ze sobą?", a: "Latem: woda (min. 1,5 l/os.), nakrycie głowy, krem z filtrem UV, wygodne buty zamknięte (gorący piasek!). Zimą: ciepła odzież, bo wiatr na pustyni potrafi być dotkliwy. Aparat fotograficzny — zawsze!", category: "Zwiedzanie" },
+      { id: "f5", q: "Czy są toalety i punkty gastronomiczne?", a: "Mamy 2 zespoły toalet w terenie (3 zł). W Centrum Informacji znajduje się kawiarnia, a w sezonie letnim także Food Truck Park (5–8 truckujów). W pobliżu są też restauracje regionalne w Kluczach.", category: "Infrastruktura" },
+      { id: "f6", q: "Jak najlepiej dojechać?", a: "**Samochodem:** z A4, zjazd Olkusz, dalej DW791 do Klucz. Z Krakowa ~1h, z Katowic ~30 min.\n**Pociągiem:** stacja Klucze, dalej 2 km pieszo lub taxi.\n**Autobusem:** linie z Olkusza i Dąbrowy Górniczej.", category: "Dojazd" },
+      { id: "f7", q: "Czy są zniżki dla grup szkolnych?", a: "Tak! Grupy szkolne (powyżej 10 uczniów) płacą 5 zł/os. + 1 opiekun gratis na 10 uczniów. Oferujemy też dedykowane lekcje terenowe z naszymi edukatorami.", category: "Bilety" },
+      { id: "f8", q: "Czy można nocować na pustyni?", a: "Tak — mamy oficjalne pole namiotowe (50 zł / nocleg do 10 osób). Dzikie biwakowanie jest zabronione (rezerwat). Na polu są prysznice, kuchnia letnia i miejsce na ognisko.", category: "Infrastruktura" },
+      { id: "f9", q: "Co zrobić w razie wypadku?", a: "Zadzwoń 112 (telefon alarmowy) lub do naszego dyżurnego: 500 123 456 (24/7). Mamy patrol ratowniczy w sezonie letnim, AED w Centrum Informacji oraz w pojazdach patrolujących.", category: "Bezpieczeństwo" },
+      { id: "f10", q: "Czy organizujecie urodziny / imprezy firmowe?", a: "Oczywiście! Oferujemy pakiety eventowe od 500 zł. W ofercie: warsztaty, integracja, jazda quadami, wielbłądy, food trucki, namiot eventowy. Skontaktuj się z naszym działem wydarzeń.", category: "Wydarzenia" },
+      { id: "f11", q: "Czy potrzebuję rezerwacji?", a: "Bilety wstępu można kupić bezpośrednio w kasach (8:00–20:00 w sezonie). Rezerwacja jest wymagana dla grup powyżej 10 osób, wynajmu altany, sesji zdjęciowych i wynajmu terenu.", category: "Bilety" },
+      { id: "f12", q: "Czy korzystam z roweru elektrycznego?", a: "Tak! W naszej wypożyczalni mamy 12 e-bike z baterią starczającą na 80 km jazdy. Cena: 80 zł/godz., 250 zł/dzień. Idealne na trasę Maraton Pustynny.", category: "Atrakcje" },
+      { id: "f13", q: "Czy w sezonie zimowym jest otwarte?", a: "Tak — pustynia jest otwarta cały rok! Sezon zimowy (XI–III): 9:00–16:00. Atrakcje sezonowe (quady, wielbłądy, sandboarding) są ograniczone, ale spacery i fotografia w zimowej scenerii są niezapomnianą atrakcją.", category: "Zwiedzanie" },
+      { id: "f14", q: "Czy mogę latać dronem?", a: "Tak, ale wymaga zezwolenia (500 zł/dzień). Skontaktuj się z biurem co najmniej 7 dni przed planowanym lotem. Zarejestruj lot zgodnie z przepisami PAŻP.", category: "Atrakcje" },
+      { id: "f15", q: "Co z osobami z niepełnosprawnościami?", a: 'Trasa edukacyjna 7,2 km jest dostępna dla wózków. Mamy toalety przystosowane, miejsca parkingowe i możemy wypożyczyć wózek terenowy. Projekt „Pustynia bez barier" trwa do 2026 r.', category: "Dostępność" }
+    ],
 
     users: [
       { id: "u1", username: "admin", password: "admin123", role: "admin", name: "Administrator" }
@@ -417,6 +953,20 @@
       Object.keys(SEED).forEach(k => {
         if (!(k in this._data)) this._data[k] = SEED[k];
       });
+
+      // Seed reactions on first run (only if no reactions data exists yet)
+      if (!localStorage.getItem("pustynia_reactions_v1")) {
+        const seedReactions = {
+          n1: { heart: 47, thumb: 23, love: 12, fire: 8, clap: 31 },
+          n2: { heart: 92, thumb: 18, love: 64, fire: 4, clap: 22 },
+          n3: { heart: 156, thumb: 87, love: 41, fire: 73, clap: 102 },
+          n4: { heart: 28, thumb: 19, love: 7, fire: 2, clap: 15 },
+          n5: { heart: 14, thumb: 11, love: 8, fire: 3, clap: 9 },
+          n6: { heart: 9, thumb: 7, love: 4, fire: 1, clap: 5 }
+        };
+        localStorage.setItem("pustynia_reactions_v1", JSON.stringify(seedReactions));
+      }
+
       return this._data;
     },
 
@@ -507,6 +1057,57 @@
     },
     nextEvent() { return this.upcomingEvents()[0]; },
     photosByFolder(folderId) { return this.all("photos").filter(p => p.folderId === folderId); },
+    photosByEvent(eventId) { return this.all("photos").filter(p => p.eventId === eventId); },
+    photosWithEvents() { return this.all("photos").filter(p => p.eventId); },
+
+    // ----- Reactions (per news/event item) -----
+    reactionsKey: "pustynia_reactions_v1",
+    userReactionsKey: "pustynia_user_reactions_v1",
+
+    getReactions(itemId) {
+      const raw = localStorage.getItem(this.reactionsKey);
+      const all = raw ? JSON.parse(raw) : {};
+      return all[itemId] || { heart: 0, thumb: 0, love: 0, fire: 0, clap: 0 };
+    },
+
+    getUserReaction(itemId) {
+      const raw = localStorage.getItem(this.userReactionsKey);
+      const all = raw ? JSON.parse(raw) : {};
+      return all[itemId] || null;
+    },
+
+    toggleReaction(itemId, type) {
+      const raw = localStorage.getItem(this.reactionsKey);
+      const all = raw ? JSON.parse(raw) : {};
+      const current = all[itemId] || { heart: 0, thumb: 0, love: 0, fire: 0, clap: 0 };
+
+      const userRaw = localStorage.getItem(this.userReactionsKey);
+      const userAll = userRaw ? JSON.parse(userRaw) : {};
+      const previousUser = userAll[itemId];
+
+      // If user already reacted with this type — toggle off
+      if (previousUser === type) {
+        current[type] = Math.max(0, (current[type] || 0) - 1);
+        delete userAll[itemId];
+      } else {
+        // If they reacted with another type — switch
+        if (previousUser) {
+          current[previousUser] = Math.max(0, (current[previousUser] || 0) - 1);
+        }
+        current[type] = (current[type] || 0) + 1;
+        userAll[itemId] = type;
+      }
+
+      all[itemId] = current;
+      localStorage.setItem(this.reactionsKey, JSON.stringify(all));
+      localStorage.setItem(this.userReactionsKey, JSON.stringify(userAll));
+      return { counts: current, userReaction: userAll[itemId] || null };
+    },
+
+    totalReactions(itemId) {
+      const r = this.getReactions(itemId);
+      return Object.values(r).reduce((s, n) => s + n, 0);
+    },
 
     // ----- Auth -----
     login(username, password) {

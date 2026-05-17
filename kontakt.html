@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Kontakt — Pustynia Błędowska</title>
-<meta name="description" content="Skontaktuj się z nami. Telefon, email, adres, formularz kontaktowy, FAQ.">
+<meta name="description" content="Skontaktuj się z nami — 8 działów, telefon, email, formularz, FAQ, mapa siedziby">
 <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
 <link rel="stylesheet" href="assets/css/main.css">
 <link rel="stylesheet" href="assets/css/header.css">
@@ -21,33 +21,46 @@
         <a href="index.html">Strona główna</a> <span>›</span> <span>Kontakt</span>
       </div>
       <h1>Kontakt</h1>
-      <p class="lead">Masz pytania? Chętnie pomożemy! Wybierz najwygodniejszą formę kontaktu.</p>
+      <p class="lead">Masz pytania? Wybierz dział, do którego chcesz się odezwać. Mamy dedykowany zespół do każdego rodzaju spraw — od ogólnych pytań, przez bilety, wydarzenia i media, aż po wolontariat.</p>
     </div>
   </section>
 
+  <!-- =================== DZIAŁY =================== -->
   <section class="section">
     <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Wybierz dział</span>
+        <h2>8 zespołów, 8 dedykowanych adresów</h2>
+        <p>Klikając w kartę, automatycznie ustawiamy dział w formularzu kontaktowym poniżej</p>
+      </div>
+      <div class="dept-grid" id="dept-grid"></div>
+    </div>
+  </section>
+
+  <section class="section dunes-bg">
+    <div class="container">
       <div class="contact-grid">
-        <!-- Info column -->
+        <!-- =================== INFO COLUMN =================== -->
         <div class="contact-info">
           <div class="contact-info-block reveal">
-            <h4>📞 Telefon</h4>
+            <h4>📞 Telefon centralny</h4>
             <p>Godziny pracy biura: Pn–Pt 8:00–16:00</p>
             <a href="tel:+48326420302">+48 32 642 03 02</a>
             <a href="tel:+48500123456" style="font-size:.85rem;color:var(--text-muted)">Awarie 24/7: +48 500 123 456</a>
           </div>
 
           <div class="contact-info-block reveal">
-            <h4>✉ Email</h4>
+            <h4>✉ Email główny</h4>
             <p>Odpowiadamy w ciągu 24h w dni robocze</p>
             <a href="mailto:kontakt@pustynia-bledowska.eu">kontakt@pustynia-bledowska.eu</a>
-            <a href="mailto:prasa@pustynia-bledowska.eu" style="font-size:.85rem">prasa@pustynia-bledowska.eu</a>
+            <a href="mailto:biuro@pustynia-bledowska.eu" style="font-size:.85rem">biuro@pustynia-bledowska.eu</a>
           </div>
 
           <div class="contact-info-block reveal">
-            <h4>📍 Adres</h4>
+            <h4>📍 Adres siedziby</h4>
             <p style="margin-bottom:8px">Centrum Informacji Turystycznej<br>ul. Pustynna 1<br>32-310 Klucze<br>woj. małopolskie</p>
             <a href="https://maps.google.com/?q=50.346,19.487" target="_blank" rel="noopener">📍 Otwórz w Google Maps</a>
+            <a href="https://www.openstreetmap.org/?mlat=50.346&mlon=19.487#map=16/50.346/19.487" target="_blank" rel="noopener" style="font-size:.85rem">🗺 Otwórz w OpenStreetMap</a>
           </div>
 
           <div class="contact-info-block reveal">
@@ -64,15 +77,25 @@
             <h4 style="color:#fff">🆘 Pomoc w terenie</h4>
             <p style="color:var(--sand-300)">W razie wypadku lub zagrożenia w terenie:</p>
             <a href="tel:112" style="color:var(--sun-400);font-size:1.4rem">112 — telefon alarmowy</a>
-            <a href="tel:601100300" style="color:var(--sand-200)">GOPR / TOPR: 601 100 300</a>
+            <a href="tel:500123456" style="color:var(--sand-200)">Dyżurny pustyni: 500 123 456</a>
+            <a href="tel:601100300" style="color:var(--sand-200);font-size:.85rem">GOPR / TOPR: 601 100 300</a>
           </div>
         </div>
 
-        <!-- Form & FAQ -->
+        <!-- =================== FORM =================== -->
         <div>
           <div class="contact-form-card reveal">
-            <h2 style="margin-bottom:24px">Napisz do nas</h2>
-            <form id="contact-form">
+            <h2 style="margin-bottom:8px">Napisz do nas</h2>
+            <p style="color:var(--text-muted);margin-bottom:24px;font-size:.9rem">
+              Wybrany dział: <strong id="selected-dept-label">Informacja ogólna</strong>
+              · Zwykle odpowiadamy w ciągu <strong id="selected-dept-time">24h</strong>
+            </p>
+            <form id="contact-form" novalidate>
+              <!-- Honeypot anti-spam (hidden from real users) -->
+              <div class="honeypot">
+                <label>Nie wypełniaj tego pola: <input type="text" id="website" tabindex="-1" autocomplete="off"></label>
+              </div>
+
               <div class="form-row">
                 <div class="form-group">
                   <label for="name">Imię i nazwisko *</label>
@@ -86,20 +109,12 @@
               <div class="form-row">
                 <div class="form-group">
                   <label for="phone">Telefon</label>
-                  <input type="tel" id="phone">
+                  <input type="tel" id="phone" placeholder="opcjonalnie">
                 </div>
                 <div class="form-group">
                   <label for="dept">Dział *</label>
                   <select id="dept" required>
                     <option value="">— Wybierz —</option>
-                    <option>Informacja ogólna</option>
-                    <option>Bilety i rezerwacje</option>
-                    <option>Wydarzenia i grupy</option>
-                    <option>Współpraca / sponsoring</option>
-                    <option>Media / prasa</option>
-                    <option>Wolontariat</option>
-                    <option>Reklamacja</option>
-                    <option>Inne</option>
                   </select>
                 </div>
               </div>
@@ -109,9 +124,22 @@
               </div>
               <div class="form-group">
                 <label for="message">Wiadomość *</label>
-                <textarea id="message" rows="6" required minlength="10"></textarea>
-                <small class="help">Min. 10 znaków</small>
+                <textarea id="message" rows="5" required minlength="10"></textarea>
+                <small class="help">Min. 10 znaków · <span id="char-count">0</span> znaków</small>
               </div>
+
+              <!-- Math Captcha -->
+              <div class="form-group">
+                <label>Weryfikacja <span style="color:var(--text-muted);font-weight:400">(zabezpieczenie przed botami)</span></label>
+                <div class="captcha-wrap">
+                  <div class="captcha-question" id="captcha-q">2 + 7</div>
+                  <input type="text" class="captcha-input" id="captcha-a" inputmode="numeric" placeholder="?" required>
+                  <button type="button" class="captcha-refresh" id="captcha-refresh" aria-label="Nowe pytanie">↻</button>
+                  <span class="captcha-result" id="captcha-result"></span>
+                </div>
+                <small class="help">Wpisz wynik działania matematycznego</small>
+              </div>
+
               <div class="form-group">
                 <label style="display:flex;gap:8px;font-weight:400;font-size:.85rem;align-items:flex-start">
                   <input type="checkbox" required style="width:auto;margin-top:4px">
@@ -121,68 +149,151 @@
               <button type="submit" class="btn btn-primary" style="width:100%">Wyślij wiadomość</button>
             </form>
           </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-          <!-- FAQ -->
-          <div style="margin-top: 64px">
-            <h2 style="margin-bottom: 24px">Najczęściej zadawane pytania</h2>
-            <div id="faq-root">
-              <div class="faq-item">
-                <button class="faq-q">Czy w pustyni jest dużo do chodzenia?</button>
-                <div class="faq-a"><div class="faq-a-inner"><p>Mamy szlaki o długości od 1,5 do 18,6 km. Najpopularniejszy szlak edukacyjny ma 7,2 km i jest dostępny dla rodzin z dziećmi oraz osób z ograniczoną mobilnością.</p></div></div>
-              </div>
-              <div class="faq-item">
-                <button class="faq-q">Czy można wjechać na pustynię samochodem?</button>
-                <div class="faq-a"><div class="faq-a-inner"><p>Nie. Pustynia to rezerwat Natura 2000 — wjazd pojazdami jest zabroniony. Mamy duży, wygodny parking 200 m od wejścia. Wyjątek to autoryzowane pojazdy serwisowe i wojskowe.</p></div></div>
-              </div>
-              <div class="faq-item">
-                <button class="faq-q">Czy psy są mile widziane?</button>
-                <div class="faq-a"><div class="faq-a-inner"><p>Tak! Psy są mile widziane na smyczy. Prosimy o sprzątanie po pupilach. W okresie lęgowym ptaków (kwiecień–czerwiec) obowiązują dodatkowe ograniczenia w niektórych strefach.</p></div></div>
-              </div>
-              <div class="faq-item">
-                <button class="faq-q">Co warto zabrać ze sobą?</button>
-                <div class="faq-a"><div class="faq-a-inner"><p>Latem: woda (min. 1,5 l/os.), nakrycie głowy, krem z filtrem UV, wygodne buty zamknięte (gorący piasek!). Zimą: ciepła odzież, bo wiatr na pustyni potrafi być dotkliwy. Aparat fotograficzny — zawsze!</p></div></div>
-              </div>
-              <div class="faq-item">
-                <button class="faq-q">Czy są toalety i punkty gastronomiczne?</button>
-                <div class="faq-a"><div class="faq-a-inner"><p>Mamy 3 zespoły toalet w terenie. W Centrum Informacji znajduje się kawiarnia, a w sezonie letnim także food trucki. W pobliżu są też restauracje regionalne w Kluczach.</p></div></div>
-              </div>
-              <div class="faq-item">
-                <button class="faq-q">Jak najlepiej dojechać?</button>
-                <div class="faq-a"><div class="faq-a-inner"><p><strong>Samochodem:</strong> z A4, zjazd Olkusz, dalej DW791 do Klucz. Z Krakowa ~1h, z Katowic ~30 min.<br><strong>Pociągiem:</strong> stacja Klucze, dalej 2 km pieszo lub taxi.<br><strong>Autobusem:</strong> linie z Olkusza i Dąbrowy Górniczej.</p></div></div>
-              </div>
-              <div class="faq-item">
-                <button class="faq-q">Czy są zniżki dla grup szkolnych?</button>
-                <div class="faq-a"><div class="faq-a-inner"><p>Tak! Grupy szkolne (powyżej 10 uczniów) płacą 5 zł/os. + 1 opiekun gratis na 10 uczniów. Oferujemy też dedykowane lekcje terenowe z naszymi edukatorami.</p></div></div>
-              </div>
-              <div class="faq-item">
-                <button class="faq-q">Czy można nocować na pustyni?</button>
-                <div class="faq-a"><div class="faq-a-inner"><p>Tak — mamy oficjalne pole namiotowe. Dzikie biwakowanie jest zabronione (rezerwat). Na polu są prysznice, kuchnia letnia i miejsce na ognisko.</p></div></div>
-              </div>
-              <div class="faq-item">
-                <button class="faq-q">Co zrobić w razie wypadku?</button>
-                <div class="faq-a"><div class="faq-a-inner"><p>Zadzwoń 112 (telefon alarmowy) lub do naszego dyżurnego: 500 123 456 (24/7). Mamy patrol ratowniczy w sezonie letnim, AED w Centrum Informacji oraz w pojazdach patrolujących.</p></div></div>
-              </div>
-              <div class="faq-item">
-                <button class="faq-q">Czy organizujecie urodziny / imprezy firmowe?</button>
-                <div class="faq-a"><div class="faq-a-inner"><p>Oczywiście! Oferujemy pakiety eventowe od 500 zł. W ofercie: warsztaty, integracja, jazda quadami, wielbłądy, food trucki, namiot eventowy. Skontaktuj się z naszym działem wydarzeń.</p></div></div>
-              </div>
+  <!-- =================== MAPA SIEDZIBY =================== -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Lokalizacja</span>
+        <h2>🗺 Mapa siedziby</h2>
+        <p>Centrum Informacji Turystycznej, parking główny i wszystkie kasy znajdują się w jednej lokalizacji.</p>
+      </div>
+
+      <div class="site-map-wrap reveal">
+        <svg class="site-map-svg" viewBox="0 0 100 50" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <radialGradient id="siteMapBg" cx="50%" cy="100%" r="100%">
+              <stop offset="0%" stop-color="#FBF6EE"/>
+              <stop offset="40%" stop-color="#F4E9D4"/>
+              <stop offset="100%" stop-color="#D9BC8E"/>
+            </radialGradient>
+            <pattern id="siteMapDots" width="2" height="2" patternUnits="userSpaceOnUse">
+              <circle cx="1" cy="1" r=".25" fill="#A87A4A" opacity=".25"/>
+            </pattern>
+            <filter id="siteMapShadow" x="-50%" y="-50%" width="200%" height="200%">
+              <feDropShadow dx="0" dy=".3" stdDeviation=".4" flood-opacity=".4"/>
+            </filter>
+          </defs>
+
+          <rect width="100" height="50" fill="url(#siteMapBg)"/>
+          <rect width="100" height="50" fill="url(#siteMapDots)"/>
+
+          <!-- Forest / vegetation -->
+          <path d="M0 0 L0 14 Q15 12 28 13 Q40 14 55 12 Q70 11 85 13 Q95 14 100 12 L100 0 Z" fill="#A8C49B" opacity=".55"/>
+          <ellipse cx="92" cy="22" rx="6" ry="8" fill="#A8C49B" opacity=".4"/>
+          <ellipse cx="6" cy="33" rx="5" ry="6" fill="#A8C49B" opacity=".4"/>
+
+          <!-- Road -->
+          <path d="M0 25 Q20 28 40 27 Q60 26 80 28 Q90 29 100 28" stroke="#6B4422" stroke-width=".8" fill="none" stroke-dasharray="2 1.5"/>
+          <text x="3" y="24" font-size="1.6" fill="#6B4422" font-weight="700">DW791 → Klucze</text>
+
+          <!-- Pustynia (sandy area) -->
+          <ellipse cx="60" cy="42" rx="35" ry="6" fill="#E8D5B7" opacity=".7"/>
+          <text x="60" y="44" font-size="2" text-anchor="middle" fill="#8B5A2B" font-weight="700" font-style="italic">Pustynia Błędowska</text>
+
+          <!-- Parking -->
+          <g class="site-map-pin" data-id="parking" transform="translate(30, 28)">
+            <rect x="-3.5" y="-3.5" width="7" height="7" rx="1" fill="#4A9BC4" filter="url(#siteMapShadow)"/>
+            <text x="0" y="1" font-size="3" text-anchor="middle" fill="#fff" font-weight="700">P</text>
+            <text x="0" y="-5" font-size="1.6" text-anchor="middle" fill="#1F1F1F" font-weight="700">PARKING</text>
+          </g>
+
+          <!-- Centrum informacji -->
+          <g class="site-map-pin" data-id="info" transform="translate(38, 32)">
+            <circle r="2.5" fill="#6E9A5C" filter="url(#siteMapShadow)"/>
+            <text x="0" y="1" font-size="3" text-anchor="middle" fill="#fff" font-weight="700">i</text>
+            <text x="0" y="6.5" font-size="1.4" text-anchor="middle" fill="#1F1F1F" font-weight="700">Centrum Inf.</text>
+          </g>
+
+          <!-- Kasy -->
+          <g class="site-map-pin" data-id="kasy" transform="translate(45, 30)">
+            <rect x="-3" y="-3" width="6" height="6" rx="1" fill="#F4A340" filter="url(#siteMapShadow)"/>
+            <text x="0" y="1" font-size="2.5" text-anchor="middle" fill="#1F1F1F" font-weight="700">€</text>
+            <text x="0" y="-4.5" font-size="1.4" text-anchor="middle" fill="#1F1F1F" font-weight="700">KASY</text>
+          </g>
+
+          <!-- Wejście na pustynię -->
+          <g class="site-map-pin" data-id="wejscie" transform="translate(55, 35)">
+            <polygon points="0,-3.5 3.5,3 -3.5,3" fill="#C0392B" filter="url(#siteMapShadow)"/>
+            <text x="0" y="2" font-size="2" text-anchor="middle" fill="#fff" font-weight="700">→</text>
+            <text x="0" y="7.5" font-size="1.4" text-anchor="middle" fill="#1F1F1F" font-weight="700">Wejście</text>
+          </g>
+
+          <!-- Food Truck Park -->
+          <g class="site-map-pin" data-id="food" transform="translate(50, 27)">
+            <circle r="2.2" fill="#E74C3C" filter="url(#siteMapShadow)"/>
+            <text x="0" y=".8" font-size="2" text-anchor="middle">🍔</text>
+            <text x="0" y="-3.5" font-size="1.3" text-anchor="middle" fill="#1F1F1F" font-weight="700">Food Truck</text>
+          </g>
+
+          <!-- Toalety -->
+          <g class="site-map-pin" data-id="wc" transform="translate(33, 32)">
+            <rect x="-2" y="-2" width="4" height="4" rx=".5" fill="#9B59B6" filter="url(#siteMapShadow)"/>
+            <text x="0" y="1" font-size="2.2" text-anchor="middle" fill="#fff">🚻</text>
+          </g>
+
+          <!-- Wypożyczalnia -->
+          <g class="site-map-pin" data-id="rental" transform="translate(42, 35)">
+            <rect x="-2.5" y="-2.5" width="5" height="5" rx=".5" fill="#A87A4A" filter="url(#siteMapShadow)"/>
+            <text x="0" y="1" font-size="2.3" text-anchor="middle">🚴</text>
+          </g>
+
+          <!-- North arrow -->
+          <g transform="translate(94, 5)">
+            <circle r="3" fill="white" stroke="#8B5A2B" stroke-width=".3"/>
+            <text x="0" y="-1.3" text-anchor="middle" font-size="1.4" font-weight="700">N</text>
+            <polygon points="0,-2.3 .6,-.3 0,0 -.6,-.3" fill="#C0392B"/>
+          </g>
+
+          <!-- Scale -->
+          <g transform="translate(2, 47)">
+            <rect width="14" height=".8" fill="#1F1F1F"/>
+            <rect x="3.5" width="3.5" height=".8" fill="white"/>
+            <rect x="10.5" width="3.5" height=".8" fill="white"/>
+            <text x="0" y="2.5" font-size="1.2" fill="#1F1F1F">0</text>
+            <text x="13" y="2.5" font-size="1.2" fill="#1F1F1F">200m</text>
+          </g>
+        </svg>
+
+        <div class="site-map-overlay">
+          <div class="site-map-info-card" id="site-map-info">
+            <h4 id="smi-title">📍 Centrum Informacji Turystycznej</h4>
+            <p id="smi-desc">Główny punkt obsługi gości. Tu otrzymasz mapy, zakupisz bilety, zostaniesz oprowadzony.</p>
+            <div class="actions">
+              <a href="https://www.google.com/maps/dir/?api=1&destination=50.346,19.487" target="_blank" rel="noopener" class="btn btn-primary btn-sm">🗺 Wyznacz trasę</a>
+              <button class="btn btn-outline btn-sm" onclick="navigator.clipboard.writeText('50.346,19.487').then(()=>App.toast('Współrzędne skopiowane!','ok'))">📋 GPS</button>
             </div>
           </div>
         </div>
       </div>
+    </div>
+  </section>
 
-      <!-- Map embed (visual mock) -->
-      <div style="margin-top: 64px; background: var(--surface); border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--shadow-md); border: 1px solid var(--border)">
-        <div style="height: 360px; background:
-            radial-gradient(circle at 50% 50%, #FBF6EE, #F4E9D4 30%, #D9BC8E 70%);
-            position: relative; display: flex; align-items: center; justify-content: center;">
-          <div style="text-align:center;color:var(--sand-800)">
-            <div style="font-size:4rem">📍</div>
-            <h3>Klucze, woj. małopolskie</h3>
-            <p style="color:var(--text-muted)">Współrzędne: 50.346°N, 19.487°E</p>
-            <a href="https://maps.google.com/?q=50.346,19.487" target="_blank" rel="noopener" class="btn btn-primary" style="margin-top:12px">Otwórz w Google Maps</a>
-          </div>
-        </div>
+  <!-- =================== FAQ =================== -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">FAQ</span>
+        <h2>Najczęściej zadawane pytania</h2>
+        <p>15 odpowiedzi na najczęstsze pytania. Nie znalazłeś tego, czego szukasz? <a href="#contact-form" style="color:var(--sun-500)">Napisz do nas</a>!</p>
+      </div>
+
+      <div class="faq-search">
+        <input type="search" id="faq-search" placeholder="Szukaj pytania... np. 'pies', 'parking', 'biwak'">
+      </div>
+
+      <div class="faq-categories" id="faq-categories"></div>
+
+      <div id="faq-list"></div>
+
+      <div class="faq-no-results" id="faq-no-results" style="display:none">
+        <div class="icon">🔍</div>
+        <h3>Brak wyników</h3>
+        <p>Spróbuj innych słów lub zmień kategorię. <a href="#contact-form">Napisz do nas</a> — odpowiemy bezpośrednio!</p>
       </div>
     </div>
   </section>
@@ -190,24 +301,151 @@
 
 <div id="footer-slot"></div>
 <script src="assets/js/store.js"></script>
+<script src="assets/js/i18n.js"></script>
 <script src="assets/js/app.js"></script>
 <script>
 (function(){
-  // FAQ accordion
-  document.querySelectorAll(".faq-q").forEach(q => {
-    q.addEventListener("click", () => {
-      q.parentElement.classList.toggle("open");
+  const departments = Store.all("departments");
+  const faqAll = Store.all("faq");
+
+  // ============== DEPT GRID ==============
+  let selectedDept = "general";
+
+  // Pre-select if URL has ?dept=
+  const initDept = new URLSearchParams(location.search).get("dept");
+  if (initDept) {
+    const found = departments.find(d => d.name === initDept || d.id === initDept);
+    if (found) selectedDept = found.id;
+  }
+
+  function renderDepts() {
+    document.getElementById("dept-grid").innerHTML = departments.map(d => `
+      <div class="dept-card ${d.id === selectedDept ? 'selected' : ''}" data-id="${d.id}">
+        <div class="dept-card-head">
+          <div class="dept-card-icon">${d.icon}</div>
+          <h4>${App.escapeHtml(d.name)}</h4>
+        </div>
+        <p class="desc">${App.escapeHtml(d.description)}</p>
+        ${d.person ? `
+          <div class="person">
+            <strong>${App.escapeHtml(d.person)}</strong>
+            ${d.role ? `<small>${App.escapeHtml(d.role)}</small>` : ''}
+          </div>` : ''}
+        <div class="contact-row">
+          <a href="mailto:${d.email}" onclick="event.stopPropagation()">✉ ${App.escapeHtml(d.email)}</a>
+          <a href="tel:${d.phone.replace(/\\s/g,'')}" onclick="event.stopPropagation()">📞 ${App.escapeHtml(d.phone)}</a>
+        </div>
+        <span class="response-tag">⏱ Odp. w ${App.escapeHtml(d.responseTime)}</span>
+      </div>
+    `).join("");
+
+    document.querySelectorAll(".dept-card").forEach(card => {
+      card.addEventListener("click", () => {
+        selectedDept = card.dataset.id;
+        renderDepts();
+        document.getElementById("dept").value = selectedDept;
+        const dept = departments.find(d => d.id === selectedDept);
+        document.getElementById("selected-dept-label").textContent = dept.name;
+        document.getElementById("selected-dept-time").textContent = dept.responseTime;
+        document.getElementById("contact-form").scrollIntoView({ behavior: "smooth", block: "start" });
+      });
     });
+  }
+  renderDepts();
+
+  // Build dept options
+  const deptSelect = document.getElementById("dept");
+  deptSelect.innerHTML = `<option value="">— Wybierz —</option>` +
+    departments.map(d => `<option value="${d.id}" ${d.id === selectedDept ? 'selected' : ''}>${App.escapeHtml(d.name)}</option>`).join("");
+
+  // Update label when dept changes via select
+  deptSelect.addEventListener("change", e => {
+    selectedDept = e.target.value;
+    renderDepts();
+    if (selectedDept) {
+      const dept = departments.find(d => d.id === selectedDept);
+      if (dept) {
+        document.getElementById("selected-dept-label").textContent = dept.name;
+        document.getElementById("selected-dept-time").textContent = dept.responseTime;
+      }
+    }
   });
 
-  // Form submission
+  // Initial label update
+  const initSelected = departments.find(d => d.id === selectedDept);
+  if (initSelected) {
+    document.getElementById("selected-dept-label").textContent = initSelected.name;
+    document.getElementById("selected-dept-time").textContent = initSelected.responseTime;
+  }
+
+  // ============== CAPTCHA (math) ==============
+  let captchaA = 0, captchaB = 0, captchaOp = "+";
+  function newCaptcha() {
+    const ops = ["+", "−", "×"];
+    captchaOp = ops[Math.floor(Math.random() * ops.length)];
+    if (captchaOp === "+") {
+      captchaA = Math.floor(Math.random() * 8) + 2;
+      captchaB = Math.floor(Math.random() * 8) + 2;
+    } else if (captchaOp === "−") {
+      captchaA = Math.floor(Math.random() * 8) + 6;
+      captchaB = Math.floor(Math.random() * 5) + 1;
+    } else {
+      captchaA = Math.floor(Math.random() * 6) + 2;
+      captchaB = Math.floor(Math.random() * 5) + 2;
+    }
+    document.getElementById("captcha-q").textContent = `${captchaA} ${captchaOp} ${captchaB}`;
+    document.getElementById("captcha-a").value = "";
+    document.getElementById("captcha-result").textContent = "";
+    document.getElementById("captcha-result").className = "captcha-result";
+  }
+  function verifyCaptcha() {
+    const expected = captchaOp === "+" ? captchaA + captchaB : captchaOp === "−" ? captchaA - captchaB : captchaA * captchaB;
+    const got = parseInt(document.getElementById("captcha-a").value);
+    return got === expected;
+  }
+  newCaptcha();
+  document.getElementById("captcha-refresh").addEventListener("click", newCaptcha);
+  document.getElementById("captcha-a").addEventListener("input", () => {
+    const r = document.getElementById("captcha-result");
+    if (document.getElementById("captcha-a").value === "") { r.textContent = ""; r.className = "captcha-result"; return; }
+    if (verifyCaptcha()) { r.textContent = "✓"; r.className = "captcha-result ok"; }
+    else { r.textContent = "✗"; r.className = "captcha-result err"; }
+  });
+
+  // ============== CHAR COUNTER ==============
+  document.getElementById("message").addEventListener("input", e => {
+    document.getElementById("char-count").textContent = e.target.value.length;
+  });
+
+  // ============== FORM SUBMIT ==============
   document.getElementById("contact-form").addEventListener("submit", e => {
     e.preventDefault();
+
+    // Honeypot check
+    if (document.getElementById("website").value !== "") {
+      App.toast("Wykryto bota — spróbuj jeszcze raz", "err");
+      return;
+    }
+
+    // Captcha check
+    if (!verifyCaptcha()) {
+      App.toast("Niepoprawny wynik weryfikacji", "err");
+      document.getElementById("captcha-a").focus();
+      return;
+    }
+
+    // Native validation
+    if (!e.target.checkValidity()) {
+      e.target.reportValidity();
+      return;
+    }
+
     const data = {
       name: document.getElementById("name").value,
       email: document.getElementById("email").value,
       phone: document.getElementById("phone").value,
-      dept: document.getElementById("dept").value,
+      dept: departments.find(d => d.id === document.getElementById("dept").value)?.name || "",
+      deptId: document.getElementById("dept").value,
       subject: document.getElementById("subject").value,
       message: document.getElementById("message").value,
       date: new Date().toISOString(),
@@ -215,8 +453,87 @@
     };
     Store.add("messages", data);
     e.target.reset();
-    App.toast("Wiadomość wysłana! Odpowiemy w ciągu 24h.", "ok");
+    newCaptcha();
+    document.getElementById("char-count").textContent = "0";
+    App.toast("Wiadomość wysłana! Odpowiemy w ciągu " + (initSelected?.responseTime || "24h"), "ok");
   });
+
+  // ============== SITE MAP PINS ==============
+  const sitePinInfos = {
+    parking:  { title: "🅿 Parking główny",        desc: "200 miejsc, monitoring 24h. Pierwsze 15 min gratis. Stawki: osobowe 5 zł/h, autobusy 15 zł/h." },
+    info:     { title: "ℹ Centrum Informacji",     desc: "Mapy, oprowadzania, sprzedaż pamiątek, toalety, wifi. Personel mówi PL/EN/DE." },
+    kasy:     { title: "€ Kasy biletowe",          desc: "Sprzedaż biletów wstępu, karnetów, pakietów rodzinnych. Płatność: gotówka, karta, BLIK." },
+    wejscie:  { title: "→ Wejście na pustynię",    desc: "Główne wejście dla zwiedzających. Tu rozpoczynają się szlaki edukacyjny i panoramiczny." },
+    food:     { title: "🍔 Food Truck Park",       desc: "5–8 food trucków w sezonie: burgery, pierogi, lody, kawa. Stoły i parasole." },
+    wc:       { title: "🚻 Toalety",                desc: "Czynne cały rok. 3 zł (BLIK/karta/gotówka). Dzieci do 120 cm — bezpłatnie." },
+    rental:   { title: "🚴 Wypożyczalnia rowerów", desc: "MTB, gravel, miejskie i e-bike. Kaski w cenie. Czynne 8:30–18:00." }
+  };
+
+  document.querySelectorAll(".site-map-pin").forEach(pin => {
+    pin.addEventListener("click", () => {
+      const info = sitePinInfos[pin.dataset.id];
+      if (info) {
+        document.getElementById("smi-title").innerHTML = info.title;
+        document.getElementById("smi-desc").textContent = info.desc;
+      }
+    });
+  });
+
+  // ============== FAQ ==============
+  let faqState = { search: "", category: "" };
+  const cats = ["", ...new Set(faqAll.map(f => f.category))];
+  document.getElementById("faq-categories").innerHTML = cats.map(c => `
+    <button class="faq-cat-pill ${c === faqState.category ? 'active' : ''}" data-cat="${c}">${c || 'Wszystkie'}</button>
+  `).join("");
+
+  function renderFaq() {
+    const filtered = faqAll.filter(f => {
+      if (faqState.category && f.category !== faqState.category) return false;
+      if (faqState.search) {
+        const s = faqState.search.toLowerCase();
+        return f.q.toLowerCase().includes(s) || f.a.toLowerCase().includes(s);
+      }
+      return true;
+    });
+
+    if (!filtered.length) {
+      document.getElementById("faq-list").style.display = "none";
+      document.getElementById("faq-no-results").style.display = "block";
+      return;
+    }
+    document.getElementById("faq-list").style.display = "block";
+    document.getElementById("faq-no-results").style.display = "none";
+
+    document.getElementById("faq-list").innerHTML = filtered.map(f => `
+      <div class="faq-item" data-id="${f.id}">
+        <button class="faq-q">
+          <span>${App.escapeHtml(f.q)}</span>
+          <span style="display:flex;align-items:center;gap:8px">
+            <span class="cat-tag">${App.escapeHtml(f.category)}</span>
+            <span class="toggle-icon">+</span>
+          </span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner"><p>${App.escapeHtml(f.a)}</p></div></div>
+      </div>
+    `).join("");
+
+    document.querySelectorAll(".faq-q").forEach(q => {
+      q.addEventListener("click", () => q.parentElement.classList.toggle("open"));
+    });
+  }
+
+  document.getElementById("faq-search").addEventListener("input", e => {
+    faqState.search = e.target.value;
+    renderFaq();
+  });
+  document.getElementById("faq-categories").addEventListener("click", e => {
+    const btn = e.target.closest(".faq-cat-pill");
+    if (!btn) return;
+    faqState.category = btn.dataset.cat;
+    document.querySelectorAll(".faq-cat-pill").forEach(b => b.classList.toggle("active", b === btn));
+    renderFaq();
+  });
+  renderFaq();
 })();
 </script>
 </body>

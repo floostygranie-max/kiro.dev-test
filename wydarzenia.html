@@ -49,6 +49,18 @@
     </div>
   </section>
 
+  <!-- =================== PAST EDITIONS / SERIES =================== -->
+  <section class="section series-section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Tradycja od lat</span>
+        <h2>Galeria z poprzednich edycji</h2>
+        <p>Cykliczne wydarzenia, które na stałe wpisały się w kalendarz Pustyni Błędowskiej. Kliknij, aby zobaczyć poprzednie edycje.</p>
+      </div>
+      <div id="series-container"></div>
+    </div>
+  </section>
+
   <!-- Event detail modal -->
   <div id="eventModal" class="modal-backdrop hidden">
     <div class="modal" id="eventModalContent"></div>
@@ -67,7 +79,7 @@
 }
 .modal {
   background: var(--surface);
-  max-width: 640px;
+  max-width: 720px;
   width: 100%;
   max-height: 90vh;
   border-radius: var(--r-lg);
@@ -100,11 +112,22 @@
 .event-grid-card h3 { font-size: 1.1rem; margin-bottom: var(--s-2); }
 </style>
 
+<!-- Lightbox for event galleries -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lb-close">✕</button>
+  <button class="lightbox-nav prev" id="lb-prev">‹</button>
+  <button class="lightbox-nav next" id="lb-next">›</button>
+  <div class="lightbox-content" id="lb-content"></div>
+  <div class="lightbox-info" id="lb-info"></div>
+</div>
+
 <script src="assets/js/store.js"></script>
+<script src="assets/js/i18n.js"></script>
 <script src="assets/js/app.js"></script>
 <script>
 (function(){
   const all = Store.all("events").filter(e => e.published);
+  const series = Store.all("eventSeries");
   let state = { view: "list", search: "", category: "", filter: "upcoming", calMonth: new Date().getMonth(), calYear: new Date().getFullYear() };
 
   // Categories
@@ -221,15 +244,25 @@
     const daysPrev = new Date(y, m, 0).getDate();
     const today = new Date().toISOString().slice(0,10);
 
-    // Map of date -> events
+    // Map of date -> events (only for current view filter)
+    const candidateEvents = filtered();
     const map = {};
-    all.forEach(e => {
+    candidateEvents.forEach(e => {
       let d = new Date(e.startDate);
       const end = new Date(e.endDate);
       while (d <= end) {
         const key = d.toISOString().slice(0,10);
         (map[key] = map[key] || []).push(e);
         d.setDate(d.getDate() + 1);
+      }
+    });
+
+    // Stats for current month
+    const monthEvents = new Set();
+    Object.entries(map).forEach(([date, evts]) => {
+      const md = new Date(date);
+      if (md.getFullYear() === y && md.getMonth() === m) {
+        evts.forEach(e => monthEvents.add(e.id));
       }
     });
 
@@ -242,18 +275,47 @@
       const dateStr = `${y}-${String(m+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
       const events = map[dateStr] || [];
       const cls = (dateStr === today ? " today" : "") + (events.length ? " has-event" : "");
-      cells += `<div class="calendar-day${cls}" data-date="${dateStr}" title="${events.map(e=>e.title).join(', ')}">${i}</div>`;
+
+      // Multi-day stripes
+      let stripes = "";
+      events.forEach(e => {
+        const isStart = dateStr === e.startDate;
+        const isEnd = dateStr === e.endDate;
+        const cls2 = isStart && isEnd ? "" : (isStart ? "start" : (isEnd ? "end" : "middle"));
+        stripes += `<div class="ev-stripe ${cls2}" style="background:${e.cover.includes('linear-gradient') ? 'var(--sun-400)' : '#F4A340'}"></div>`;
+      });
+
+      const pin = events.length > 1 ? `<span class="calendar-day-pin">${events.length}</span>` : "";
+      const tooltip = events.length ? `<div class="ev-tooltip"><strong>${events.map(e => App.escapeHtml(e.title)).join('<br>')}</strong></div>` : "";
+
+      cells += `<div class="calendar-day${cls}" data-date="${dateStr}">${i}${stripes}${pin}${tooltip}</div>`;
     }
     const total = offset + daysInMonth;
     const trail = (7 - total % 7) % 7;
     for (let i = 1; i <= trail; i++) cells += `<div class="calendar-day other-month">${i}</div>`;
 
+    // Years range for jumper
+    const allYears = [...new Set(all.flatMap(e => [e.startDate.slice(0,4), e.endDate.slice(0,4)]))].sort();
+    const minYear = parseInt(allYears[0]) || y;
+    const maxYear = parseInt(allYears[allYears.length-1]) || y;
+    const yearRange = [];
+    for (let yi = minYear; yi <= Math.max(maxYear, y+1); yi++) yearRange.push(yi);
+
     root.innerHTML = `
+      <div class="calendar-toolbar">
+        <div class="cal-year-jumper">
+          ${yearRange.map(yi => `<button class="${yi===y?'active':''}" data-jump-year="${yi}">${yi}</button>`).join("")}
+        </div>
+        <div class="cal-month-stats">
+          <span>📅 <strong>${monthEvents.size}</strong> wydarzeń w tym miesiącu</span>
+          <span>👥 <strong>${[...monthEvents].reduce((s,id) => s + (Store.get('events',id)?.registered || 0), 0).toLocaleString('pl-PL')}</strong> zapisanych</span>
+        </div>
+      </div>
       <div class="calendar">
         <div class="calendar-head">
-          <button class="nav-btn" id="cal-prev">‹</button>
+          <button class="nav-btn" id="cal-prev" aria-label="Poprzedni miesiąc">‹</button>
           <h3>${monthsFull[m]} ${y}</h3>
-          <button class="nav-btn" id="cal-next">›</button>
+          <button class="nav-btn" id="cal-next" aria-label="Następny miesiąc">›</button>
         </div>
         <div class="calendar-grid">
           ${dayNames.map(d => `<div class="calendar-day-name">${d}</div>`).join("")}
@@ -270,6 +332,10 @@
       state.calMonth++; if (state.calMonth > 11) { state.calMonth = 0; state.calYear++; }
       render();
     });
+    root.querySelectorAll("[data-jump-year]").forEach(b => b.addEventListener("click", () => {
+      state.calYear = parseInt(b.dataset.jumpYear);
+      render();
+    }));
     root.querySelectorAll(".calendar-day.has-event").forEach(d => {
       d.addEventListener("click", () => {
         const events = map[d.dataset.date] || [];
@@ -283,6 +349,7 @@
             </div>
           `).join("");
         evRoot.querySelectorAll(".event-card").forEach(c => c.addEventListener("click", () => openModal(c.dataset.id)));
+        evRoot.scrollIntoView({ behavior: "smooth", block: "center" });
       });
     });
   }
@@ -292,6 +359,38 @@
     if (!e) return;
     const pct = e.capacity ? Math.round((e.registered || 0) / e.capacity * 100) : 0;
     const dateRange = e.startDate === e.endDate ? App.fmtDate(e.startDate) : `${App.fmtDate(e.startDate)} – ${App.fmtDate(e.endDate)}`;
+
+    // Series — find past editions of same series
+    let pastEditionsHtml = "";
+    if (e.seriesId) {
+      const others = all.filter(x => x.seriesId === e.seriesId && x.id !== e.id).sort((a,b) => b.startDate.localeCompare(a.startDate));
+      if (others.length) {
+        pastEditionsHtml = `
+          <div style="margin-top: 24px;padding-top:24px;border-top:1px solid var(--border)">
+            <strong style="display:block;margin-bottom:12px">📚 Poprzednie edycje:</strong>
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              ${others.map(o => `<a href="?id=${o.id}" class="btn btn-ghost btn-sm">${o.startDate.slice(0,4)} →</a>`).join("")}
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    // Gallery
+    let galleryHtml = "";
+    const galleryIds = Array.isArray(e.gallery) ? e.gallery : [];
+    const galleryPhotos = galleryIds.map(pid => Store.get("photos", pid)).filter(Boolean);
+    if (galleryPhotos.length) {
+      galleryHtml = `
+        <div style="margin-top: 24px;padding-top:24px;border-top:1px solid var(--border)">
+          <strong style="display:block;margin-bottom:12px">📸 Galeria zdjęć (${galleryPhotos.length})</strong>
+          <div class="article-gallery-grid">
+            ${galleryPhotos.map((p, i) => `<div class="article-gallery-tile" data-event-photo="${i}" style="background:${p.cover}" title="${App.escapeHtml(p.title)}"></div>`).join("")}
+          </div>
+        </div>
+      `;
+    }
+
     document.getElementById("eventModalContent").innerHTML = `
       <button class="modal-close" onclick="document.getElementById('eventModal').classList.add('hidden')">✕</button>
       <div class="cover" style="background:${e.cover}"></div>
@@ -311,6 +410,8 @@
             <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
           </div>
         ` : ''}
+        ${galleryHtml}
+        ${pastEditionsHtml}
         <div style="display:flex;gap:12px;margin-top:24px;flex-wrap:wrap">
           <button class="btn btn-primary" onclick="App.toast('Zapisano! Sprawdź email.', 'ok'); document.getElementById('eventModal').classList.add('hidden')">📝 Zapisz się</button>
           <a class="btn btn-outline" href="data:text/calendar;charset=utf-8,${encodeURIComponent('BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nSUMMARY:'+e.title+'\nDTSTART:'+e.startDate.replace(/-/g,'')+'\nDTEND:'+e.endDate.replace(/-/g,'')+'\nLOCATION:'+e.location+'\nDESCRIPTION:'+e.description+'\nEND:VEVENT\nEND:VCALENDAR')}" download="${e.slug}.ics">📅 Dodaj do kalendarza</a>
@@ -319,10 +420,145 @@
       </div>
     `;
     document.getElementById("eventModal").classList.remove("hidden");
+
+    // Attach event-photo lightbox
+    if (galleryPhotos.length) {
+      window.__currentEventGallery = galleryPhotos;
+      document.querySelectorAll("[data-event-photo]").forEach(t => {
+        t.addEventListener("click", (ev) => {
+          ev.stopPropagation();
+          openLB(parseInt(t.dataset.eventPhoto));
+        });
+      });
+    }
   }
 
   document.getElementById("eventModal").addEventListener("click", e => {
     if (e.target.id === "eventModal") e.currentTarget.classList.add("hidden");
+  });
+
+  // ============== EVENT SERIES SECTION ==============
+  function renderSeries() {
+    const container = document.getElementById("series-container");
+    container.innerHTML = series.map(s => {
+      const editions = all.filter(e => e.seriesId === s.id).sort((a,b) => b.startDate.localeCompare(a.startDate));
+      const lastEdition = editions[0];
+      return `
+        <div class="series-card" data-series="${s.id}">
+          <div class="series-card-head">
+            <div class="series-card-num">
+              ${s.editions}<small>edycji</small>
+            </div>
+            <div>
+              <h3>${App.escapeHtml(s.name)}</h3>
+              <p style="margin: 4px 0 6px;color:var(--text-muted);font-size:.9rem">${App.escapeHtml(s.description)}</p>
+              <div class="series-meta">
+                <span class="badge">${App.escapeHtml(s.category)}</span>
+                <span>📅 Pierwsza edycja: <strong>${s.firstEdition}</strong></span>
+                <span>🎬 W bazie: <strong>${editions.length}</strong> edycji</span>
+              </div>
+            </div>
+            <div class="series-toggle">▼</div>
+          </div>
+          <div class="series-editions">
+            <div class="series-editions-inner">
+              ${editions.length ? editions.map(ed => {
+                const galleryIds = Array.isArray(ed.gallery) ? ed.gallery : [];
+                const photos = galleryIds.map(pid => Store.get("photos", pid)).filter(Boolean);
+                const moreCount = Math.max(0, galleryIds.length - 4);
+                const tilesHtml = photos.slice(0, 4).map(p => `<div data-photo="${p.id}" data-edition="${ed.id}" style="background:${p.cover}" title="${App.escapeHtml(p.title)}"></div>`).join("");
+                const more = moreCount > 0 ? `<div class="more">+${moreCount}</div>` : "";
+                const pct = ed.capacity ? Math.round((ed.registered||0)/ed.capacity*100) : 0;
+                return `
+                  <div class="edition-tile" data-id="${ed.id}">
+                    <div class="year-block">
+                      <strong>${ed.startDate.slice(0,4)}</strong>
+                      <small>${months[new Date(ed.startDate).getMonth()]}</small>
+                    </div>
+                    <div class="edition-info">
+                      <strong>${App.escapeHtml(ed.title)}</strong>
+                      <small>${App.escapeHtml(ed.description.slice(0, 80))}${ed.description.length > 80 ? '…' : ''}</small>
+                      ${photos.length ? `<div class="edition-gallery">${tilesHtml}${more}</div>` : ''}
+                    </div>
+                    <div class="edition-stat">
+                      ${ed.capacity ? `<strong>${(ed.registered||0).toLocaleString('pl-PL')}</strong>${ed.capacity ? ` / ${ed.capacity.toLocaleString('pl-PL')}` : ''}<br><small>${pct}% frekwencji</small>` : '—'}
+                    </div>
+                  </div>
+                `;
+              }).join("") : `<p style="color:var(--text-muted);text-align:center;padding:24px">Brak edycji w archiwum.</p>`}
+            </div>
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    // Toggle expand
+    container.querySelectorAll(".series-card-head").forEach(head => {
+      head.addEventListener("click", () => {
+        head.parentElement.classList.toggle("open");
+      });
+    });
+    // Edition click → open modal
+    container.querySelectorAll(".edition-tile").forEach(t => {
+      t.addEventListener("click", e => {
+        if (e.target.closest("[data-photo]")) return;
+        openModal(t.dataset.id);
+      });
+    });
+    // Photo thumb click → lightbox
+    container.querySelectorAll("[data-photo]").forEach(p => {
+      p.addEventListener("click", e => {
+        e.stopPropagation();
+        const ed = Store.get("events", p.dataset.edition);
+        if (ed && ed.gallery) {
+          window.__currentEventGallery = ed.gallery.map(pid => Store.get("photos", pid)).filter(Boolean);
+          const idx = ed.gallery.indexOf(p.dataset.photo);
+          openLB(Math.max(0, idx));
+        }
+      });
+    });
+
+    // Auto-open the first series (most-active one)
+    const first = container.querySelector(".series-card");
+    if (first) first.classList.add("open");
+  }
+  renderSeries();
+
+  // ============== LIGHTBOX (shared) ==============
+  let lbIdx = 0;
+  const lb = document.getElementById("lightbox");
+  function openLB(i) {
+    lbIdx = i;
+    paintLB();
+    lb.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+  function closeLB() {
+    lb.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+  function navLB(d) {
+    const list = window.__currentEventGallery || [];
+    if (!list.length) return;
+    lbIdx = (lbIdx + d + list.length) % list.length;
+    paintLB();
+  }
+  function paintLB() {
+    const list = window.__currentEventGallery || [];
+    const p = list[lbIdx];
+    if (!p) return closeLB();
+    document.getElementById("lb-content").style.background = p.cover;
+    document.getElementById("lb-info").innerHTML = `<strong>${App.escapeHtml(p.title)}</strong><small>${App.escapeHtml(p.author||'')} · ${App.fmtDate(p.date||'')} · ${lbIdx+1} / ${list.length}</small>`;
+  }
+  document.getElementById("lb-close").addEventListener("click", closeLB);
+  document.getElementById("lb-prev").addEventListener("click", () => navLB(-1));
+  document.getElementById("lb-next").addEventListener("click", () => navLB(1));
+  lb.addEventListener("click", e => { if (e.target === lb) closeLB(); });
+  document.addEventListener("keydown", e => {
+    if (!lb.classList.contains("open")) return;
+    if (e.key === "Escape") closeLB();
+    if (e.key === "ArrowLeft") navLB(-1);
+    if (e.key === "ArrowRight") navLB(1);
   });
 
   // Open from URL ?id=

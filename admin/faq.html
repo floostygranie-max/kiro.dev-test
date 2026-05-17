@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>FAQ — Panel admina</title>
+<link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+<link rel="stylesheet" href="../assets/css/main.css">
+<link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body>
+<div id="admin-sidebar-slot"></div>
+<div class="admin-main">
+  <div id="admin-topbar-slot"></div>
+  <div class="admin-content">
+    <div class="alert alert-info">
+      <strong>💡 Drag & drop</strong> — przeciągnij pytania, by zmienić kolejność wyświetlania. Pytania są pogrupowane po kategoriach.
+    </div>
+    <div class="admin-card">
+      <div class="admin-card-head">
+        <h3>❓ FAQ (<span id="count">0</span>)</h3>
+        <button class="btn btn-primary" id="btnNew">+ Nowe pytanie</button>
+      </div>
+      <div class="admin-card-body" style="padding-bottom:0">
+        <div class="page-filters">
+          <input type="search" id="search" placeholder="Szukaj...">
+          <select id="f-cat"><option value="">Wszystkie kategorie</option></select>
+        </div>
+      </div>
+      <div class="admin-card-body">
+        <div class="sortable-list" id="faq-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/js/store.js"></script>
+<script src="../assets/js/i18n.js"></script>
+<script src="../assets/js/app.js"></script>
+<script src="../assets/js/admin.js"></script>
+<script>
+if (Admin.init({ title: "FAQ" })) {
+  let state = { search: "", cat: "" };
+
+  function render() {
+    const cats = [...new Set(Store.all("faq").map(f => f.category))];
+    const sel = document.getElementById("f-cat");
+    if (sel.options.length === 1) cats.forEach(c => { const o = document.createElement("option"); o.value = c; o.textContent = c; sel.appendChild(o); });
+
+    let list = Store.all("faq");
+    if (state.search) list = list.filter(f => f.q.toLowerCase().includes(state.search) || f.a.toLowerCase().includes(state.search));
+    if (state.cat) list = list.filter(f => f.category === state.cat);
+
+    document.getElementById("count").textContent = list.length;
+    const root = document.getElementById("faq-list");
+    if (!list.length) {
+      root.innerHTML = `<div class="empty-state"><h3>Brak pytań</h3></div>`;
+      return;
+    }
+    root.innerHTML = list.map(f => `
+      <div class="sortable-list-item" data-id="${f.id}">
+        <span class="drag-handle">⋮⋮</span>
+        <div>
+          <strong>${App.escapeHtml(f.q)}</strong>
+          <small style="color:var(--text-muted);display:block;margin-top:4px">
+            <span class="badge">${App.escapeHtml(f.category)}</span>
+            ${App.escapeHtml(f.a.slice(0, 80))}${f.a.length > 80 ? '…' : ''}
+          </small>
+        </div>
+        <div class="row-actions">
+          <button class="row-action-btn" data-edit="${f.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+          <button class="row-action-btn delete" data-del="${f.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button>
+        </div>
+      </div>
+    `).join("");
+
+    root.querySelectorAll("[data-edit]").forEach(b => b.addEventListener("click", () => openForm(b.dataset.edit)));
+    root.querySelectorAll("[data-del]").forEach(b => b.addEventListener("click", async () => {
+      if (await Admin.confirmDialog("Usunąć pytanie?")) {
+        const f = Store.get("faq", b.dataset.del);
+        Store.remove("faq", b.dataset.del);
+        Admin.logActivity("delete", "faq", f?.q.slice(0, 60) || b.dataset.del);
+        App.toast("Usunięto","ok"); render();
+      }
+    }));
+
+    // Sortable
+    Admin.makeSortable(root, (newOrder) => {
+      const items = newOrder.map(id => Store.get("faq", id)).filter(Boolean);
+      Store._data.faq = items; Store._save();
+      Admin.logActivity("update", "faq", "Zmiana kolejności pytań");
+      App.toast("Zmieniono kolejność", "ok");
+    });
+  }
+
+  function openForm(id) {
+    const isNew = !id;
+    const item = isNew ? { q:"", a:"", category:"Zwiedzanie" } : Store.get("faq", id);
+    if (!item) return;
+    const cats = [...new Set(Store.all("faq").map(f => f.category))];
+    const form = document.createElement("div");
+    form.innerHTML = `
+      <div class="form-row">
+        <div class="form-group"><label>Pytanie *</label><input id="f-q" value="${App.escapeHtml(item.q)}" required></div>
+        <div class="form-group"><label>Kategoria</label><input id="f-cat" value="${App.escapeHtml(item.category)}" list="catlist"><datalist id="catlist">${cats.map(c=>`<option>${c}</option>`).join("")}</datalist></div>
+      </div>
+      <div class="form-group"><label>Odpowiedź *</label><textarea id="f-a" rows="5">${App.escapeHtml(item.a)}</textarea></div>
+    `;
+    const m = Admin.modal({
+      title: isNew ? "Nowe pytanie FAQ" : "Edytuj pytanie",
+      body: form,
+      footer: `<button class="btn btn-ghost" data-close>Anuluj</button><button class="btn btn-primary" id="save">Zapisz</button>`
+    });
+    m.root.querySelector("#save").addEventListener("click", () => {
+      const q = form.querySelector("#f-q").value.trim();
+      if (!q) return App.toast("Pytanie wymagane","err");
+      const data = {
+        q,
+        a: form.querySelector("#f-a").value,
+        category: form.querySelector("#f-cat").value || "Inne"
+      };
+      if (isNew) { Store.add("faq", data); Admin.logActivity("create", "faq", q); }
+      else { Store.update("faq", id, data); Admin.logActivity("update", "faq", q); }
+      App.toast(isNew?"Dodano!":"Zapisano!","ok");
+      m.close(); render();
+    });
+  }
+
+  document.getElementById("btnNew").addEventListener("click", () => openForm(null));
+  document.getElementById("search").addEventListener("input", e => { state.search = e.target.value.toLowerCase(); render(); });
+  document.getElementById("f-cat").addEventListener("change", e => { state.cat = e.target.value; render(); });
+  render();
+}
+</script>
+</body>
+</html>

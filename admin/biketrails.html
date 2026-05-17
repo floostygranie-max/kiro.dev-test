@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Trasy rowerowe — Panel admina</title>
+<link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+<link rel="stylesheet" href="../assets/css/main.css">
+<link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body>
+<div id="admin-sidebar-slot"></div>
+<div class="admin-main">
+  <div id="admin-topbar-slot"></div>
+  <div class="admin-content">
+
+    <div class="alert alert-info">
+      <strong>💡 Drag & drop</strong> — przeciągnij trasy uchwytem ⋮⋮, by zmienić kolejność na stronie publicznej.
+    </div>
+
+    <div class="admin-card">
+      <div class="admin-card-head">
+        <h3>🚴 Trasy rowerowe (<span id="count">0</span>)</h3>
+        <button class="btn btn-primary" id="btnNew">+ Nowa trasa</button>
+      </div>
+      <div class="admin-card-body">
+        <div class="sortable-list" id="trails-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/js/store.js"></script>
+<script src="../assets/js/i18n.js"></script>
+<script src="../assets/js/app.js"></script>
+<script src="../assets/js/admin.js"></script>
+<script>
+if (Admin.init({ title: "Trasy rowerowe" })) {
+  function render() {
+    const list = Store.all("bikeTrails");
+    document.getElementById("count").textContent = list.length;
+    const root = document.getElementById("trails-list");
+    if (!list.length) {
+      root.innerHTML = `<div class="empty-state"><h3>Brak tras</h3><p>Dodaj pierwszą trasę przyciskiem powyżej.</p></div>`;
+      return;
+    }
+    root.innerHTML = list.map(t => `
+      <div class="sortable-list-item" data-id="${t.id}">
+        <span class="drag-handle">⋮⋮</span>
+        <div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+            <span style="display:inline-block;width:14px;height:14px;background:${t.color};border-radius:50%"></span>
+            <strong>${App.escapeHtml(t.name)}</strong>
+          </div>
+          <small style="color:var(--text-muted)">
+            ${t.length} km · ${t.elevationGain}m + · ${App.escapeHtml(t.time)} · <span class="badge">${App.escapeHtml(t.difficulty)}</span>
+          </small>
+        </div>
+        <div class="row-actions">
+          <button class="row-action-btn" data-edit="${t.id}" title="Edytuj"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+          <button class="row-action-btn delete" data-del="${t.id}" title="Usuń"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button>
+        </div>
+      </div>
+    `).join("");
+
+    // Wire actions
+    root.querySelectorAll("[data-edit]").forEach(b => b.addEventListener("click", () => openForm(b.dataset.edit)));
+    root.querySelectorAll("[data-del]").forEach(b => b.addEventListener("click", async () => {
+      if (await Admin.confirmDialog("Usunąć trasę?")) {
+        const t = Store.get("bikeTrails", b.dataset.del);
+        Store.remove("bikeTrails", b.dataset.del);
+        Admin.logActivity("delete", "bikeTrails", t?.name || b.dataset.del);
+        App.toast("Usunięto","ok");
+        render();
+      }
+    }));
+
+    // Sortable
+    Admin.makeSortable(root, (newOrder) => {
+      // Re-write order in store: rebuild bikeTrails in new order
+      const items = newOrder.map(id => Store.get("bikeTrails", id)).filter(Boolean);
+      Store._data.bikeTrails = items;
+      Store._save();
+      Admin.logActivity("update", "bikeTrails", "Zmiana kolejności tras");
+      App.toast("Zmieniono kolejność", "ok");
+    });
+  }
+
+  function openForm(id) {
+    const isNew = !id;
+    const item = isNew ? {
+      name: "", color: "#6E9A5C", difficulty: "łatwy", length: 0, elevationGain: 0, time: "",
+      surface: "", startPoint: "", description: "", highlights: [], points: "30,62 50,40 70,60", elevation: [320,340,350,330,320], recommended: []
+    } : Store.get("bikeTrails", id);
+    if (!item) return;
+
+    const form = document.createElement("div");
+    form.innerHTML = `
+      <div class="form-group"><label>Nazwa *</label><input id="f-name" value="${App.escapeHtml(item.name)}" required></div>
+      <div class="form-row">
+        <div class="form-group"><label>Kolor</label><input type="color" id="f-color" value="${item.color}"></div>
+        <div class="form-group"><label>Trudność</label><select id="f-diff">
+          <option value="bardzo łatwy" ${item.difficulty==='bardzo łatwy'?'selected':''}>Bardzo łatwa</option>
+          <option value="łatwy" ${item.difficulty==='łatwy'?'selected':''}>Łatwa</option>
+          <option value="średni" ${item.difficulty==='średni'?'selected':''}>Średnia</option>
+          <option value="trudny" ${item.difficulty==='trudny'?'selected':''}>Trudna</option>
+        </select></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Długość (km)</label><input type="number" step="0.1" id="f-length" value="${item.length}"></div>
+        <div class="form-group"><label>Przewyższenie (m)</label><input type="number" id="f-elev" value="${item.elevationGain||0}"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Czas</label><input id="f-time" value="${App.escapeHtml(item.time)}" placeholder="np. 1h - 1h 30min"></div>
+        <div class="form-group"><label>Nawierzchnia</label><input id="f-surface" value="${App.escapeHtml(item.surface)}"></div>
+      </div>
+      <div class="form-group"><label>Punkt startowy</label><input id="f-start" value="${App.escapeHtml(item.startPoint)}"></div>
+      <div class="form-group"><label>Opis</label><textarea id="f-desc" rows="3">${App.escapeHtml(item.description)}</textarea></div>
+      <div class="form-group"><label>Atrakcje (każda w nowej linii)</label><textarea id="f-hl" rows="3">${(item.highlights||[]).join('\n')}</textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label>Tagi (przecinek)</label><input id="f-rec" value="${(item.recommended||[]).join(', ')}"></div>
+        <div class="form-group"><label>Punkty SVG (X,Y X,Y...)</label><input id="f-points" value="${App.escapeHtml(item.points)}" style="font-family:monospace"></div>
+      </div>
+      <div class="form-group"><label>Profil wysokości (m, oddzielone przecinkiem)</label><input id="f-elevline" value="${(item.elevation||[]).join(', ')}" style="font-family:monospace"></div>
+    `;
+
+    const m = Admin.modal({
+      title: isNew ? "Nowa trasa rowerowa" : "Edytuj trasę",
+      body: form,
+      footer: `<button class="btn btn-ghost" data-close>Anuluj</button><button class="btn btn-primary" id="save">Zapisz</button>`
+    });
+    m.root.querySelector("#save").addEventListener("click", () => {
+      const name = form.querySelector("#f-name").value.trim();
+      if (!name) return App.toast("Nazwa wymagana","err");
+      const data = {
+        name,
+        color: form.querySelector("#f-color").value,
+        difficulty: form.querySelector("#f-diff").value,
+        length: parseFloat(form.querySelector("#f-length").value) || 0,
+        elevationGain: parseInt(form.querySelector("#f-elev").value) || 0,
+        time: form.querySelector("#f-time").value,
+        surface: form.querySelector("#f-surface").value,
+        startPoint: form.querySelector("#f-start").value,
+        description: form.querySelector("#f-desc").value,
+        highlights: form.querySelector("#f-hl").value.split("\n").map(s => s.trim()).filter(Boolean),
+        recommended: form.querySelector("#f-rec").value.split(",").map(s => s.trim()).filter(Boolean),
+        points: form.querySelector("#f-points").value.trim(),
+        elevation: form.querySelector("#f-elevline").value.split(",").map(s => parseFloat(s.trim())).filter(n => !isNaN(n))
+      };
+      if (isNew) {
+        Store.add("bikeTrails", data);
+        Admin.logActivity("create", "bikeTrails", data.name);
+      } else {
+        Store.update("bikeTrails", id, data);
+        Admin.logActivity("update", "bikeTrails", data.name);
+      }
+      App.toast(isNew?"Dodano!":"Zapisano!","ok");
+      m.close(); render();
+    });
+  }
+
+  document.getElementById("btnNew").addEventListener("click", () => openForm(null));
+  const editId = new URLSearchParams(location.search).get("edit");
+  render();
+  if (editId) openForm(editId);
+}
+</script>
+</body>
+</html>

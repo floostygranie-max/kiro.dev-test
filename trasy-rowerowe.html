@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Trasy rowerowe — Pustynia Błędowska</title>
+<meta name="description" content="Trasy rowerowe na Pustyni Błędowskiej — od family loop dla dzieci po trasy MTB dla zaawansowanych. Profile wysokościowe, GPX, wypożyczalnia.">
+<link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+<link rel="stylesheet" href="assets/css/main.css">
+<link rel="stylesheet" href="assets/css/header.css">
+<link rel="stylesheet" href="assets/css/home.css">
+<link rel="stylesheet" href="assets/css/pages.css">
+</head>
+<body>
+<div id="header-slot"></div>
+
+<main>
+  <section class="page-hero bike-hero">
+    <div class="container">
+      <div class="breadcrumbs">
+        <a href="index.html">Strona główna</a> <span>›</span> <span>Trasy rowerowe</span>
+      </div>
+      <h1>Trasy rowerowe</h1>
+      <p class="lead">6 oznakowanych szlaków o łącznej długości <strong>73 km</strong>. Od krótkiej pętli dla dzieci po pełen szlak maratoński dla zaawansowanych. Każda trasa z profilem wysokościowym i plikiem GPX do pobrania.</p>
+      <div class="bike-stats">
+        <div class="bike-stat"><strong id="bk-count">6</strong><small>Tras</small></div>
+        <div class="bike-stat"><strong id="bk-total">0 km</strong><small>Łączna długość</small></div>
+        <div class="bike-stat"><strong>318–382m</strong><small>Wysokości</small></div>
+        <div class="bike-stat"><strong>4</strong><small>Poziomy trudności</small></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Wybierz trasę</span>
+        <h2>Filtruj wg poziomu trudności</h2>
+      </div>
+
+      <div class="difficulty-filters" id="diff-filters"></div>
+      <div id="trails-list"></div>
+    </div>
+  </section>
+
+  <!-- Bike rental promo -->
+  <section class="section">
+    <div class="container">
+      <div class="bike-rental-promo reveal">
+        <div>
+          <span class="badge badge-accent">Wypożyczalnia</span>
+          <h2 style="margin: 12px 0">Nie masz roweru? Mamy go dla Ciebie!</h2>
+          <p>Profesjonalne rowery MTB, gravel i miejskie. Także rowery elektryczne (e-bike) — idealne na długie trasy w upalne dni. Kaski, kamizelki i mapy w cenie.</p>
+          <a href="cennik.html" class="btn btn-accent" style="margin-top:12px">Zobacz pełen cennik</a>
+        </div>
+        <div class="rental-prices">
+          <div class="rental-price-card">
+            <strong>30 zł</strong>
+            <small>Rower miejski / godz.</small>
+          </div>
+          <div class="rental-price-card">
+            <strong>40 zł</strong>
+            <small>MTB / godz.</small>
+          </div>
+          <div class="rental-price-card">
+            <strong>60 zł</strong>
+            <small>Gravel / godz.</small>
+          </div>
+          <div class="rental-price-card">
+            <strong>80 zł</strong>
+            <small>E-bike / godz.</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tips -->
+  <section class="section dunes-bg">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Porady eksperta</span>
+        <h2>Zanim wyruszysz na trasę</h2>
+        <p>10 wskazówek, które ułatwią Ci jazdę po pustyni</p>
+      </div>
+      <div class="tips-grid">
+        <div class="tip-card reveal"><div class="icon">💧</div><h4>Wystarczająco wody</h4><p>Minimum 1 litr na każdą godzinę jazdy. Latem dwa razy tyle. Na pustyni nie ma punktów uzupełnienia poza centrum.</p></div>
+        <div class="tip-card reveal"><div class="icon">🌞</div><h4>Ochrona przeciwsłoneczna</h4><p>Krem SPF 50+, okulary, kaszkiet pod kask. Pustynne słońce nie żartuje — odbicia od piasku potęgują UV.</p></div>
+        <div class="tip-card reveal"><div class="icon">🛞</div><h4>Szersze opony</h4><p>Min. 2.0", jeszcze lepiej 2.4" lub plus-size. Wąskie opony szybko utkną w piasku — zwłaszcza na trasie czerwonej.</p></div>
+        <div class="tip-card reveal"><div class="icon">⏰</div><h4>Wcześnie rano lub późno</h4><p>Najlepsza pora to 6-10 rano lub po 17. W południe piasek osiąga 50°C i jazda staje się męczarnią.</p></div>
+        <div class="tip-card reveal"><div class="icon">🥨</div><h4>Przekąski energetyczne</h4><p>Batony, daktyle, suszone owoce. Trasa Czerwona i Maraton wymagają regularnego uzupełniania energii.</p></div>
+        <div class="tip-card reveal"><div class="icon">🔧</div><h4>Zestaw naprawczy</h4><p>Dętka zapasowa, łatki, multi-tool, pompka. Najbliższy serwis to 8 km — najlepiej radzić sobie samodzielnie.</p></div>
+        <div class="tip-card reveal"><div class="icon">📱</div><h4>Naładowany telefon</h4><p>Ściągnij mapę offline (np. Komoot, Mapy.cz). Zasięg na pustyni potrafi być nierówny, a GPS niezbędny.</p></div>
+        <div class="tip-card reveal"><div class="icon">🧭</div><h4>Trzymaj się szlaków</h4><p>Pustynia to rezerwat Natura 2000. Zjeżdżanie poza oznakowane szlaki niszczy unikalne siedliska.</p></div>
+        <div class="tip-card reveal"><div class="icon">👥</div><h4>Nie sam, jeśli możesz</h4><p>Trasy trudne i Maraton najlepiej w 2-3 osoby. W razie awarii lub kontuzji — łatwiej o pomoc.</p></div>
+        <div class="tip-card reveal"><div class="icon">🆘</div><h4>Numer alarmowy</h4><p>112 lub nasz dyżurny: 500 123 456 (24/7 w sezonie). Zapamiętaj przed wyjazdem!</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section">
+    <div class="container">
+      <div class="cta-banner reveal">
+        <h2>Dopiero co odkryłeś rower? Zorganizujemy wycieczkę z przewodnikiem!</h2>
+        <p>3-godzinna wycieczka z lokalnym ekspertem, który pokaże Ci najpiękniejsze miejsca i opowie historię pustyni. Idealne na pierwsze zwiedzanie.</p>
+        <a href="kontakt.html?dept=Wydarzenia%20i%20grupy" class="btn btn-accent">Zarezerwuj przewodnika</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+<script src="assets/js/store.js"></script>
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+(function(){
+  const all = Store.all("bikeTrails");
+  let activeDiff = "";
+
+  // Stats
+  const totalKm = all.reduce((s,t) => s + t.length, 0).toFixed(1);
+  document.getElementById("bk-count").textContent = all.length;
+  document.getElementById("bk-total").textContent = totalKm + " km";
+
+  // Difficulty filters
+  const diffs = [
+    { v: "",            l: "Wszystkie",   c: all.length },
+    { v: "bardzo łatwy", l: "Bardzo łatwe", c: all.filter(t => t.difficulty === "bardzo łatwy").length },
+    { v: "łatwy",       l: "Łatwe",       c: all.filter(t => t.difficulty === "łatwy").length },
+    { v: "średni",      l: "Średnie",     c: all.filter(t => t.difficulty === "średni").length },
+    { v: "trudny",      l: "Trudne",      c: all.filter(t => t.difficulty === "trudny").length }
+  ];
+  document.getElementById("diff-filters").innerHTML = diffs.map(d => `
+    <button class="diff-pill ${d.v === activeDiff ? 'active' : ''}" data-diff="${d.v}">
+      <span class="dot"></span>
+      <span>${d.l} (${d.c})</span>
+    </button>
+  `).join("");
+  document.getElementById("diff-filters").addEventListener("click", e => {
+    const btn = e.target.closest(".diff-pill");
+    if (!btn) return;
+    activeDiff = btn.dataset.diff;
+    document.querySelectorAll(".diff-pill").forEach(b => b.classList.toggle("active", b === btn));
+    renderTrails();
+  });
+
+  function elevSvg(elevation, color) {
+    if (!elevation || elevation.length < 2) return "";
+    const min = Math.min(...elevation);
+    const max = Math.max(...elevation);
+    const range = max - min || 1;
+    const w = 100, h = 80;
+    const stepX = w / (elevation.length - 1);
+    const points = elevation.map((e, i) => `${(i * stepX).toFixed(1)},${(h - 8 - ((e - min) / range) * (h - 16)).toFixed(1)}`).join(" ");
+    const fillPoints = `0,${h} ${points} ${w},${h}`;
+    return `
+      <svg class="elevation-svg" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="elev-grad-${color.replace('#','')}" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="${color}" stop-opacity="0.5"/>
+            <stop offset="100%" stop-color="${color}" stop-opacity="0.05"/>
+          </linearGradient>
+        </defs>
+        <polygon fill="url(#elev-grad-${color.replace('#','')})" points="${fillPoints}"/>
+        <polyline fill="none" stroke="${color}" stroke-width="1.5" points="${points}" vector-effect="non-scaling-stroke"/>
+      </svg>
+    `;
+  }
+
+  function trailMiniMap(t) {
+    return `
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <radialGradient id="mm-bg-${t.id}" cx="50%" cy="60%">
+            <stop offset="0%" stop-color="#FBF6EE"/>
+            <stop offset="100%" stop-color="#D9BC8E"/>
+          </radialGradient>
+        </defs>
+        <rect width="100" height="100" fill="url(#mm-bg-${t.id})"/>
+        <!-- Forest border -->
+        <path d="M0 0 L0 22 Q15 18 25 16 Q40 14 55 18 Q75 22 100 18 L100 0 Z" fill="#A8C49B" opacity=".4"/>
+        <path d="M0 100 L0 80 Q20 78 35 82 Q55 86 75 84 L100 86 L100 100 Z" fill="#A8C49B" opacity=".4"/>
+        <!-- Trail -->
+        <polyline points="${t.points}" fill="none" stroke="${t.color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 2"/>
+        <!-- Start point -->
+        <circle cx="${t.points.split(' ')[0].split(',')[0]}" cy="${t.points.split(' ')[0].split(',')[1]}" r="2.5" fill="#fff" stroke="${t.color}" stroke-width="1.5"/>
+        <text x="${t.points.split(' ')[0].split(',')[0]}" y="${parseFloat(t.points.split(' ')[0].split(',')[1])-3.5}" font-size="3" text-anchor="middle" font-weight="700" fill="${t.color}">START</text>
+      </svg>
+    `;
+  }
+
+  function downloadGPX(t) {
+    // Generate a fake GPX based on trail points (interpolated lat/lon around Pustynia Błędowska)
+    const baseLat = 50.346;
+    const baseLon = 19.487;
+    const ptsXY = t.points.split(' ').map(p => p.split(',').map(Number));
+    const trkpts = ptsXY.map(([x,y]) => {
+      const lat = baseLat + (50 - y) * 0.001;
+      const lon = baseLon + (x - 50) * 0.0014;
+      return `      <trkpt lat="${lat.toFixed(6)}" lon="${lon.toFixed(6)}"></trkpt>`;
+    }).join("\n");
+    const gpx = `<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="Pustynia Bledowska" xmlns="http://www.topografix.com/GPX/1/1">
+  <metadata>
+    <name>${t.name}</name>
+    <desc>${t.description}</desc>
+  </metadata>
+  <trk>
+    <name>${t.name}</name>
+    <trkseg>
+${trkpts}
+    </trkseg>
+  </trk>
+</gpx>`;
+    const blob = new Blob([gpx], { type: "application/gpx+xml" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = t.name.replace(/\s/g, "-").toLowerCase() + ".gpx";
+    a.click();
+    URL.revokeObjectURL(a.href);
+    App.toast("GPX pobrany!", "ok");
+  }
+
+  function renderTrails() {
+    const list = activeDiff ? all.filter(t => t.difficulty === activeDiff) : all;
+    const root = document.getElementById("trails-list");
+    if (!list.length) {
+      root.innerHTML = `<div class="empty-state"><h3>Brak tras</h3><p>Spróbuj innego poziomu trudności.</p></div>`;
+      return;
+    }
+    // Sort: easy → hard
+    const order = { "bardzo łatwy": 0, "łatwy": 1, "średni": 2, "trudny": 3 };
+    list.sort((a,b) => (order[a.difficulty] || 99) - (order[b.difficulty] || 99));
+
+    root.innerHTML = list.map(t => {
+      const minElev = Math.min(...t.elevation);
+      const maxElev = Math.max(...t.elevation);
+      return `
+        <div class="bike-trail-card reveal" data-id="${t.id}">
+          <div class="bike-trail-head">
+            <div class="bike-trail-mini-map">${trailMiniMap(t)}</div>
+            <div class="bike-trail-info">
+              <span class="difficulty-badge" data-diff="${t.difficulty}"><span style="display:inline-block;width:8px;height:8px;background:${t.color};border-radius:50%"></span> ${t.difficulty}</span>
+              <h3>${App.escapeHtml(t.name)}</h3>
+              <div class="meta">
+                <span class="meta-pill">📏 <strong>${t.length} km</strong></span>
+                <span class="meta-pill">⏱ <strong>${App.escapeHtml(t.time)}</strong></span>
+                <span class="meta-pill">⛰ <strong>+${t.elevationGain} m</strong></span>
+                <span class="meta-pill">🛣 ${App.escapeHtml(t.surface)}</span>
+              </div>
+              <p>${App.escapeHtml(t.description)}</p>
+              <div class="meta" style="margin-top:8px">
+                ${t.recommended.map(r => `<span class="badge">${r}</span>`).join("")}
+              </div>
+            </div>
+            <div class="bike-trail-actions">
+              <button class="btn btn-primary btn-sm" data-gpx="${t.id}">📥 GPX</button>
+              <a class="btn btn-outline btn-sm" href="mapa.html#trail-${t.id}">🗺 Na mapie</a>
+              <button class="btn btn-ghost btn-sm" data-share="${t.id}">🔗 Udostępnij</button>
+            </div>
+          </div>
+          <div class="bike-trail-body">
+            <div class="elevation-chart">
+              <h5>📈 Profil wysokościowy</h5>
+              ${elevSvg(t.elevation, t.color)}
+              <div class="elev-stats">
+                <span>Min: <strong>${minElev} m</strong></span>
+                <span>Max: <strong>${maxElev} m</strong></span>
+                <span>Suma podjazdów: <strong>+${t.elevationGain} m</strong></span>
+              </div>
+            </div>
+            <div class="highlights-list">
+              <h5>✨ Ciekawe miejsca na trasie</h5>
+              <ul>
+                ${t.highlights.map(h => `<li>${App.escapeHtml(h)}</li>`).join("")}
+              </ul>
+              <small style="color:var(--text-muted);font-size:.8rem;margin-top:8px;display:block">📍 Start: <strong>${App.escapeHtml(t.startPoint)}</strong></small>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    // Wire up buttons
+    root.querySelectorAll("[data-gpx]").forEach(b => b.addEventListener("click", () => {
+      const t = all.find(x => x.id === b.dataset.gpx);
+      if (t) downloadGPX(t);
+    }));
+    root.querySelectorAll("[data-share]").forEach(b => b.addEventListener("click", () => {
+      const url = location.origin + location.pathname + "#trail-" + b.dataset.share;
+      navigator.clipboard.writeText(url).then(() => App.toast("Link skopiowany!", "ok"));
+    }));
+    root.querySelectorAll(".reveal").forEach(el => setTimeout(() => el.classList.add("in"), 50));
+  }
+
+  renderTrails();
+})();
+</script>
+</body>
+</html>

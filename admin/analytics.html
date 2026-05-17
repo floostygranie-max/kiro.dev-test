@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Analityka — Panel admina</title>
+<link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+<link rel="stylesheet" href="../assets/css/main.css">
+<link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body>
+<div id="admin-sidebar-slot"></div>
+<div class="admin-main">
+  <div id="admin-topbar-slot"></div>
+  <div class="admin-content">
+
+    <!-- KPI overview -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="icon-bg">📊</div>
+        <div class="label">Łączne wyświetlenia newsów</div>
+        <div class="value" id="kpi-views">0</div>
+        <span class="delta up" id="kpi-views-trend">↑ ostatnie 30 dni</span>
+      </div>
+      <div class="kpi-card">
+        <div class="icon-bg">❤️</div>
+        <div class="label">Reakcje łącznie</div>
+        <div class="value" id="kpi-reactions">0</div>
+        <span class="delta up" id="kpi-reactions-trend">— wszystkich newsów</span>
+      </div>
+      <div class="kpi-card">
+        <div class="icon-bg">📨</div>
+        <div class="label">Wiadomości</div>
+        <div class="value" id="kpi-messages">0</div>
+        <span class="delta up" id="kpi-msg-unread">— nieprzeczytanych</span>
+      </div>
+      <div class="kpi-card">
+        <div class="icon-bg">🎟</div>
+        <div class="label">Zapisy na wydarzenia</div>
+        <div class="value" id="kpi-registrations">0</div>
+        <span class="delta up" id="kpi-events-active">— aktywnych wydarzeń</span>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="dash-2col">
+      <div class="chart-card">
+        <h4>📈 Wyświetlenia per news (top 10)</h4>
+        <div id="chart-views"></div>
+      </div>
+      <div class="chart-card">
+        <h4>❤️ Rozkład reakcji</h4>
+        <div id="chart-reactions"></div>
+        <div class="chart-legend" id="legend-reactions"></div>
+      </div>
+    </div>
+
+    <div class="dash-2col" style="margin-top: 16px">
+      <div class="chart-card">
+        <h4>📅 Wydarzenia — frekwencja</h4>
+        <div id="chart-events"></div>
+      </div>
+      <div class="chart-card">
+        <h4>📂 Treści w bazie</h4>
+        <div id="chart-content"></div>
+        <div class="chart-legend" id="legend-content"></div>
+      </div>
+    </div>
+
+    <div class="chart-card" style="margin-top: 16px">
+      <h4>📰 Symulowany trend wyświetleń (30 dni)</h4>
+      <div id="chart-line"></div>
+    </div>
+
+    <!-- Top performers -->
+    <div class="dash-2col" style="margin-top: 16px">
+      <div class="admin-card">
+        <div class="admin-card-head">
+          <h3>🏆 Top 5 newsów (wyświetlenia)</h3>
+        </div>
+        <div class="admin-card-body" style="padding:0">
+          <table class="admin-table">
+            <thead><tr><th>Tytuł</th><th>Wyświetlenia</th><th>Reakcje</th></tr></thead>
+            <tbody id="top-news"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-head">
+          <h3>🎯 Top wydarzenia (frekwencja)</h3>
+        </div>
+        <div class="admin-card-body" style="padding:0">
+          <table class="admin-table">
+            <thead><tr><th>Wydarzenie</th><th>Zapisani</th></tr></thead>
+            <tbody id="top-events"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="../assets/js/store.js"></script>
+<script src="../assets/js/i18n.js"></script>
+<script src="../assets/js/app.js"></script>
+<script src="../assets/js/admin.js"></script>
+<script>
+if (Admin.init({ title: "Analityka" })) {
+  const news = Store.all("news");
+  const events = Store.all("events");
+  const messages = Store.all("messages");
+
+  // KPIs
+  const totalViews = news.reduce((s, n) => s + (n.views || 0), 0);
+  const totalReactions = news.reduce((s, n) => s + Store.totalReactions(n.id), 0);
+  const totalReg = events.reduce((s, e) => s + (e.registered || 0), 0);
+
+  document.getElementById("kpi-views").textContent = totalViews.toLocaleString("pl-PL");
+  document.getElementById("kpi-reactions").textContent = totalReactions.toLocaleString("pl-PL");
+  document.getElementById("kpi-messages").textContent = messages.length;
+  document.getElementById("kpi-msg-unread").textContent = messages.filter(m => !m.read).length + " nieprzeczytanych";
+  document.getElementById("kpi-registrations").textContent = totalReg.toLocaleString("pl-PL");
+  document.getElementById("kpi-events-active").textContent = Store.upcomingEvents().length + " aktywnych wydarzeń";
+
+  // Bar chart — top 10 news by views
+  const top10 = [...news].sort((a,b) => (b.views||0) - (a.views||0)).slice(0, 10);
+  document.getElementById("chart-views").innerHTML = Admin.barChart(
+    top10.map(n => ({ label: n.title.length > 12 ? n.title.slice(0,11) + '…' : n.title, value: n.views || 0 }))
+  );
+
+  // Donut — reactions distribution
+  let totalByType = { heart: 0, thumb: 0, love: 0, fire: 0, clap: 0 };
+  news.forEach(n => {
+    const r = Store.getReactions(n.id);
+    Object.keys(totalByType).forEach(k => totalByType[k] += r[k] || 0);
+  });
+  const reactColors = { heart: "#E74C3C", thumb: "#3498DB", love: "#F4A340", fire: "#C0392B", clap: "#6E9A5C" };
+  const reactLabels = { heart: "❤️ Super", thumb: "👍 Lajk", love: "😍 Kocham", fire: "🔥 Świetne", clap: "👏 Brawo" };
+  const reactData = Object.keys(totalByType).map(k => ({ label: reactLabels[k], value: totalByType[k], color: reactColors[k] }));
+  document.getElementById("chart-reactions").innerHTML = Admin.donutChart(reactData);
+  document.getElementById("legend-reactions").innerHTML = reactData.map(d => `
+    <span style="color:${d.color}"><span></span><span style="color:var(--text)">${d.label}: <strong>${d.value}</strong></span></span>
+  `).join("");
+
+  // Bar chart — events attendance
+  document.getElementById("chart-events").innerHTML = Admin.barChart(
+    events.slice(0, 8).map(e => ({
+      label: e.title.length > 14 ? e.title.slice(0, 13) + '…' : e.title,
+      value: e.registered || 0,
+      color: e.endDate >= new Date().toISOString().slice(0,10) ? "var(--sun-400)" : "var(--sand-300)"
+    }))
+  );
+
+  // Donut — content distribution
+  const colors = ["#F4A340","#6E9A5C","#4A9BC4","#C0392B","#9B59B6","#1F1F1F","#E67E22","#3498DB"];
+  const contentData = [
+    { label: "Aktualności", value: news.length, color: colors[0] },
+    { label: "Wydarzenia", value: events.length, color: colors[1] },
+    { label: "Zdjęcia", value: Store.all("photos").length, color: colors[2] },
+    { label: "Albumy", value: Store.all("galleryFolders").length, color: colors[3] },
+    { label: "Projekty", value: Store.all("projects").length, color: colors[4] },
+    { label: "Trasy rowerowe", value: Store.all("bikeTrails").length, color: colors[5] },
+    { label: "POI", value: Store.all("poi").length, color: colors[6] },
+    { label: "Partnerzy", value: Store.all("partners").length, color: colors[7] }
+  ];
+  document.getElementById("chart-content").innerHTML = Admin.donutChart(contentData);
+  document.getElementById("legend-content").innerHTML = contentData.map(d => `
+    <span style="color:${d.color}"><span></span><span style="color:var(--text)">${d.label}: <strong>${d.value}</strong></span></span>
+  `).join("");
+
+  // Line chart — simulated 30-day trend (deterministic based on totalViews)
+  const trendData = Array.from({ length: 30 }, (_, i) => {
+    // Smooth curve with deterministic noise
+    const x = i / 29;
+    const wave = Math.sin(x * Math.PI * 2) * 0.2 + Math.cos(x * Math.PI * 4) * 0.1;
+    const base = totalViews / 30;
+    return Math.round(base + wave * base * 0.5 + Math.sin(i * 1.7) * base * 0.15);
+  });
+  document.getElementById("chart-line").innerHTML = Admin.lineChart(trendData, { height: 140 });
+
+  // Top tables
+  document.getElementById("top-news").innerHTML = top10.slice(0, 5).map(n => `
+    <tr>
+      <td><a href="news.html?edit=${n.id}" style="font-weight:600">${App.escapeHtml(n.title.length>40?n.title.slice(0,40)+'…':n.title)}</a></td>
+      <td><strong>${(n.views||0).toLocaleString('pl-PL')}</strong></td>
+      <td>${Store.totalReactions(n.id)}</td>
+    </tr>
+  `).join("") || `<tr><td colspan="3" style="text-align:center;padding:24px;color:var(--text-muted)">Brak danych</td></tr>`;
+
+  const topEvents = [...events].sort((a,b) => (b.registered||0) - (a.registered||0)).slice(0, 5);
+  document.getElementById("top-events").innerHTML = topEvents.map(e => `
+    <tr>
+      <td><a href="events.html?edit=${e.id}" style="font-weight:600">${App.escapeHtml(e.title)}</a><br><small style="color:var(--text-muted)">${App.fmtDateShort(e.startDate)}</small></td>
+      <td><strong>${(e.registered||0).toLocaleString('pl-PL')}</strong>${e.capacity ? ' / ' + e.capacity : ''}</td>
+    </tr>
+  `).join("") || `<tr><td colspan="2" style="text-align:center;padding:24px;color:var(--text-muted)">Brak danych</td></tr>`;
+}
+</script>
+</body>
+</html>

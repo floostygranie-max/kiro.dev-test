@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Działy kontaktowe — Panel admina</title>
+<link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+<link rel="stylesheet" href="../assets/css/main.css">
+<link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body>
+<div id="admin-sidebar-slot"></div>
+<div class="admin-main">
+  <div id="admin-topbar-slot"></div>
+  <div class="admin-content">
+    <div class="admin-card">
+      <div class="admin-card-head">
+        <h3>🏛 Działy kontaktowe (<span id="count">0</span>)</h3>
+        <button class="btn btn-primary" id="btnNew">+ Nowy dział</button>
+      </div>
+      <table class="admin-table">
+        <thead><tr><th>Ikona</th><th>Nazwa</th><th>Email</th><th>Telefon</th><th>Osoba</th><th>Czas odp.</th><th></th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/js/store.js"></script>
+<script src="../assets/js/i18n.js"></script>
+<script src="../assets/js/app.js"></script>
+<script src="../assets/js/admin.js"></script>
+<script>
+if (Admin.init({ title: "Działy kontaktowe" })) {
+  function render() {
+    const list = Store.all("departments");
+    document.getElementById("count").textContent = list.length;
+    const tb = document.getElementById("tbody");
+    if (!list.length) { tb.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-muted)">Brak działów</td></tr>`; return; }
+    tb.innerHTML = list.map(d => `
+      <tr>
+        <td style="font-size:1.6rem">${d.icon || '🏛'}</td>
+        <td><strong>${App.escapeHtml(d.name)}</strong><br><small style="color:var(--text-muted)">${App.escapeHtml(d.description||"")}</small></td>
+        <td><a href="mailto:${d.email}">${App.escapeHtml(d.email)}</a></td>
+        <td>${App.escapeHtml(d.phone)}</td>
+        <td>${App.escapeHtml(d.person||"—")}<br><small style="color:var(--text-muted)">${App.escapeHtml(d.role||"")}</small></td>
+        <td><span class="status-pill published">${App.escapeHtml(d.responseTime||"24h")}</span></td>
+        <td><div class="row-actions">
+          <button class="row-action-btn" data-edit="${d.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+          <button class="row-action-btn delete" data-del="${d.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button>
+        </div></td>
+      </tr>
+    `).join("");
+    tb.querySelectorAll("[data-edit]").forEach(b => b.addEventListener("click", () => openForm(b.dataset.edit)));
+    tb.querySelectorAll("[data-del]").forEach(b => b.addEventListener("click", async () => {
+      if (await Admin.confirmDialog("Usunąć dział?")) { Store.remove("departments", b.dataset.del); Admin.logActivity("delete","departments",b.dataset.del); App.toast("Usunięto","ok"); render(); }
+    }));
+  }
+  function openForm(id) {
+    const isNew = !id;
+    const item = isNew ? { name:"", description:"", email:"", phone:"", person:"", role:"", icon:"🏛", responseTime:"24h" } : Store.get("departments", id);
+    if (!item) return;
+    const form = document.createElement("div");
+    form.innerHTML = `
+      <div class="form-row">
+        <div class="form-group" style="flex:0 0 80px"><label>Ikona</label><input id="f-icon" value="${App.escapeHtml(item.icon||'🏛')}" maxlength="2" style="text-align:center;font-size:1.4rem"></div>
+        <div class="form-group" style="flex:1"><label>Nazwa działu *</label><input id="f-name" value="${App.escapeHtml(item.name)}" required></div>
+      </div>
+      <div class="form-group"><label>Opis</label><input id="f-desc" value="${App.escapeHtml(item.description||"")}"></div>
+      <div class="form-row">
+        <div class="form-group"><label>Email *</label><input type="email" id="f-email" value="${App.escapeHtml(item.email)}" required></div>
+        <div class="form-group"><label>Telefon</label><input id="f-phone" value="${App.escapeHtml(item.phone||"")}"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Osoba</label><input id="f-person" value="${App.escapeHtml(item.person||"")}"></div>
+        <div class="form-group"><label>Rola</label><input id="f-role" value="${App.escapeHtml(item.role||"")}"></div>
+      </div>
+      <div class="form-group"><label>Czas odpowiedzi</label><input id="f-time" value="${App.escapeHtml(item.responseTime||"24h")}" placeholder="np. 24h, 5 dni"></div>
+    `;
+    const m = Admin.modal({
+      title: isNew ? "Nowy dział" : "Edytuj dział",
+      body: form,
+      footer: `<button class="btn btn-ghost" data-close>Anuluj</button><button class="btn btn-primary" id="save">Zapisz</button>`
+    });
+    m.root.querySelector("#save").addEventListener("click", () => {
+      const name = form.querySelector("#f-name").value.trim();
+      if (!name) return App.toast("Nazwa wymagana","err");
+      const data = {
+        name,
+        description: form.querySelector("#f-desc").value,
+        email: form.querySelector("#f-email").value,
+        phone: form.querySelector("#f-phone").value,
+        person: form.querySelector("#f-person").value,
+        role: form.querySelector("#f-role").value,
+        icon: form.querySelector("#f-icon").value || "🏛",
+        responseTime: form.querySelector("#f-time").value || "24h"
+      };
+      if (isNew) { Store.add("departments", data); Admin.logActivity("create", "departments", name); }
+      else { Store.update("departments", id, data); Admin.logActivity("update", "departments", name); }
+      App.toast(isNew?"Dodano!":"Zapisano!","ok"); m.close(); render();
+    });
+  }
+  document.getElementById("btnNew").addEventListener("click", () => openForm(null));
+  render();
+}
+</script>
+</body>
+</html>

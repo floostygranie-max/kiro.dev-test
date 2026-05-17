@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Galeria — Pustynia Błędowska</title>
-<meta name="description" content="Galeria zdjęć Pustyni Błędowskiej — wydmy, wschody słońca, flora i fauna, wydarzenia">
+<meta name="description" content="Galeria zdjęć Pustyni Błędowskiej — wydmy, wschody słońca, flora i fauna, wydarzenia, fotografia drone">
 <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
 <link rel="stylesheet" href="assets/css/main.css">
 <link rel="stylesheet" href="assets/css/header.css">
@@ -21,7 +21,7 @@
         <a href="index.html">Strona główna</a> <span>›</span> <a href="galeria.html">Galeria</a>
       </div>
       <h1 id="page-title">Galeria</h1>
-      <p class="lead" id="page-lead">Pustynia w obiektywie najlepszych fotografów. Albumy uporządkowane tematycznie — od magicznych wschodów słońca po niezwykłą florę i faunę.</p>
+      <p class="lead" id="page-lead">Pustynia w obiektywie najlepszych fotografów. Albumy uporządkowane tematycznie — od magicznych wschodów słońca po niezwykłą florę i faunę. Także kolekcja zdjęć z naszych wydarzeń.</p>
     </div>
   </section>
 
@@ -37,12 +37,13 @@
     <button class="lightbox-nav prev" id="lb-prev" aria-label="Poprzednie">‹</button>
     <button class="lightbox-nav next" id="lb-next" aria-label="Następne">›</button>
     <div class="lightbox-content" id="lb-content"></div>
-    <div class="lightbox-info" id="lb-info"></div>
+    <div class="lightbox-info-extended" id="lb-info"></div>
   </div>
 </main>
 
 <div id="footer-slot"></div>
 <script src="assets/js/store.js"></script>
+<script src="assets/js/i18n.js"></script>
 <script src="assets/js/app.js"></script>
 <script>
 (function(){
@@ -51,34 +52,231 @@
   const root = document.getElementById("gallery-root");
 
   if (!folderId) {
-    renderFolderList();
+    renderHome();
   } else {
     renderFolder(folderId);
   }
 
-  function renderFolderList() {
-    const folders = Store.all("galleryFolders").sort((a,b) => (a.order||0) - (b.order||0));
-    const photos = Store.all("photos");
+  // ============== HOME (folders + events tab) ==============
+  function renderHome() {
     document.getElementById("page-title").textContent = "Galeria";
+    document.getElementById("bc").innerHTML = `<a href="index.html">Strona główna</a> <span>›</span> <span>Galeria</span>`;
+
+    const folders = Store.all("galleryFolders").sort((a,b) => (a.order||0) - (b.order||0));
+    const allPhotos = Store.all("photos");
+    const eventPhotos = Store.photosWithEvents();
+    const events = Store.all("events");
+    const authors = [...new Set(allPhotos.map(p => p.author).filter(Boolean))];
 
     root.innerHTML = `
-      <div class="folder-grid">
-        ${folders.map(f => {
-          const count = photos.filter(p => p.folderId === f.id).length;
-          return `
-            <a href="galeria.html?folder=${f.id}" class="folder-card reveal" style="background:${f.cover}">
-              <span class="count">${count} zdjęć</span>
-              <div class="folder-card-body">
-                <h3>${App.escapeHtml(f.name)}</h3>
-                <small>${App.escapeHtml(f.description || '')}</small>
-              </div>
-            </a>
-          `;
-        }).join("")}
+      <div class="gallery-stats">
+        <div class="g-stat-card"><strong>${allPhotos.length}</strong><small>Zdjęć łącznie</small></div>
+        <div class="g-stat-card"><strong>${folders.length}</strong><small>Albumów</small></div>
+        <div class="g-stat-card"><strong>${eventPhotos.length}</strong><small>Z wydarzeń</small></div>
+        <div class="g-stat-card"><strong>${authors.length}</strong><small>Autorów</small></div>
       </div>
+
+      <div class="gallery-mode-tabs" id="mode-tabs">
+        <button class="active" data-mode="albums">📁 Albumy tematyczne</button>
+        <button data-mode="events">🎉 Z wydarzeń</button>
+        <button data-mode="all">🖼 Wszystkie</button>
+      </div>
+
+      <div id="mode-content"></div>
     `;
+
+    // Mode switcher
+    let mode = "albums";
+    document.getElementById("mode-tabs").addEventListener("click", e => {
+      const btn = e.target.closest("[data-mode]");
+      if (!btn) return;
+      mode = btn.dataset.mode;
+      document.querySelectorAll("#mode-tabs button").forEach(b => b.classList.toggle("active", b === btn));
+      paintMode();
+    });
+    paintMode();
+
+    function paintMode() {
+      const c = document.getElementById("mode-content");
+      if (mode === "albums") {
+        c.innerHTML = renderFolderGrid(folders, allPhotos);
+      } else if (mode === "events") {
+        c.innerHTML = renderEventsView(events, eventPhotos);
+        wireEventsView();
+      } else if (mode === "all") {
+        c.innerHTML = renderAllPhotosView(allPhotos);
+        wireAllPhotosView(allPhotos);
+      }
+    }
+
+    function renderFolderGrid(folders, photos) {
+      return `
+        <div class="folder-grid">
+          ${folders.map(f => {
+            const count = photos.filter(p => p.folderId === f.id).length;
+            return `
+              <a href="galeria.html?folder=${f.id}" class="folder-card reveal" style="background:${f.cover}">
+                <span class="count">${count} zdjęć</span>
+                <div class="folder-card-body">
+                  <h3>${App.escapeHtml(f.name)}</h3>
+                  <small>${App.escapeHtml(f.description || '')}</small>
+                </div>
+              </a>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+
+    function renderEventsView(events, eventPhotos) {
+      // Group photos by event
+      const grouped = {};
+      eventPhotos.forEach(p => {
+        (grouped[p.eventId] = grouped[p.eventId] || []).push(p);
+      });
+      const ids = Object.keys(grouped).sort((a,b) => {
+        const ea = events.find(e => e.id === a);
+        const eb = events.find(e => e.id === b);
+        return (eb?.startDate || "").localeCompare(ea?.startDate || "");
+      });
+
+      if (!ids.length) {
+        return `<div class="empty-state"><h3>Brak zdjęć z wydarzeń</h3><p>Wkrótce dodamy galerie ze wszystkich wydarzeń.</p></div>`;
+      }
+
+      return `
+        <div class="events-gallery-list">
+          ${ids.map(id => {
+            const ev = events.find(e => e.id === id);
+            if (!ev) return '';
+            const photos = grouped[id];
+            return `
+              <div class="event-photo-block" data-event="${id}">
+                <div class="event-photo-block-head">
+                  <div class="event-photo-block-cover" style="background:${ev.cover}"></div>
+                  <div>
+                    <h3>${App.escapeHtml(ev.title)}</h3>
+                    <div class="meta">
+                      <span>📅 <strong>${App.fmtDate(ev.startDate)}</strong></span>
+                      <span>📍 ${App.escapeHtml(ev.location)}</span>
+                      <span>📸 <strong>${photos.length}</strong> zdjęć</span>
+                    </div>
+                  </div>
+                  <a href="wydarzenia.html?id=${ev.id}" class="btn btn-outline btn-sm">O wydarzeniu →</a>
+                </div>
+                <div class="event-photo-block-grid">
+                  ${photos.map((p, i) => `
+                    <div class="photo-tile aspect-${p.aspect || 'square'}" data-event="${id}" data-idx="${i}" style="background:${p.cover}">
+                      <div class="photo-tile-info">
+                        <strong>${App.escapeHtml(p.title)}</strong><br>
+                        <small>${App.escapeHtml(p.author || '')}</small>
+                      </div>
+                    </div>
+                  `).join("")}
+                </div>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+
+    function wireEventsView() {
+      // For each block, build its own tile→lightbox handler
+      document.querySelectorAll(".event-photo-block").forEach(block => {
+        const eventId = block.dataset.event;
+        const photos = Store.photosByEvent(eventId).sort((a,b) => (a.date||"").localeCompare(b.date||""));
+        block.querySelectorAll(".photo-tile").forEach(tile => {
+          tile.addEventListener("click", () => {
+            window.__lbList = photos;
+            openLB(parseInt(tile.dataset.idx));
+          });
+        });
+      });
+    }
+
+    function renderAllPhotosView(allPhotos) {
+      return `
+        <div class="gallery-toolbar">
+          <div class="info"><strong id="all-count">${allPhotos.length}</strong> zdjęć z całej kolekcji</div>
+          <div class="gallery-toolbar-controls">
+            <select id="all-folder">
+              <option value="">Wszystkie albumy</option>
+              ${Store.all("galleryFolders").map(f => `<option value="${f.id}">${App.escapeHtml(f.name)}</option>`).join("")}
+            </select>
+            <select id="all-author">
+              <option value="">Wszyscy autorzy</option>
+              ${authors.map(a => `<option value="${a}">${App.escapeHtml(a)}</option>`).join("")}
+            </select>
+            <select id="all-sort">
+              <option value="date-desc">Najnowsze</option>
+              <option value="date-asc">Najstarsze</option>
+              <option value="title">Tytuł A→Z</option>
+              <option value="random">Losowo</option>
+            </select>
+            <div class="gallery-view-toggle">
+              <button class="active" id="vw-masonry">⊞ Masonry</button>
+              <button id="vw-grid">▦ Siatka</button>
+            </div>
+          </div>
+        </div>
+        <div id="all-photos-grid"></div>
+      `;
+    }
+
+    function wireAllPhotosView(allPhotos) {
+      let state = { folder: "", author: "", sort: "date-desc", view: "masonry" };
+
+      function paint() {
+        let list = [...allPhotos];
+        if (state.folder) list = list.filter(p => p.folderId === state.folder);
+        if (state.author) list = list.filter(p => p.author === state.author);
+        if (state.sort === "date-asc") list.sort((a,b) => (a.date||"").localeCompare(b.date||""));
+        else if (state.sort === "title") list.sort((a,b) => (a.title||"").localeCompare(b.title||"", "pl"));
+        else if (state.sort === "random") list.sort(() => Math.random() - 0.5);
+        else list.sort((a,b) => (b.date||"").localeCompare(a.date||""));
+
+        document.getElementById("all-count").textContent = list.length;
+
+        const grid = document.getElementById("all-photos-grid");
+        grid.className = state.view === "masonry" ? "photo-masonry" : "photo-grid";
+        grid.innerHTML = list.map((p, i) => `
+          <div class="photo-tile aspect-${p.aspect || 'square'}" data-idx="${i}" style="background:${p.cover}">
+            <div class="photo-tile-info">
+              <strong>${App.escapeHtml(p.title)}</strong><br>
+              <small>${App.escapeHtml(p.author || '')} · ${App.fmtDateShort(p.date || '')}</small>
+            </div>
+          </div>
+        `).join("");
+
+        grid.querySelectorAll(".photo-tile").forEach(tile => {
+          tile.addEventListener("click", () => {
+            window.__lbList = list;
+            openLB(parseInt(tile.dataset.idx));
+          });
+        });
+      }
+
+      document.getElementById("all-folder").addEventListener("change", e => { state.folder = e.target.value; paint(); });
+      document.getElementById("all-author").addEventListener("change", e => { state.author = e.target.value; paint(); });
+      document.getElementById("all-sort").addEventListener("change", e => { state.sort = e.target.value; paint(); });
+      document.getElementById("vw-masonry").addEventListener("click", () => {
+        state.view = "masonry";
+        document.getElementById("vw-masonry").classList.add("active");
+        document.getElementById("vw-grid").classList.remove("active");
+        paint();
+      });
+      document.getElementById("vw-grid").addEventListener("click", () => {
+        state.view = "grid";
+        document.getElementById("vw-grid").classList.add("active");
+        document.getElementById("vw-masonry").classList.remove("active");
+        paint();
+      });
+      paint();
+    }
   }
 
+  // ============== FOLDER VIEW ==============
   function renderFolder(fid) {
     const folder = Store.get("galleryFolders", fid);
     if (!folder) {
@@ -86,6 +284,8 @@
       return;
     }
     const photos = Store.photosByFolder(fid).sort((a,b) => (b.date||"").localeCompare(a.date||""));
+    const tags = [...new Set(photos.flatMap(p => p.tags || []))];
+    const authors = [...new Set(photos.map(p => p.author).filter(Boolean))];
 
     document.getElementById("page-title").textContent = folder.name;
     document.getElementById("page-lead").textContent = folder.description || "";
@@ -95,33 +295,49 @@
       <span>${App.escapeHtml(folder.name)}</span>
     `;
 
-    // Tag filter
-    const tags = [...new Set(photos.flatMap(p => p.tags || []))];
-
     root.innerHTML = `
-      <div style="display:flex;gap:16px;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap">
-        <div>
-          <a href="galeria.html" class="btn btn-ghost btn-sm">← Wszystkie albumy</a>
-          <span style="margin-left:12px;color:var(--text-muted)">${photos.length} zdjęć</span>
+      <div class="gallery-toolbar">
+        <div class="info">
+          <a href="galeria.html" class="btn btn-ghost btn-sm" style="margin-right:8px">← Wszystkie albumy</a>
+          <strong id="vis-count">${photos.length}</strong> zdjęć
         </div>
-        <div style="display:flex;gap:8px">
+        <div class="gallery-toolbar-controls">
+          <select id="srt">
+            <option value="date-desc">Najnowsze</option>
+            <option value="date-asc">Najstarsze</option>
+            <option value="title">Tytuł A→Z</option>
+          </select>
+          <div class="gallery-view-toggle">
+            <button class="active" id="vw-masonry">⊞ Masonry</button>
+            <button id="vw-grid">▦ Siatka</button>
+          </div>
           <button class="btn btn-outline btn-sm" id="slideshow-btn">▶ Pokaz slajdów</button>
         </div>
       </div>
+
       ${tags.length ? `<div class="tag-pills" id="tags">
         <span class="tag-pill active" data-tag="">Wszystkie</span>
         ${tags.map(t => `<span class="tag-pill" data-tag="${t}">#${t}</span>`).join("")}
       </div>` : ''}
-      <div class="photo-grid" id="photos-grid"></div>
+
+      <div class="photo-masonry" id="photos-grid"></div>
     `;
 
-    let activeTag = "";
+    let state = { tag: "", sort: "date-desc", view: "masonry" };
     const grid = document.getElementById("photos-grid");
+
     function paint() {
-      const list = activeTag ? photos.filter(p => (p.tags || []).includes(activeTag)) : photos;
+      let list = [...photos];
+      if (state.tag) list = list.filter(p => (p.tags || []).includes(state.tag));
+      if (state.sort === "date-asc") list.sort((a,b) => (a.date||"").localeCompare(b.date||""));
+      else if (state.sort === "title") list.sort((a,b) => (a.title||"").localeCompare(b.title||"", "pl"));
+      else list.sort((a,b) => (b.date||"").localeCompare(a.date||""));
+
       window.__lbList = list;
+      document.getElementById("vis-count").textContent = list.length;
+      grid.className = state.view === "masonry" ? "photo-masonry" : "photo-grid";
       grid.innerHTML = list.map((p, i) => `
-        <div class="photo-tile reveal" data-idx="${i}" style="background:${p.cover}">
+        <div class="photo-tile aspect-${p.aspect || 'square'}" data-idx="${i}" style="background:${p.cover}">
           <div class="photo-tile-info">
             <strong>${App.escapeHtml(p.title)}</strong><br>
             <small>${App.escapeHtml(p.author || '')} · ${App.fmtDateShort(p.date || '')}</small>
@@ -130,27 +346,39 @@
       `).join("");
       grid.querySelectorAll(".photo-tile").forEach(el => {
         el.addEventListener("click", () => openLB(parseInt(el.dataset.idx)));
-        setTimeout(() => el.classList.add("in"), 50);
       });
     }
     paint();
+
     if (tags.length) {
       document.getElementById("tags").addEventListener("click", e => {
         if (!e.target.classList.contains("tag-pill")) return;
         document.querySelectorAll("#tags .tag-pill").forEach(p => p.classList.remove("active"));
         e.target.classList.add("active");
-        activeTag = e.target.dataset.tag;
+        state.tag = e.target.dataset.tag;
         paint();
       });
     }
-
+    document.getElementById("srt").addEventListener("change", e => { state.sort = e.target.value; paint(); });
+    document.getElementById("vw-masonry").addEventListener("click", () => {
+      state.view = "masonry";
+      document.getElementById("vw-masonry").classList.add("active");
+      document.getElementById("vw-grid").classList.remove("active");
+      paint();
+    });
+    document.getElementById("vw-grid").addEventListener("click", () => {
+      state.view = "grid";
+      document.getElementById("vw-grid").classList.add("active");
+      document.getElementById("vw-masonry").classList.remove("active");
+      paint();
+    });
     document.getElementById("slideshow-btn").addEventListener("click", () => {
       openLB(0);
       window.__slideshow = setInterval(() => navLB(1), 3000);
     });
   }
 
-  // Lightbox
+  // ============== LIGHTBOX ==============
   let lbIdx = 0;
   const lb = document.getElementById("lightbox");
   function openLB(idx) {
@@ -175,7 +403,19 @@
     const p = list[lbIdx];
     if (!p) return closeLB();
     document.getElementById("lb-content").style.background = p.cover;
-    document.getElementById("lb-info").innerHTML = `<strong>${App.escapeHtml(p.title)}</strong><small>${App.escapeHtml(p.author || '')} · ${App.fmtDate(p.date || '')} · ${lbIdx+1} / ${list.length}</small>`;
+    const event = p.eventId ? Store.get("events", p.eventId) : null;
+    document.getElementById("lb-info").innerHTML = `
+      <div class="title-row">
+        <strong>${App.escapeHtml(p.title)}</strong>
+        <span class="counter">${lbIdx+1} / ${list.length}</span>
+      </div>
+      <div class="meta-pills">
+        ${p.author ? `<span>📷 ${App.escapeHtml(p.author)}</span>` : ''}
+        <span>📅 ${App.fmtDate(p.date || '')}</span>
+        ${(p.tags || []).slice(0,3).map(t => `<span>#${App.escapeHtml(t)}</span>`).join("")}
+        ${event ? `<span>🎉 ${App.escapeHtml(event.title)}</span>` : ''}
+      </div>
+    `;
   }
   document.getElementById("lb-close").addEventListener("click", closeLB);
   document.getElementById("lb-prev").addEventListener("click", () => navLB(-1));
