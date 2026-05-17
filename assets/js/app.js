@@ -283,6 +283,121 @@
     toast("Dziękujemy za zapisanie się!", "ok");
   }
 
+  // ---------------- SUN — sunrise/sunset calculation (NOAA-based) ----------------
+  // Lat/Lon for Pustynia Błędowska (Klucze, MŚ): 50.346°N, 19.487°E
+  function sunTimes(date = new Date(), lat = 50.346, lon = 19.487) {
+    const rad = Math.PI / 180;
+    const start = new Date(date.getFullYear(), 0, 0);
+    const dayOfYear = Math.floor((date - start) / 86400000);
+    // Solar declination (Spencer formula simplified)
+    const gamma = 2 * Math.PI / 365 * (dayOfYear - 1);
+    const decl = 0.006918 - 0.399912*Math.cos(gamma) + 0.070257*Math.sin(gamma)
+                - 0.006758*Math.cos(2*gamma) + 0.000907*Math.sin(2*gamma)
+                - 0.002697*Math.cos(3*gamma) + 0.00148*Math.sin(3*gamma);
+    // Hour angle (zenith 90.833° accounts for atmospheric refraction)
+    const zenith = 90.833 * rad;
+    const cosH = (Math.cos(zenith) - Math.sin(lat*rad)*Math.sin(decl)) / (Math.cos(lat*rad)*Math.cos(decl));
+    if (cosH < -1) return { sunrise: "—", sunset: "—", dayLength: "24:00", polarDay: true };
+    if (cosH > 1)  return { sunrise: "—", sunset: "—", dayLength: "00:00", polarNight: true };
+    const H = Math.acos(cosH);
+    // UTC times in hours
+    const sunriseUTC = 12 - H * 12 / Math.PI - lon / 15;
+    const sunsetUTC  = 12 + H * 12 / Math.PI - lon / 15;
+    // Local timezone offset (Poland: CET=+1 / CEST=+2)
+    const offset = -date.getTimezoneOffset() / 60;
+    return {
+      sunrise: hoursToHM(sunriseUTC + offset),
+      sunset:  hoursToHM(sunsetUTC + offset),
+      dayLength: hoursToHM((sunsetUTC - sunriseUTC + 24) % 24),
+      sunriseHours: (sunriseUTC + offset + 24) % 24,
+      sunsetHours:  (sunsetUTC + offset + 24) % 24
+    };
+  }
+  function hoursToHM(h) {
+    if (h < 0) h += 24;
+    if (h >= 24) h -= 24;
+    const hh = Math.floor(h);
+    const mm = Math.round((h - hh) * 60);
+    return String(hh).padStart(2, "0") + ":" + String(mm % 60).padStart(2, "0");
+  }
+
+  // ---------------- WEATHER simulator (deterministic by date) ----------------
+  // No external API — generates pseudo-realistic weather based on month + day.
+  function getWeather(date = new Date()) {
+    const month = date.getMonth(); // 0–11
+    const dayKey = date.toISOString().slice(0,10);
+    // Climate base for Pustynia Błędowska (continental, dry, sunny)
+    const baseTemp = [
+      -2, 0, 5, 11, 16, 20, 22, 21, 16, 10, 4, 0   // monthly avg max
+    ][month];
+    // Seeded "random" using day key (consistent within the same day)
+    const seed = [...dayKey].reduce((s,c) => s + c.charCodeAt(0), 0);
+    const rng = (n) => {
+      const x = Math.sin(seed + n) * 10000;
+      return x - Math.floor(x);
+    };
+    const tempVar = (rng(1) - 0.5) * 8;
+    const temp = Math.round(baseTemp + tempVar);
+    const conditions = [
+      { code: "sunny",   label: "Słonecznie",      icon: "☀️", emoji: "☀️" },
+      { code: "partly",  label: "Częściowe zachmurzenie", icon: "⛅", emoji: "⛅" },
+      { code: "cloudy",  label: "Pochmurno",       icon: "☁️", emoji: "☁️" },
+      { code: "rain",    label: "Przelotne opady", icon: "🌧️", emoji: "🌧️" },
+      { code: "storm",   label: "Burza",           icon: "⛈️", emoji: "⛈️" },
+      { code: "snow",    label: "Opady śniegu",    icon: "❄️", emoji: "❄️" },
+      { code: "fog",     label: "Mgła",            icon: "🌫️", emoji: "🌫️" }
+    ];
+    // Weather distribution by month — desert area = mostly sunny
+    let pool;
+    if (month >= 11 || month <= 1) pool = ["snow","cloudy","cloudy","fog","partly","sunny"];
+    else if (month <= 3) pool = ["cloudy","partly","sunny","rain","fog"];
+    else if (month <= 8) pool = ["sunny","sunny","partly","partly","cloudy","storm","rain"];
+    else pool = ["sunny","partly","cloudy","cloudy","rain","fog"];
+    const cond = conditions.find(c => c.code === pool[Math.floor(rng(2) * pool.length)]) || conditions[0];
+
+    const wind = Math.round(8 + rng(3) * 18); // 8–26 km/h (windy region!)
+    const humidity = Math.round(40 + rng(4) * 40); // 40–80%
+    const feels = temp - Math.round(rng(5) * 3);
+    const uv = Math.max(0, Math.round((1 - Math.abs(month - 6) / 6) * 10 - rng(6) * 2));
+
+    // Recommendation
+    let recommendation;
+    if (cond.code === "storm" || cond.code === "snow") recommendation = "Lepiej zostań w domu — niesprzyjająca pogoda!";
+    else if (cond.code === "rain") recommendation = "Weź pelerynę i odkryj pustynię w deszczu.";
+    else if (temp >= 25 && cond.code === "sunny") recommendation = "Idealna pogoda na sandboarding! Pamiętaj o wodzie.";
+    else if (temp >= 18) recommendation = "Świetne warunki na zwiedzanie i fotografię.";
+    else if (temp >= 10) recommendation = "Ubierz się ciepło — w sam raz na spacery.";
+    else if (temp >= 0)  recommendation = "Zimowy klimat — pustynia zaśnieżona wygląda magicznie.";
+    else recommendation = "Mróz — wybierz krótszy szlak i ciepłą herbatę w kawiarni.";
+
+    // 24h forecast (hourly)
+    const hourly = Array.from({ length: 24 }, (_, h) => {
+      // Day curve: peak ~ 14:00, min ~ 5:00
+      const tHour = baseTemp + tempVar + Math.cos((h - 14) / 12 * Math.PI) * 7;
+      return Math.round(tHour);
+    });
+
+    // 5-day forecast
+    const days = ["Pn","Wt","Śr","Cz","Pt","Sb","Nd"];
+    const forecast = Array.from({ length: 5 }, (_, i) => {
+      const d = new Date(date); d.setDate(d.getDate() + i);
+      const dKey = d.toISOString().slice(0,10);
+      const dSeed = [...dKey].reduce((s,c) => s + c.charCodeAt(0), 0);
+      const dRng = (n) => { const x = Math.sin(dSeed + n) * 10000; return x - Math.floor(x); };
+      const dTemp = Math.round(baseTemp + (dRng(1) - 0.5) * 8);
+      const dCond = conditions.find(c => c.code === pool[Math.floor(dRng(2) * pool.length)]) || conditions[0];
+      return {
+        day: i === 0 ? "Dziś" : days[(d.getDay() + 6) % 7],
+        date: d.getDate() + "." + String(d.getMonth() + 1).padStart(2, "0"),
+        temp: dTemp,
+        tempMin: dTemp - 4 - Math.round(dRng(7) * 4),
+        cond: dCond
+      };
+    });
+
+    return { temp, feels, condition: cond, wind, humidity, uv, recommendation, hourly, forecast };
+  }
+
   // ---------------- Init ----------------
   document.addEventListener("DOMContentLoaded", () => {
     injectChrome();
@@ -291,5 +406,5 @@
   });
 
   // Public API
-  window.App = { toast, fmtDate, fmtDateShort, escapeHtml, animateCounters, subscribeNewsletter };
+  window.App = { toast, fmtDate, fmtDateShort, escapeHtml, animateCounters, subscribeNewsletter, sunTimes, getWeather };
 })();
