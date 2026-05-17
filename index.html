@@ -329,14 +329,11 @@
     <div class="container">
       <div class="section-head">
         <span class="eyebrow">Partnerzy i fundatorzy</span>
+        <h2 style="font-size: 1.6rem">Razem dbamy o pustynię</h2>
       </div>
-      <div class="partners-row">
-        <div class="partner-logo">Natura 2000</div>
-        <div class="partner-logo">Małopolska</div>
-        <div class="partner-logo">Klucze</div>
-        <div class="partner-logo">EFRR UE</div>
-        <div class="partner-logo">LIFE+</div>
-        <div class="partner-logo">NFOŚiGW</div>
+      <div class="partners-marquee" id="partners-strip"></div>
+      <div class="text-center mt-6">
+        <a href="partnerzy.html" class="btn btn-outline">Wszyscy partnerzy →</a>
       </div>
     </div>
   </section>
@@ -655,6 +652,19 @@
   document.getElementById("gallery-preview").innerHTML = photos.map(p => `
     <a href="galeria.html?folder=${p.folderId}" style="background:${p.cover}" title="${App.escapeHtml(p.title)}"></a>
   `).join("");
+
+  // ============== PARTNERS STRIP ==============
+  const allPartners = Store.all("partners");
+  const platinumGold = allPartners.filter(p => p.tier === "platinum" || p.tier === "gold").slice(0, 8);
+  const partnersStrip = document.getElementById("partners-strip");
+  if (partnersStrip) {
+    partnersStrip.innerHTML = platinumGold.map(p => `
+      <a href="partnerzy.html#${p.id}" class="partner-tile" title="${App.escapeHtml(p.name)}">
+        ${App.partnerLogoSVG(p)}
+        <span class="name">${App.escapeHtml(p.name)}</span>
+      </a>
+    `).join("");
+  }
 })();
 </script>
 </body>

@@ -555,6 +555,39 @@
       { code: "nca",  name: "Granty NCN", org: "Narodowe Centrum Nauki", description: "Granty badawcze — m.in. inwentaryzacja gatunków na pustyni.", totalReceived: "180 000 zł", projects: 0 }
     ],
 
+    // ---- Partnerzy / Sponsorzy ----
+    partners: [
+      // Instytucje publiczne
+      { id: "p_natura",   name: "Natura 2000",            tier: "platinum", category: "Instytucje", description: "Europejska sieć obszarów chronionych — pustynia jest częścią od 2008 r. (kod PLH120014). Współpraca przy monitoringu siedlisk, raportowanie do Komisji Europejskiej.", website: "https://natura2000.eea.europa.eu", since: 2008, logo: { kind: "leaf", colors: ["#3F5E32","#6E9A5C"] } },
+      { id: "p_malopolska", name: "Województwo Małopolskie", tier: "platinum", category: "Instytucje", description: "Regionalny patron i partner. Współfinansowanie projektów infrastrukturalnych i edukacyjnych. Promocja w materiałach turystycznych regionu.", website: "https://www.malopolska.pl", since: 2010, logo: { kind: "shield", colors: ["#C0392B","#FFD27A"] } },
+      { id: "p_klucze",   name: "Gmina Klucze",            tier: "platinum", category: "Instytucje", description: "Lokalny partner założycielski — pustynia leży na terenie gminy. Wspólne planowanie infrastruktury, zezwolenia, koordynacja imprez masowych.", website: "https://klucze.pl", since: 2003, logo: { kind: "key", colors: ["#8B5A2B","#F4A340"] } },
+      { id: "p_ndap",     name: "Nadleśnictwo Olkusz",     tier: "gold",     category: "Instytucje", description: "Lasy Państwowe — zarządzanie obszarami leśnymi otaczającymi pustynię. Wspólne projekty renaturyzacji.", website: "https://olkusz.katowice.lasy.gov.pl", since: 2014, logo: { kind: "tree", colors: ["#3F5E32","#A8C49B"] } },
+      { id: "p_rdo",      name: "RDOŚ Kraków",             tier: "gold",     category: "Instytucje", description: "Regionalna Dyrekcja Ochrony Środowiska — nadzór formalny nad obszarem Natura 2000.", website: "https://krakow.rdos.gov.pl", since: 2008, logo: { kind: "leaf", colors: ["#6E9A5C","#3F5E32"] } },
+
+      // Fundatorzy / Sponsorzy strategiczni
+      { id: "p_efrr",     name: "EFRR / Fundusze UE",      tier: "platinum", category: "Fundatorzy", description: "Główny fundator inwestycji infrastrukturalnych. Łącznie ponad 16,8 mln zł w projektach 2014–2026.", website: "https://www.funduszeeuropejskie.gov.pl", since: 2014, logo: { kind: "stars", colors: ["#003399","#FFCC00"] } },
+      { id: "p_life",     name: "LIFE+ Komisja Europ.",    tier: "gold",     category: "Fundatorzy", description: "Program ochrony klimatu — finansowanie czynnej ochrony siedlisk pustynnych. 1,2 mln zł od 2014.", website: "https://cinea.ec.europa.eu/programmes/life", since: 2014, logo: { kind: "leaf", colors: ["#6E9A5C","#FFCC00"] } },
+      { id: "p_nfos",     name: "NFOŚiGW",                 tier: "gold",     category: "Fundatorzy", description: "Narodowy Fundusz Ochrony Środowiska — 2,4 mln zł na infrastrukturę dla osób z niepełnosprawnościami.", website: "https://www.nfosigw.gov.pl", since: 2018, logo: { kind: "drop", colors: ["#4A9BC4","#234567"] } },
+      { id: "p_wfos",     name: "WFOŚiGW Małopolska",      tier: "silver",   category: "Fundatorzy", description: "Regionalny fundusz — 1,1 mln zł na monitoring przyrodniczy.", website: "https://www.wfos.krakow.pl", since: 2020, logo: { kind: "drop", colors: ["#A8C49B","#6E9A5C"] } },
+
+      // Media partnerzy
+      { id: "p_natgeo",   name: "National Geographic Polska", tier: "silver", category: "Media", description: "Patronat medialny nad warsztatami fotografii krajobrazu. Reportaże o pustyni w wydaniach drukowanych i online.", website: "https://www.national-geographic.pl", since: 2022, logo: { kind: "rect", colors: ["#FFCC00","#1F1F1F"] } },
+      { id: "p_focus",    name: "Focus / Focus Wiedza",    tier: "silver",   category: "Media", description: "Magazyn naukowo-popularny. Dwa duże reportaże o Pustyni Błędowskiej w 2023–2024.", website: "https://www.focus.pl", since: 2023, logo: { kind: "circle", colors: ["#C0392B","#1F1F1F"] } },
+      { id: "p_radio",    name: "Radio Kraków",            tier: "silver",   category: "Media", description: "Patronat radiowy nad cyklicznymi wydarzeniami — Inwazja Pustynna, Maraton, Perseidy.", website: "https://www.radiokrakow.pl", since: 2019, logo: { kind: "wave", colors: ["#F4A340","#C0392B"] } },
+      { id: "p_tvp3",     name: "TVP3 Kraków",             tier: "silver",   category: "Media", description: "Reportaże telewizyjne z największych imprez. Pełen patronat nad sezonem 2025.", website: "https://krakow.tvp.pl", since: 2020, logo: { kind: "rect", colors: ["#234567","#FFCC00"] } },
+
+      // Lokalni
+      { id: "p_olkuz",    name: 'Lokalna Grupa Działania „Nad Białą Przemszą"', tier: "bronze", category: "Lokalni", description: "Lokalna grupa działania w ramach PROW — wspólne projekty turystyczne i kulturalne dla mieszkańców regionu.", website: "https://lgd-przemsza.pl", since: 2016, logo: { kind: "rect", colors: ["#A8C49B","#3F5E32"] } },
+      { id: "p_pttkkr",   name: "PTTK Oddział Olkusz",     tier: "bronze",   category: "Lokalni", description: "Polskie Towarzystwo Turystyczno-Krajoznawcze — szkolenia przewodników, wytyczanie szlaków pieszych.", website: "https://www.pttk-olkusz.pl", since: 2012, logo: { kind: "circle", colors: ["#1F1F1F","#F4A340"] } },
+      { id: "p_studio",   name: "Drone Studio PL",         tier: "bronze",   category: "Lokalni", description: "Lokalne studio drone — partner technologiczny przy filmach promocyjnych i monitoringu z lotu ptaka.", website: "#", since: 2021, logo: { kind: "circle", colors: ["#4A9BC4","#1F1F1F"] } },
+      { id: "p_natfoto",  name: "Foto Express Olkusz",     tier: "bronze",   category: "Lokalni", description: "Studio fotograficzne — fotograf etatowy wszystkich naszych imprez od 2018 r.", website: "#", since: 2018, logo: { kind: "circle", colors: ["#F4A340","#8B5A2B"] } },
+      { id: "p_uagh",     name: "AGH — Wydz. Geol., Geofizyki i Ochrony Środ.", tier: "silver", category: "Naukowi", description: "Akademia Górniczo-Hutnicza w Krakowie — partner naukowy. Inwentaryzacja roślin, badania geologiczne.", website: "https://www.geol.agh.edu.pl", since: 2015, logo: { kind: "shield", colors: ["#C0392B","#1F1F1F"] } },
+      { id: "p_uj",       name: "Uniwersytet Jagielloński — Wydz. Biol.",   tier: "silver",   category: "Naukowi", description: "UJ Kraków — partner naukowy w badaniach awifauny i bezkręgowców. Cykliczne praktyki studenckie.", website: "https://biologia.uj.edu.pl", since: 2017, logo: { kind: "shield", colors: ["#234567","#FFCC00"] } }
+    ],
+
+    // ---- Aplikacje partnerskie (sample) ----
+    partnerApplications: [],
+
     prices: [
       { id: "pc1", category: "Bilety wstępu", name: "Bilet normalny", price: 15, unit: "os.", description: "Dorośli powyżej 18 lat", order: 1 },
       { id: "pc2", category: "Bilety wstępu", name: "Bilet ulgowy", price: 8, unit: "os.", description: "Dzieci 7–18 lat, studenci, seniorzy", order: 2 },
@@ -895,7 +928,7 @@
       { id: "f12", q: "Czy korzystam z roweru elektrycznego?", a: "Tak! W naszej wypożyczalni mamy 12 e-bike z baterią starczającą na 80 km jazdy. Cena: 80 zł/godz., 250 zł/dzień. Idealne na trasę Maraton Pustynny.", category: "Atrakcje" },
       { id: "f13", q: "Czy w sezonie zimowym jest otwarte?", a: "Tak — pustynia jest otwarta cały rok! Sezon zimowy (XI–III): 9:00–16:00. Atrakcje sezonowe (quady, wielbłądy, sandboarding) są ograniczone, ale spacery i fotografia w zimowej scenerii są niezapomnianą atrakcją.", category: "Zwiedzanie" },
       { id: "f14", q: "Czy mogę latać dronem?", a: "Tak, ale wymaga zezwolenia (500 zł/dzień). Skontaktuj się z biurem co najmniej 7 dni przed planowanym lotem. Zarejestruj lot zgodnie z przepisami PAŻP.", category: "Atrakcje" },
-      { id: "f15", q: "Co z osobami z niepełnosprawnościami?", a: "Trasa edukacyjna 7,2 km jest dostępna dla wózków. Mamy toalety przystosowane, miejsca parkingowe i możemy wypożyczyć wózek terenowy. Projekt „Pustynia bez barier" trwa do 2026 r.", category: "Dostępność" }
+      { id: "f15", q: "Co z osobami z niepełnosprawnościami?", a: 'Trasa edukacyjna 7,2 km jest dostępna dla wózków. Mamy toalety przystosowane, miejsca parkingowe i możemy wypożyczyć wózek terenowy. Projekt „Pustynia bez barier" trwa do 2026 r.', category: "Dostępność" }
     ],
 
     users: [

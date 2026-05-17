@@ -406,6 +406,67 @@
     animateCounters();
   });
 
+  // ---------------- PARTNER LOGOS — stylized SVG generator ----------------
+  function partnerLogoSVG(partner) {
+    const size = 200;
+    const colors = (partner.logo && partner.logo.colors) || ["#8B5A2B","#1F1F1F"];
+    const kind = (partner.logo && partner.logo.kind) || "circle";
+    const initials = partner.name.split(/\s+/).slice(0, 2).map(w => w[0]).filter(Boolean).join("").toUpperCase();
+
+    let shape = "";
+    switch (kind) {
+      case "shield":
+        shape = `<path d="M${size/2} 30 L${size-30} 60 L${size-30} 130 Q${size-30} 165 ${size/2} 180 Q30 165 30 130 L30 60 Z" fill="url(#g)"/>`;
+        break;
+      case "key":
+        shape = `<circle cx="${size/2-20}" cy="${size/2}" r="55" fill="url(#g)"/><circle cx="${size/2-20}" cy="${size/2}" r="22" fill="white"/><rect x="${size/2+25}" y="${size/2-12}" width="60" height="24" fill="url(#g)" rx="4"/><rect x="${size/2+60}" y="${size/2-22}" width="14" height="14" fill="url(#g)"/><rect x="${size/2+60}" y="${size/2+8}" width="14" height="14" fill="url(#g)"/>`;
+        break;
+      case "leaf":
+        shape = `<path d="M${size/2} 40 Q40 60 35 110 Q60 160 ${size/2} 165 Q140 160 165 110 Q160 60 ${size/2} 40 Z" fill="url(#g)"/><path d="M${size/2} 50 L${size/2} 165" stroke="white" stroke-width="3" opacity=".6"/>`;
+        break;
+      case "tree":
+        shape = `<path d="M${size/2} 30 L${size/2-50} 120 L${size/2-30} 120 L${size/2-65} 165 L${size/2+65} 165 L${size/2+30} 120 L${size/2+50} 120 Z" fill="url(#g)"/><rect x="${size/2-10}" y="160" width="20" height="20" fill="${colors[1]}"/>`;
+        break;
+      case "drop":
+        shape = `<path d="M${size/2} 35 Q40 100 50 130 Q60 175 ${size/2} 175 Q140 175 150 130 Q160 100 ${size/2} 35 Z" fill="url(#g)"/>`;
+        break;
+      case "stars":
+        shape = `<rect x="20" y="40" width="${size-40}" height="${size-80}" fill="url(#g)" rx="6"/>` +
+          `<g fill="${colors[1]}">` +
+          [[60,90],[105,80],[150,90],[60,135],[105,145],[150,135],[80,110],[130,110]]
+            .map(([cx,cy]) => `<polygon points="${cx},${cy-8} ${cx+2.5},${cy-3} ${cx+8},${cy-3} ${cx+3.5},${cy+1} ${cx+5},${cy+8} ${cx},${cy+4} ${cx-5},${cy+8} ${cx-3.5},${cy+1} ${cx-8},${cy-3} ${cx-2.5},${cy-3}"/>`).join("") +
+          `</g>`;
+        break;
+      case "wave":
+        shape = `<rect x="20" y="40" width="${size-40}" height="${size-80}" fill="url(#g)" rx="${size/2}"/>` +
+          `<g fill="white" opacity=".7">` +
+          `<path d="M40 100 Q60 80 80 100 T120 100 T160 100" stroke="white" stroke-width="4" fill="none"/>` +
+          `<path d="M40 120 Q60 100 80 120 T120 120 T160 120" stroke="white" stroke-width="3" fill="none" opacity=".6"/>` +
+          `</g>`;
+        break;
+      case "rect":
+        shape = `<rect x="20" y="40" width="${size-40}" height="${size-80}" fill="url(#g)" rx="6"/>`;
+        break;
+      case "circle":
+      default:
+        shape = `<circle cx="${size/2}" cy="${size/2}" r="${size/2-20}" fill="url(#g)"/>`;
+    }
+
+    const initialsText = `<text x="${size/2}" y="${size/2+10}" text-anchor="middle" fill="white" font-family="Georgia, serif" font-weight="800" font-size="42" letter-spacing="2">${escapeHtml(initials)}</text>`;
+    const skipInitials = ["leaf","key","tree","drop","stars","wave"].includes(kind);
+
+    return `<svg viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg" class="partner-logo-svg" aria-hidden="true">
+      <defs>
+        <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="${colors[0]}"/>
+          <stop offset="100%" stop-color="${colors[1] || colors[0]}"/>
+        </linearGradient>
+      </defs>
+      ${shape}
+      ${skipInitials ? '' : initialsText}
+    </svg>`;
+  }
+
   // Public API
-  window.App = { toast, fmtDate, fmtDateShort, escapeHtml, animateCounters, subscribeNewsletter, sunTimes, getWeather };
+  window.App = { toast, fmtDate, fmtDateShort, escapeHtml, animateCounters, subscribeNewsletter, sunTimes, getWeather, partnerLogoSVG };
 })();
