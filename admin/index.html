@@ -14,6 +14,18 @@
   <div id="admin-topbar-slot"></div>
   <div class="admin-content">
 
+    <!-- Greeting -->
+    <div style="background: linear-gradient(135deg, var(--sand-900), #2A1F14); color: var(--sand-50); border-radius: var(--r-lg); padding: 24px; margin-bottom: 24px; display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px">
+      <div>
+        <h2 style="color:#fff;margin-bottom:4px" id="greeting">Witaj!</h2>
+        <p style="color:var(--sand-300);margin:0">Co dziś robimy? Naciśnij <kbd>?</kbd> aby zobaczyć skróty klawiszowe.</p>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <a href="news.html?new=1" class="btn btn-accent">📰 Nowa aktualność</a>
+        <a href="events.html?new=1" class="btn btn-outline" style="color:#fff;border-color:rgba(255,255,255,.3)">📅 Nowe wydarzenie</a>
+      </div>
+    </div>
+
     <!-- KPIs -->
     <div class="kpi-grid">
       <div class="kpi-card">
@@ -42,12 +54,24 @@
       </div>
     </div>
 
-    <div class="dash-grid">
+    <!-- Charts row -->
+    <div class="dash-2col">
+      <div class="chart-card">
+        <h4>📈 Wyświetlenia top 8 newsów</h4>
+        <div id="chart-news"></div>
+      </div>
+      <div class="chart-card">
+        <h4>📂 Treści w bazie</h4>
+        <div id="chart-content"></div>
+      </div>
+    </div>
+
+    <div class="dash-grid" style="margin-top: 16px">
       <!-- Recent activity -->
       <div class="admin-card">
         <div class="admin-card-head">
-          <h3>Ostatnia aktywność</h3>
-          <button class="btn btn-ghost btn-sm">Zobacz wszystkie</button>
+          <h3>📋 Ostatnia aktywność</h3>
+          <a href="activity.html" class="btn btn-ghost btn-sm">Zobacz wszystkie</a>
         </div>
         <div class="admin-card-body">
           <ul class="activity-list" id="activity-list"></ul>
@@ -57,29 +81,31 @@
       <!-- Quick actions -->
       <div class="admin-card">
         <div class="admin-card-head">
-          <h3>Szybkie akcje</h3>
+          <h3>⚡ Szybkie akcje</h3>
         </div>
         <div class="admin-card-body" style="display:grid;gap:8px">
-          <a href="news.html" class="btn btn-primary"><span>📰 Dodaj aktualność</span></a>
-          <a href="events.html" class="btn btn-outline">📅 Dodaj wydarzenie</a>
-          <a href="gallery.html" class="btn btn-outline">🖼 Dodaj zdjęcia</a>
-          <a href="projects.html" class="btn btn-outline">🚧 Dodaj projekt</a>
-          <a href="messages.html" class="btn btn-outline">📨 Sprawdź wiadomości</a>
-          <a href="backup.html" class="btn btn-ghost">💾 Zrób backup</a>
+          <a href="news.html" class="btn btn-primary"><span>📰 Aktualności</span></a>
+          <a href="events.html" class="btn btn-outline">📅 Wydarzenia</a>
+          <a href="gallery.html" class="btn btn-outline">🖼 Galeria</a>
+          <a href="biketrails.html" class="btn btn-outline">🚴 Trasy rowerowe</a>
+          <a href="partners.html" class="btn btn-outline">🤝 Partnerzy</a>
+          <a href="analytics.html" class="btn btn-outline">📊 Analityka</a>
+          <a href="messages.html" class="btn btn-outline">📨 Wiadomości</a>
+          <a href="backup.html" class="btn btn-ghost">💾 Backup</a>
         </div>
       </div>
     </div>
 
-    <!-- Stats by category -->
-    <div class="dash-grid">
+    <!-- Top performers -->
+    <div class="dash-grid" style="margin-top: 16px">
       <div class="admin-card">
         <div class="admin-card-head">
-          <h3>Najpopularniejsze aktualności</h3>
+          <h3>🏆 Najpopularniejsze aktualności</h3>
         </div>
         <div class="admin-card-body" style="padding:0">
           <table class="admin-table">
             <thead>
-              <tr><th>Tytuł</th><th>Kategoria</th><th>Wyświetlenia</th><th>Data</th></tr>
+              <tr><th>Tytuł</th><th>Kategoria</th><th>Wyśw.</th><th>❤️</th></tr>
             </thead>
             <tbody id="top-news"></tbody>
           </table>
@@ -87,11 +113,11 @@
       </div>
       <div class="admin-card">
         <div class="admin-card-head">
-          <h3>Nadchodzące wydarzenia</h3>
+          <h3>📅 Nadchodzące wydarzenia</h3>
         </div>
         <div class="admin-card-body" style="padding:0">
           <table class="admin-table">
-            <thead><tr><th>Wydarzenie</th><th>Data</th></tr></thead>
+            <thead><tr><th>Wydarzenie</th><th>Data</th><th>Zapis.</th></tr></thead>
             <tbody id="upcoming-events"></tbody>
           </table>
         </div>
@@ -103,16 +129,24 @@
 
 <script src="../assets/js/store.js"></script>
 <script src="../assets/js/i18n.js"></script>
+<script src="../assets/js/app.js"></script>
 <script src="../assets/js/admin.js"></script>
 <script>
-if (!Admin.init({ title: "Dashboard" })) { /* redirected to login */ } else {
+if (Admin.init({ title: "Dashboard" })) {
   const news = Store.all("news");
   const events = Store.all("events");
   const photos = Store.all("photos");
   const folders = Store.all("galleryFolders");
   const messages = Store.all("messages");
   const newMsgs = messages.filter(m => !m.read).length;
+  const session = Store.session();
 
+  // Greeting (time-based)
+  const hour = new Date().getHours();
+  const greet = hour < 12 ? "Dzień dobry" : hour < 18 ? "Witaj" : "Dobry wieczór";
+  document.getElementById("greeting").textContent = `${greet}, ${session.name}!`;
+
+  // KPIs
   document.getElementById("kpi-news").textContent = news.filter(n => n.published).length;
   document.getElementById("kpi-events").textContent = events.length;
   document.getElementById("kpi-events-up").textContent = `${Store.upcomingEvents().length} nadchodzących`;
@@ -121,40 +155,58 @@ if (!Admin.init({ title: "Dashboard" })) { /* redirected to login */ } else {
   document.getElementById("kpi-messages").textContent = messages.length;
   document.getElementById("kpi-messages-new").textContent = `${newMsgs} nowych`;
 
-  // Top news
-  document.getElementById("top-news").innerHTML = [...news]
-    .sort((a,b) => (b.views||0) - (a.views||0))
-    .slice(0, 5)
-    .map(n => `<tr>
-      <td><a href="news.html?edit=${n.id}" style="font-weight:600">${n.title.length>40?n.title.slice(0,40)+'…':n.title}</a></td>
-      <td><span class="badge">${n.category}</span></td>
-      <td><strong>${(n.views||0).toLocaleString('pl-PL')}</strong></td>
-      <td><small style="color:var(--text-muted)">${App.fmtDateShort(n.date)}</small></td>
-    </tr>`).join("");
+  // Bar chart — top news
+  const top = [...news].sort((a,b) => (b.views||0) - (a.views||0)).slice(0, 8);
+  document.getElementById("chart-news").innerHTML = Admin.barChart(
+    top.map(n => ({ label: n.title.length > 10 ? n.title.slice(0,10) + '…' : n.title, value: n.views || 0 }))
+  );
+
+  // Donut — content
+  const colors = ["#F4A340","#6E9A5C","#4A9BC4","#C0392B","#9B59B6","#1F1F1F","#E67E22","#3498DB"];
+  document.getElementById("chart-content").innerHTML = Admin.donutChart([
+    { label: "Aktualności", value: news.length, color: colors[0] },
+    { label: "Wydarzenia", value: events.length, color: colors[1] },
+    { label: "Zdjęcia", value: photos.length, color: colors[2] },
+    { label: "Projekty", value: Store.all("projects").length, color: colors[3] },
+    { label: "Trasy", value: Store.all("bikeTrails").length, color: colors[4] },
+    { label: "Partnerzy", value: Store.all("partners").length, color: colors[5] }
+  ]);
+
+  // Top news with reactions
+  document.getElementById("top-news").innerHTML = top.slice(0, 5).map(n => `<tr>
+    <td><a href="news.html?edit=${n.id}" style="font-weight:600">${n.title.length>30?n.title.slice(0,30)+'…':App.escapeHtml(n.title)}</a></td>
+    <td><span class="badge">${App.escapeHtml(n.category)}</span></td>
+    <td><strong>${(n.views||0).toLocaleString('pl-PL')}</strong></td>
+    <td>${Store.totalReactions(n.id)}</td>
+  </tr>`).join("");
 
   // Upcoming events
-  document.getElementById("upcoming-events").innerHTML = Store.upcomingEvents()
-    .slice(0, 5)
-    .map(e => `<tr>
-      <td><a href="events.html?edit=${e.id}" style="font-weight:600">${e.title}</a><br>
-        <small style="color:var(--text-muted)">📍 ${e.location}</small></td>
+  document.getElementById("upcoming-events").innerHTML = Store.upcomingEvents().slice(0, 5).map(e => {
+    const pct = e.capacity ? Math.round((e.registered||0)/e.capacity*100) : 0;
+    return `<tr>
+      <td><a href="events.html?edit=${e.id}" style="font-weight:600">${App.escapeHtml(e.title.length>30?e.title.slice(0,30)+'…':e.title)}</a></td>
       <td><strong>${App.fmtDateShort(e.startDate)}</strong></td>
-    </tr>`).join("") || `<tr><td colspan="2" style="text-align:center;color:var(--text-muted);padding:24px">Brak nadchodzących wydarzeń</td></tr>`;
+      <td>${e.capacity ? `${e.registered||0}/${e.capacity}<br><small style="color:var(--text-muted)">${pct}%</small>` : '—'}</td>
+    </tr>`;
+  }).join("") || `<tr><td colspan="3" style="text-align:center;color:var(--text-muted);padding:24px">Brak nadchodzących wydarzeń</td></tr>`;
 
-  // Activity list — recent items
-  const acts = [];
-  news.slice(0, 3).forEach(n => acts.push({ icon: "📰", title: `Aktualność: ${n.title}`, sub: App.fmtDate(n.date) }));
-  events.slice(0, 2).forEach(e => acts.push({ icon: "📅", title: `Wydarzenie: ${e.title}`, sub: App.fmtDate(e.startDate) }));
-  messages.slice(0, 3).forEach(m => acts.push({ icon: "📨", title: `Wiadomość od ${m.name}`, sub: m.subject }));
-  document.getElementById("activity-list").innerHTML = acts.map(a => `
-    <li>
-      <div class="act-icon">${a.icon}</div>
-      <div class="act-content">
-        <strong>${App.escapeHtml(a.title)}</strong>
-        <small>${App.escapeHtml(a.sub)}</small>
-      </div>
-    </li>
-  `).join("") || `<li style="text-align:center;color:var(--text-muted);padding:24px">Brak aktywności</li>`;
+  // Activity preview
+  const acts = Admin.getActivities().slice(0, 6);
+  if (acts.length === 0) {
+    document.getElementById("activity-list").innerHTML = `<li style="text-align:center;color:var(--text-muted);padding:24px">Brak aktywności. Zacznij coś robić w panelu, by zobaczyć logi.</li>`;
+  } else {
+    const labels = { create: ["+", "Utworzono", "create"], update: ["✎", "Zaktualizowano", "update"], delete: ["✕", "Usunięto", "delete"], login: ["→", "Logowanie", "login"], publish: ["✓", "Publikacja", "publish"] };
+    document.getElementById("activity-list").innerHTML = acts.map(a => {
+      const [icon, label, cls] = labels[a.action] || ["•", a.action, ""];
+      return `<li>
+        <div class="act-icon ${cls}">${icon}</div>
+        <div class="act-content">
+          <strong>${App.escapeHtml(label)}: ${App.escapeHtml(a.details || a.target)}</strong>
+          <small>${a.userName || a.username} · ${App.fmtDateShort(a.date)}</small>
+        </div>
+      </li>`;
+    }).join("");
+  }
 }
 </script>
 </body>
