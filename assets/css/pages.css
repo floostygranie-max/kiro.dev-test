@@ -521,6 +521,389 @@
 .timeline-item h4 { margin-bottom: var(--s-2); font-size: 1.2rem; }
 .timeline-item p { color: var(--text-muted); }
 
+/* Timeline (enhanced) — era filters and richer cards */
+.timeline-filters {
+  display: flex;
+  gap: var(--s-2);
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: var(--s-6);
+  padding: var(--s-3);
+  background: var(--surface);
+  border-radius: var(--r-full);
+  max-width: max-content;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: var(--shadow-sm);
+}
+.timeline-filters button {
+  padding: 8px 16px;
+  border-radius: var(--r-full);
+  font-size: .85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: all var(--t-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.timeline-filters button:hover { background: var(--sand-100); }
+.timeline-filters button.active {
+  background: var(--sand-900);
+  color: var(--sand-50);
+}
+.timeline-item {
+  transition: opacity var(--t-mid), transform var(--t-mid);
+}
+.timeline-item.hidden {
+  opacity: .25;
+  filter: grayscale(.7);
+}
+.timeline-marker.era-prehistoric { background: #6E9A5C; }
+.timeline-marker.era-medieval    { background: #8B5A2B; }
+.timeline-marker.era-modern      { background: #C0392B; }
+.timeline-marker.era-contemporary{ background: var(--sun-400); }
+.timeline-tags {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-top: var(--s-2);
+}
+.timeline-tags span {
+  font-size: .7rem;
+  padding: 2px 8px;
+  background: var(--sand-100);
+  color: var(--sand-700);
+  border-radius: var(--r-full);
+}
+.timeline-image {
+  margin-top: var(--s-3);
+  height: 100px;
+  border-radius: var(--r-md);
+  background-size: cover;
+  background-position: center;
+  box-shadow: var(--shadow-sm);
+}
+
+/* =========================================================
+   NATURA 2000 SECTION
+   ========================================================= */
+.natura-section {
+  background:
+    radial-gradient(ellipse at 30% 30%, rgba(168,196,155,.2), transparent 50%),
+    linear-gradient(180deg, #F4F8EE 0%, #E8F0DC 100%);
+  position: relative;
+  overflow: hidden;
+}
+.natura-banner {
+  background: linear-gradient(135deg, #3F5E32 0%, #6E9A5C 100%);
+  color: #fff;
+  border-radius: var(--r-xl);
+  padding: var(--s-7);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: var(--s-7);
+}
+.natura-banner::before {
+  content: "";
+  position: absolute;
+  top: -50px; right: -50px;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(255,255,255,.15), transparent 70%);
+  border-radius: 50%;
+}
+.natura-banner h2 { color: #fff; margin-bottom: var(--s-3); }
+.natura-banner .lead { color: rgba(255,255,255,.9); max-width: 700px; }
+.natura-code-card {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  background: rgba(255,255,255,.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: var(--s-3) var(--s-5);
+  border-radius: var(--r-full);
+  margin-bottom: var(--s-4);
+  border: 1px solid rgba(255,255,255,.2);
+  font-family: monospace;
+  font-size: 1rem;
+  color: #fff;
+}
+.natura-code-card strong { color: var(--sun-400); }
+
+.natura-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--s-5);
+}
+@media (max-width: 900px) { .natura-grid { grid-template-columns: 1fr; } }
+.natura-card {
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  padding: var(--s-5);
+  border: 1px solid var(--border);
+  border-top: 4px solid var(--green-500);
+  transition: all var(--t-mid);
+}
+.natura-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+.natura-card .num {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--green-700);
+  line-height: 1;
+}
+.natura-card h4 { margin: var(--s-2) 0; }
+.natura-card p { color: var(--text-muted); font-size: .9rem; margin-bottom: 0; }
+
+/* Priority species */
+.priority-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--s-3);
+  margin-top: var(--s-5);
+}
+.priority-item {
+  background: var(--surface);
+  border-radius: var(--r-md);
+  padding: var(--s-3);
+  border: 1px solid var(--border);
+  display: flex;
+  gap: var(--s-3);
+  align-items: center;
+}
+.priority-item .icon-wrap {
+  width: 48px; height: 48px;
+  border-radius: var(--r-sm);
+  background: linear-gradient(135deg, var(--green-300), var(--green-500));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem;
+  flex-shrink: 0;
+}
+.priority-item .body strong { display: block; font-size: .95rem; }
+.priority-item .body small { font-style: italic; color: var(--text-muted); font-size: .75rem; }
+
+.priority-badge {
+  display: inline-block;
+  font-size: .65rem;
+  padding: 2px 8px;
+  border-radius: var(--r-full);
+  margin-top: 4px;
+  background: var(--danger);
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+/* Habitat distribution chart */
+.habitat-chart {
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  padding: var(--s-5);
+  margin-top: var(--s-5);
+  border: 1px solid var(--border);
+}
+.habitat-row {
+  display: grid;
+  grid-template-columns: 200px 1fr 60px;
+  gap: var(--s-3);
+  align-items: center;
+  margin-bottom: var(--s-3);
+}
+.habitat-row .name { font-weight: 600; font-size: .9rem; }
+.habitat-row .bar {
+  height: 24px;
+  background: var(--sand-100);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  position: relative;
+}
+.habitat-row .fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--green-500), var(--green-700));
+  border-radius: var(--r-sm);
+  transition: width 1.5s var(--t-mid);
+  position: relative;
+  width: 0;
+}
+.habitat-row .fill.priority { background: linear-gradient(90deg, var(--sun-500), var(--danger)); }
+.habitat-row .pct { font-weight: 700; text-align: right; }
+@media (max-width: 600px) {
+  .habitat-row { grid-template-columns: 1fr; gap: 4px; }
+  .habitat-row .pct { text-align: left; }
+}
+
+/* =========================================================
+   FACT CAROUSEL — "Czy wiesz, że…"
+   ========================================================= */
+.fact-carousel {
+  background: linear-gradient(135deg, var(--sand-900) 0%, #2A1F14 100%);
+  border-radius: var(--r-xl);
+  padding: var(--s-8) var(--s-7);
+  color: var(--sand-50);
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.fact-carousel::before {
+  content: "?";
+  position: absolute;
+  top: -60px; right: -40px;
+  font-family: var(--font-display);
+  font-size: 20rem;
+  font-weight: 900;
+  color: var(--sun-400);
+  opacity: .07;
+  line-height: 1;
+}
+.fact-slide {
+  max-width: 700px;
+  position: relative;
+  animation: fadeIn .5s ease-out;
+}
+.fact-slide .badge { background: var(--sun-400); color: var(--sand-900); margin-bottom: var(--s-4); }
+.fact-slide h3 {
+  color: var(--sand-50);
+  font-size: clamp(1.3rem, 2.5vw, 2rem);
+  margin-bottom: var(--s-4);
+}
+.fact-slide p { color: var(--sand-200); font-size: 1.05rem; margin-bottom: 0; }
+
+.fact-controls {
+  display: flex;
+  justify-content: center;
+  gap: var(--s-3);
+  margin-top: var(--s-5);
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+.fact-nav {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.1);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  transition: all var(--t-fast);
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+.fact-nav:hover { background: var(--sun-400); color: var(--sand-900); transform: scale(1.1); }
+.fact-dots {
+  display: flex;
+  gap: 6px;
+}
+.fact-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.25);
+  cursor: pointer;
+  transition: all var(--t-fast);
+  border: none;
+  padding: 0;
+}
+.fact-dot.active {
+  background: var(--sun-400);
+  width: 24px;
+  border-radius: var(--r-full);
+}
+
+/* =========================================================
+   MYTHS & LEGENDS
+   ========================================================= */
+.myths-bg {
+  background:
+    radial-gradient(ellipse at 50% 100%, rgba(74,47,24,.4), transparent 50%),
+    linear-gradient(180deg, #1F1F1F 0%, #4A2F18 100%);
+  color: var(--sand-200);
+  position: relative;
+  overflow: hidden;
+}
+.myths-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 20% 30%, rgba(255,210,122,.05) 1px, transparent 1px),
+                    radial-gradient(circle at 80% 60%, rgba(255,210,122,.03) 1px, transparent 1px),
+                    radial-gradient(circle at 40% 80%, rgba(255,210,122,.06) 1px, transparent 1px);
+  background-size: 100px 100px, 60px 60px, 80px 80px;
+  pointer-events: none;
+}
+.myths-bg .section-head h2 { color: var(--sun-300); }
+.myths-bg .section-head p { color: var(--sand-300); }
+.myths-bg .section-head .eyebrow { color: var(--sun-400); }
+.myths-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--s-5);
+  position: relative;
+}
+@media (max-width: 800px) { .myths-grid { grid-template-columns: 1fr; } }
+.myth-card {
+  background: rgba(255,255,255,.04);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,210,122,.2);
+  border-radius: var(--r-lg);
+  padding: var(--s-6);
+  position: relative;
+  overflow: hidden;
+  transition: all var(--t-mid);
+}
+.myth-card:hover {
+  border-color: var(--sun-400);
+  background: rgba(255,255,255,.07);
+  transform: translateY(-4px);
+}
+.myth-card::before {
+  content: "";
+  position: absolute;
+  top: 16px; right: 16px;
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, var(--sun-400), transparent 60%);
+  opacity: .3;
+}
+.myth-icon {
+  font-size: 3rem;
+  margin-bottom: var(--s-3);
+  display: inline-block;
+  filter: drop-shadow(0 0 12px rgba(255,210,122,.5));
+}
+.myth-card h4 {
+  color: var(--sun-300);
+  margin-bottom: var(--s-3);
+  font-size: 1.4rem;
+}
+.myth-card .myth-meta {
+  font-size: .8rem;
+  color: var(--sand-400);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin-bottom: var(--s-3);
+}
+.myth-card p {
+  color: var(--sand-200);
+  font-style: italic;
+  line-height: 1.7;
+  margin-bottom: 0;
+}
+.myth-card .myth-source {
+  margin-top: var(--s-3);
+  padding-top: var(--s-3);
+  border-top: 1px dashed rgba(255,255,255,.15);
+  font-size: .8rem;
+  color: var(--sand-400);
+  font-style: normal;
+}
+
 /* Fact cards */
 .fact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-4); }
 @media (max-width: 800px) { .fact-grid { grid-template-columns: 1fr 1fr; } }
