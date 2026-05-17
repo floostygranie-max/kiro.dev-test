@@ -543,6 +543,76 @@
       { id: "pc16", category: "Parking", name: "Rower / motocykl", price: 0, unit: "doba", description: "Bezpłatnie", order: 16 }
     ],
 
+    // ---- Strukturalne dane cennikowe — szczegółowe tabele ----
+    pricingDetailed: {
+      // Udostępnianie terenu
+      areaUsage: [
+        { no: 1,  name: "Impreza masowa",                                                              price: 4000, unit: "wydarzenie",   featured: true },
+        { no: 2,  name: "Impreza firmowa",                                                             price: 2500, unit: "wydarzenie" },
+        { no: 3,  name: "Trening sportowy z wykorzystaniem pojazdów",                                  price: 300,  unit: "pojazd" },
+        { no: 4,  name: "Przejazd turystyczny z wykorzystaniem pojazdów",                              price: 60,   unit: "pojazd",       footnote: "*" },
+        { no: 5,  name: "Loty widokowe i skoki spadochronowe",                                         price: 300,  unit: "przelot/zrzut" },
+        { no: 6,  name: "Sesja zdjęciowa w celach reklamowych",                                        price: 700,  unit: "sesja",        group: "Sesje zdjęciowe" },
+        { no: 6, name: "Sesja zdjęciowa w celach niekomercyjnych",                                     price: 300,  unit: "sesja",        group: "Sesje zdjęciowe" },
+        { no: 6, name: "Sesja zdjęciowa uroczystości rodzinnych",                                      price: 100,  unit: "sesja",        group: "Sesje zdjęciowe" },
+        { no: 6, name: "Sesja zdjęciowa w celach prasowych i reportażowych",                           price: 0,    unit: "—",            group: "Sesje zdjęciowe", priceLabel: "bez opłat" },
+        { no: 7, name: "Filmy komercyjne, fabularne i reklamowe",                                      price: 2500, unit: "produkcja",    group: "Działalność filmowa" },
+        { no: 7, name: "Filmy rozrywkowe i teledyski",                                                 price: 1000, unit: "produkcja",    group: "Działalność filmowa" },
+        { no: 7, name: "Filmy edukacyjne i rekreacyjne",                                               price: 300,  unit: "produkcja",    group: "Działalność filmowa" },
+        { no: 7, name: "Filmy promocyjne i reportaże",                                                 price: 0,    unit: "—",            group: "Działalność filmowa", priceLabel: "bez opłat" },
+        { no: 8,  name: "Używanie bezzałogowych statków powietrznych (drony)",                         price: 500,  unit: "lot/dzień" },
+        { no: 9, name: "Nocleg — do 10 osób",                                                          price: 50,   unit: "nocleg",       group: "Biwakowanie" },
+        { no: 9, name: "Rozpalenie ogniska/grilla w wyznaczonym miejscu",                              price: 50,   unit: "ognisko",      group: "Biwakowanie" },
+        { no: 9, name: "Rozpalenie ogniska/grilla — dodatkowo do aktywności z poz. 1–16",              price: 100,  unit: "ognisko",      group: "Biwakowanie" },
+        { no: 9, name: "Rozpalenie ogniska/grilla w miejscu innym niż wyznaczone",                     price: 300,  unit: "ognisko",      group: "Biwakowanie" },
+        { no: 10, name: "Wynajęcie altany turystycznej na wyłączność",                                 price: 250,  unit: "altana/dzień" },
+        { no: 11, name: "Wynajęcie przewodnika turystycznego",                                         price: 300,  unit: "wycieczka" },
+        { no: 12, name: "Wynajęcie powierzchni do 50 m² pod usługi handlowe",                          price: 200,  unit: "1 dzień" },
+        { no: 13, name: "Wynajęcie długoterminowe (>30 dni do 3 lat) — 1 m² pod usługi handlowe",      price: 1,    unit: "1 m²/dzień" },
+        { no: 14, name: "Udostępnienie mediów — wydarzenia do 500 osób",                               price: 50,   unit: "wydarzenie",   group: "Media (opcja)" },
+        { no: 14, name: "Udostępnienie mediów — wydarzenia powyżej 500 osób",                          price: 100,  unit: "wydarzenie",   group: "Media (opcja)" },
+        { no: 15, name: "Wynajęcie miejsca postojowego na wyłączność",                                 price: 50,   unit: "doba" },
+        { no: 16, name: "Inne rodzajowo podobne imprezy/typy aktywności (poza pkt. 1–15)",             price: 500,  unit: "wydarzenie" }
+      ],
+      areaUsageNote: "* Pozycja 4: stawka za pojedynczy pojazd. Wszystkie ceny brutto. Ceny mogą podlegać negocjacji dla wydarzeń długoterminowych.",
+
+      // Parking
+      parking: [
+        { name: "Pierwsze 15 minut",                  price: 0,  unit: "—",   priceLabel: "Darmowe", featured: true },
+        { name: "Samochody osobowe i motocykle",      price: 5,  unit: "godz." },
+        { name: "Autobusy",                           price: 15, unit: "godz." },
+        { name: "Kampery i przyczepy kempingowe",     price: 15, unit: "godz." }
+      ],
+
+      // Toilets
+      toilets: {
+        price: 3,
+        currency: "zł",
+        payment: "karta / gotówka",
+        locations: [
+          {
+            name: "Toaleta przy kasach parkingowych",
+            availability: "Cały rok",
+            type: "męska / damska / dla niepełnosprawnych",
+            features: [
+              "Przewijak dla dzieci w toalecie dla niepełnosprawnych",
+              "Dzieci do 120 cm wzrostu — bez opłat",
+              "Płatność BLIK / karta / gotówka"
+            ]
+          },
+          {
+            name: "Toaleta przy strefie Food Truck Park",
+            availability: "Cały rok poza sezonem zimowym",
+            type: "męska / damska / dla niepełnosprawnych",
+            features: [
+              "Czynna 8:00 – 22:00 w sezonie",
+              "Płatność BLIK / karta / gotówka"
+            ]
+          }
+        ]
+      }
+    },
+
     poi: [
       { id: "poi1", name: "Punkt widokowy Czubatka", type: "viewpoint", x: 65, y: 35, description: "Najwyższy punkt pustyni — 382 m n.p.m. Panorama 360°." },
       { id: "poi2", name: "Parking główny", type: "parking", x: 25, y: 60, description: "200 miejsc, monitoring." },

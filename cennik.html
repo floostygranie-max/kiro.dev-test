@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Cennik — Pustynia Błędowska</title>
-<meta name="description" content="Bilety, karnety, atrakcje — kompletny cennik Pustyni Błędowskiej">
+<meta name="description" content="Bilety, karnety, atrakcje, udostępnianie terenu, parking, toalety — kompletny cennik Pustyni Błędowskiej">
 <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
 <link rel="stylesheet" href="assets/css/main.css">
 <link rel="stylesheet" href="assets/css/header.css">
@@ -21,40 +21,184 @@
         <a href="index.html">Strona główna</a> <span>›</span> <span>Cennik</span>
       </div>
       <h1>Cennik</h1>
-      <p class="lead">Transparentne ceny biletów, atrakcji i usług. Dzieci do 7 lat — wstęp bezpłatny. Karnety i bilety rodzinne — duże oszczędności!</p>
+      <p class="lead">Transparentne ceny biletów, atrakcji, udostępniania terenu, parkingu i toalet. Dzieci do 7 lat — wstęp bezpłatny. Karnety i bilety rodzinne — duże oszczędności!</p>
     </div>
   </section>
 
   <section class="section">
     <div class="container">
 
-      <!-- Pricing categories -->
-      <div id="pricing-root"></div>
+      <!-- Spis treści -->
+      <nav class="pricing-toc" aria-label="Spis treści cennika">
+        <a href="#bilety"><span class="icon">🎟</span><span>Bilety wstępu</span></a>
+        <a href="#przewodnicy"><span class="icon">📖</span><span>Przewodnicy</span></a>
+        <a href="#atrakcje"><span class="icon">🎢</span><span>Atrakcje</span></a>
+        <a href="#udostepnianie"><span class="icon">🏞</span><span>Udostępnianie terenu</span></a>
+        <a href="#parking"><span class="icon">🅿</span><span>Parking</span></a>
+        <a href="#toalety"><span class="icon">🚻</span><span>Toalety</span></a>
+        <a href="#kalkulator"><span class="icon">🧮</span><span>Kalkulator wizyty</span></a>
+      </nav>
 
-      <!-- Calculator -->
-      <div class="section-head reveal" style="margin-top: 64px">
-        <span class="eyebrow">Kalkulator wizyty</span>
-        <h2>Oszacuj koszt</h2>
-        <p>Wybierz, kogo zabierasz i co chcesz robić — pokażemy podsumowanie</p>
+      <!-- =================== BILETY =================== -->
+      <div id="bilety" class="reveal" style="margin-top: 40px">
+        <div class="price-table-head" style="border-radius: var(--r-lg) var(--r-lg) 0 0">
+          <div class="icon-circle">🎟</div>
+          <div>
+            <h3>Bilety wstępu</h3>
+            <p class="desc">Dzieci do 7 lat — bezpłatnie. Karta Dużej Rodziny: 20% zniżki.</p>
+          </div>
+        </div>
+        <div class="price-table-wrap" style="border-radius: 0 0 var(--r-lg) var(--r-lg); margin-top: -1px">
+          <div class="tickets-cards" style="padding: 24px"></div>
+        </div>
       </div>
 
-      <div class="price-calc reveal" style="max-width: 780px; margin: 0 auto;" id="calc-card">
-        <div id="calc-rows"></div>
-        <div class="calc-total">
-          <span style="font-weight:600">Łącznie do zapłaty:</span>
-          <strong id="calc-sum">0 zł</strong>
-        </div>
-        <div style="display:flex;gap:12px;margin-top:24px;flex-wrap:wrap">
-          <button class="btn btn-primary" onclick="App.toast('Bilety zarezerwowane! Sprawdź email.', 'ok')">💳 Kup bilety online</button>
-          <button class="btn btn-ghost" onclick="document.querySelectorAll('.qty-input').forEach(i => { i.value = 0; i.dispatchEvent(new Event('input')); })">🗑 Wyczyść</button>
+      <!-- =================== PRZEWODNICY =================== -->
+      <div id="przewodnicy" class="reveal" style="margin-top: 40px">
+        <div class="price-table-wrap">
+          <div class="price-table-head">
+            <div class="icon-circle">📖</div>
+            <div>
+              <h3>Przewodnicy turystyczni</h3>
+              <p class="desc">Profesjonalne oprowadzanie po pustyni. Grupy, języki obce, audio.</p>
+            </div>
+          </div>
+          <table class="price-table">
+            <thead>
+              <tr>
+                <th>Usługa</th>
+                <th class="price-col">Cena</th>
+                <th class="unit-col">Jednostka</th>
+              </tr>
+            </thead>
+            <tbody id="guides-rows"></tbody>
+          </table>
         </div>
       </div>
 
-      <!-- Info banner -->
+      <!-- =================== ATRAKCJE =================== -->
+      <div id="atrakcje" class="reveal" style="margin-top: 40px">
+        <div class="price-table-wrap">
+          <div class="price-table-head">
+            <div class="icon-circle">🎢</div>
+            <div>
+              <h3>Atrakcje i aktywności</h3>
+              <p class="desc">Quady, sandboarding, jazda konna, wielbłądy — coś dla każdego!</p>
+            </div>
+          </div>
+          <table class="price-table">
+            <thead>
+              <tr>
+                <th>Atrakcja</th>
+                <th class="price-col">Cena</th>
+                <th class="unit-col">Jednostka</th>
+              </tr>
+            </thead>
+            <tbody id="attractions-rows"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- =================== UDOSTĘPNIANIE TERENU =================== -->
+      <div id="udostepnianie" class="reveal" style="margin-top: 40px">
+        <div class="price-table-wrap">
+          <div class="price-table-head">
+            <div class="icon-circle">🏞</div>
+            <div>
+              <h3>Udostępnianie terenu pustyni</h3>
+              <p class="desc">Ceny dla organizatorów imprez, ekip filmowych, sesji zdjęciowych i innych komercyjnych aktywności.</p>
+            </div>
+          </div>
+          <table class="price-table">
+            <thead>
+              <tr>
+                <th class="num-col">Lp.</th>
+                <th>Rodzaj aktywności</th>
+                <th class="price-col">Cena</th>
+                <th class="unit-col">Jednostka</th>
+              </tr>
+            </thead>
+            <tbody id="area-rows"></tbody>
+          </table>
+          <div class="price-table-foot" id="area-foot"></div>
+        </div>
+        <div class="alert alert-info" style="margin-top: 16px">
+          <strong>📞 Rezerwacja terenu</strong><br>
+          Wszystkie usługi wymagają wcześniejszej rezerwacji i podpisania umowy. Skontaktuj się z biurem: <strong>+48 32 642 03 02</strong> lub <strong>kontakt@pustynia-bledowska.eu</strong>
+        </div>
+      </div>
+
+      <!-- =================== PARKING =================== -->
+      <div id="parking" class="reveal" style="margin-top: 40px">
+        <div class="price-table-wrap">
+          <div class="price-table-head">
+            <div class="icon-circle">🅿</div>
+            <div>
+              <h3>Parking</h3>
+              <p class="desc">Pierwsze 15 minut bezpłatnie. Monitoring 24h. Parking wielopoziomowy w pobliżu kas.</p>
+            </div>
+          </div>
+          <div style="padding: 24px">
+            <div class="parking-quick-row" id="parking-quick"></div>
+            <table class="price-table" style="border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden">
+              <thead>
+                <tr>
+                  <th>Pojazd / okres</th>
+                  <th class="price-col">Cena</th>
+                  <th class="unit-col">Jednostka</th>
+                </tr>
+              </thead>
+              <tbody id="parking-rows"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="alert alert-warn" style="margin-top: 16px">
+          <strong>⏰ Płatność za parking</strong><br>
+          Bilet pobierany przy wjeździe, opłata przy parkomacie lub aplikacji mobilnej (mobiParking, SkyCash). Akceptujemy: gotówkę, kartę, BLIK.
+        </div>
+      </div>
+
+      <!-- =================== TOALETY =================== -->
+      <div id="toalety" class="reveal" style="margin-top: 40px">
+        <div class="section-head">
+          <span class="eyebrow">Sanitariaty</span>
+          <h2>🚻 Toalety publiczne</h2>
+          <p>Dwa zespoły toalet w terenie, oba wyposażone w udogodnienia dla osób z niepełnosprawnościami</p>
+        </div>
+        <div class="toilet-grid" id="toilets-grid"></div>
+        <div class="alert alert-success" style="margin-top: 24px">
+          <strong>👶 Dzieci do 120 cm wzrostu — wstęp bezpłatny</strong><br>
+          W toaletach dla niepełnosprawnych znajdują się przewijaki dla niemowląt. W okresie zimowym czynna jest tylko toaleta przy kasach parkingowych.
+        </div>
+      </div>
+
+      <!-- =================== KALKULATOR =================== -->
+      <div id="kalkulator" class="reveal" style="margin-top: 64px">
+        <div class="section-head">
+          <span class="eyebrow">Kalkulator wizyty</span>
+          <h2>🧮 Oszacuj koszt</h2>
+          <p>Wybierz, kogo zabierasz i co chcesz robić — pokażemy podsumowanie</p>
+        </div>
+        <div class="price-calc" style="max-width: 780px; margin: 0 auto;" id="calc-card">
+          <div id="calc-rows"></div>
+          <div class="calc-total">
+            <span style="font-weight:600">Łącznie do zapłaty:</span>
+            <strong id="calc-sum">0 zł</strong>
+          </div>
+          <div style="display:flex;gap:12px;margin-top:24px;flex-wrap:wrap">
+            <button class="btn btn-primary" onclick="App.toast('Bilety zarezerwowane! Sprawdź email.', 'ok')">💳 Kup bilety online</button>
+            <button class="btn btn-ghost" id="calc-clear">🗑 Wyczyść</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- =================== INFO =================== -->
       <div class="alert alert-info reveal" style="margin-top: 48px">
         <strong>💡 Dobre wiadomości</strong>
         <ul style="margin: 8px 0 0 24px">
           <li>Dzieci do 7 lat — <strong>bezpłatnie</strong> (z opiekunem)</li>
+          <li>Dzieci do 120 cm wzrostu w toaletach — <strong>bezpłatnie</strong></li>
+          <li>Pierwsze 15 min parkingu — <strong>gratis</strong></li>
           <li>Karnet sezonowy zwraca się już po 8 wizytach</li>
           <li>Zniżki dla grup zorganizowanych powyżej 20 osób — skontaktuj się z nami</li>
           <li>Karta Dużej Rodziny — 20% zniżki na wszystkie bilety</li>
@@ -83,30 +227,144 @@
 <script>
 (function(){
   const all = Store.all("prices").sort((a,b) => (a.order||0) - (b.order||0));
-  const categories = [...new Set(all.map(p => p.category))];
+  const detailed = Store._data?.pricingDetailed || Store.settings()?.pricingDetailed || {};
+  // Direct read just in case (Store doesn't expose pricingDetailed via getters):
+  const data = (function(){
+    const raw = localStorage.getItem("pustynia_db_v1");
+    if (!raw) return {};
+    try { return (JSON.parse(raw).pricingDetailed) || {}; } catch { return {}; }
+  })();
 
-  // Build pricing sections
-  const root = document.getElementById("pricing-root");
-  const featuredIds = ["pc4", "pc5", "pc6"]; // family + carnets featured
-  root.innerHTML = categories.map(cat => {
-    const items = all.filter(p => p.category === cat);
-    return `
-      <div class="price-section">
-        <h3>${App.escapeHtml(cat)}</h3>
-        <div class="price-card-grid">
-          ${items.map(p => `
-            <div class="price-card ${featuredIds.includes(p.id) ? 'featured' : ''} reveal">
-              <h4>${App.escapeHtml(p.name)}</h4>
-              <div class="price">${p.price === 0 ? 'Gratis' : p.price + '<small> zł / ' + App.escapeHtml(p.unit) + '</small>'}</div>
-              <div class="desc">${App.escapeHtml(p.description || '')}</div>
-            </div>
-          `).join("")}
+  function fmtPrice(price, label) {
+    if (label) return `<span class="free">${App.escapeHtml(label)}</span>`;
+    if (!price || price === 0) return `<span class="free">Gratis</span>`;
+    return `<span class="amount">${price.toLocaleString('pl-PL')}</span> <span class="currency">zł</span>`;
+  }
+
+  // ============== BILETY (cards) ==============
+  const tickets = all.filter(p => p.category === "Bilety wstępu");
+  const popularIds = ["pc4", "pc5", "pc6"];
+  document.querySelector("#bilety .tickets-cards").innerHTML = tickets.map(p => `
+    <div class="ticket-card ${popularIds.includes(p.id) ? 'popular' : ''}">
+      <h4>${App.escapeHtml(p.name)}</h4>
+      <div class="price">${p.price === 0 ? 'Gratis' : p.price + '<small> zł / ' + App.escapeHtml(p.unit) + '</small>'}</div>
+      <div class="desc">${App.escapeHtml(p.description || '')}</div>
+    </div>
+  `).join("");
+
+  // ============== PRZEWODNICY (table) ==============
+  const guides = all.filter(p => p.category === "Przewodnicy");
+  document.getElementById("guides-rows").innerHTML = guides.map(p => `
+    <tr>
+      <td class="name-cell"><strong>${App.escapeHtml(p.name)}</strong>${p.description ? `<br><small style="color:var(--text-muted)">${App.escapeHtml(p.description)}</small>` : ''}</td>
+      <td class="price-cell">${fmtPrice(p.price)}</td>
+      <td class="unit-cell">${App.escapeHtml(p.unit)}</td>
+    </tr>
+  `).join("");
+
+  // ============== ATRAKCJE (table) ==============
+  const attractions = all.filter(p => p.category === "Atrakcje");
+  document.getElementById("attractions-rows").innerHTML = attractions.map(p => `
+    <tr>
+      <td class="name-cell"><strong>${App.escapeHtml(p.name)}</strong>${p.description ? `<br><small style="color:var(--text-muted)">${App.escapeHtml(p.description)}</small>` : ''}</td>
+      <td class="price-cell">${fmtPrice(p.price)}</td>
+      <td class="unit-cell">${App.escapeHtml(p.unit)}</td>
+    </tr>
+  `).join("");
+
+  // ============== UDOSTĘPNIANIE TERENU (grouped table) ==============
+  const area = data.areaUsage || [];
+  const areaFoot = data.areaUsageNote || "";
+  let lastNo = null;
+  let html = "";
+  // Group by 'group' field where present
+  const grouped = {};
+  area.forEach(item => {
+    const key = item.group || `__${item.no}__`;
+    (grouped[key] = grouped[key] || []).push(item);
+  });
+  // Sort groups by lowest no
+  const groupKeys = Object.keys(grouped).sort((a,b) => grouped[a][0].no - grouped[b][0].no);
+
+  groupKeys.forEach(key => {
+    const items = grouped[key];
+    const isGroup = items.length > 1 && items[0].group;
+    if (isGroup) {
+      // Header row for group
+      html += `
+        <tr class="group-row">
+          <td class="num-cell">${items[0].no}</td>
+          <td colspan="3"><strong>${App.escapeHtml(items[0].group)}</strong></td>
+        </tr>
+      `;
+      items.forEach(item => {
+        const featured = item.featured ? 'featured' : '';
+        html += `
+          <tr class="${featured}">
+            <td class="num-cell"></td>
+            <td class="name-cell">↳ ${App.escapeHtml(item.name)}${item.footnote ? ` <small style="color:var(--sun-500);font-weight:700">${item.footnote}</small>` : ''}</td>
+            <td class="price-cell">${fmtPrice(item.price, item.priceLabel)}</td>
+            <td class="unit-cell">${App.escapeHtml(item.unit)}</td>
+          </tr>
+        `;
+      });
+    } else {
+      const item = items[0];
+      const featured = item.featured ? 'featured' : '';
+      html += `
+        <tr class="${featured}">
+          <td class="num-cell">${item.no}</td>
+          <td class="name-cell"><strong>${App.escapeHtml(item.name)}</strong>${item.footnote ? ` <small style="color:var(--sun-500);font-weight:700">${item.footnote}</small>` : ''}</td>
+          <td class="price-cell">${fmtPrice(item.price, item.priceLabel)}</td>
+          <td class="unit-cell">${App.escapeHtml(item.unit)}</td>
+        </tr>
+      `;
+    }
+  });
+  document.getElementById("area-rows").innerHTML = html;
+  document.getElementById("area-foot").textContent = areaFoot;
+
+  // ============== PARKING ==============
+  const parking = data.parking || [];
+  // Quick cards
+  const icons = ["⏱", "🚗", "🚌", "🚐"];
+  document.getElementById("parking-quick").innerHTML = parking.map((p, i) => `
+    <div class="parking-quick ${p.featured ? 'free' : ''}">
+      <div class="icon">${icons[i] || '🅿'}</div>
+      <strong>${p.priceLabel || (p.price + ' zł')}</strong>
+      <small>${App.escapeHtml(p.name)}</small>
+    </div>
+  `).join("");
+  // Table
+  document.getElementById("parking-rows").innerHTML = parking.map(p => `
+    <tr class="${p.featured ? 'featured' : ''}">
+      <td class="name-cell"><strong>${App.escapeHtml(p.name)}</strong></td>
+      <td class="price-cell">${fmtPrice(p.price, p.priceLabel)}</td>
+      <td class="unit-cell">${App.escapeHtml(p.unit)}</td>
+    </tr>
+  `).join("");
+
+  // ============== TOALETY ==============
+  const toilets = data.toilets || { locations: [] };
+  document.getElementById("toilets-grid").innerHTML = toilets.locations.map((t, i) => `
+    <div class="toilet-card">
+      <div class="icon-row">
+        <div class="toilet-icon">🚻</div>
+        <div>
+          <h4>${App.escapeHtml(t.name)}</h4>
+          <span class="price-tag">${toilets.price} ${toilets.currency}</span>
         </div>
       </div>
-    `;
-  }).join("");
+      <div class="toilet-meta">
+        <div><span>📅 Dostępność</span><strong>${App.escapeHtml(t.availability)}</strong></div>
+        <div><span>🚪 Typ</span><strong>${App.escapeHtml(t.type)}</strong></div>
+        <div><span>💳 Płatność</span><strong>${App.escapeHtml(toilets.payment)}</strong></div>
+      </div>
+      <ul>${t.features.map(f => `<li>${App.escapeHtml(f)}</li>`).join("")}</ul>
+    </div>
+  `).join("");
 
-  // Calculator
+  // ============== KALKULATOR ==============
   const calcRows = document.getElementById("calc-rows");
   calcRows.innerHTML = all.filter(p => p.price > 0).map(p => `
     <div class="calc-row">
@@ -139,6 +397,19 @@
     recalc();
   });
   calcRows.addEventListener("input", recalc);
+  document.getElementById("calc-clear").addEventListener("click", () => {
+    document.querySelectorAll('.qty-input').forEach(i => { i.value = 0; });
+    recalc();
+  });
+
+  // Smooth scroll for ToC
+  document.querySelectorAll(".pricing-toc a").forEach(a => {
+    a.addEventListener("click", e => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute("href"));
+      if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
 })();
 </script>
 </body>
