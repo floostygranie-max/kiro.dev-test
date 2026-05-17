@@ -143,6 +143,7 @@
     events: [
       {
         id: "e1",
+        seriesId: "inwazja",
         title: "Inwazja Pustynna 2026",
         slug: "inwazja-pustynna-2026",
         description: "Największa rekonstrukcja historyczna w południowej Polsce. Czołgi, pojazdy wojskowe, prelekcje, food trucki, koncerty.",
@@ -159,6 +160,7 @@
       },
       {
         id: "e2",
+        seriesId: "perseidy",
         title: "Noc spadających gwiazd — Perseidy",
         slug: "perseidy-2026",
         description: "Wspólna obserwacja roju Perseidów z najlepszego miejsca w okolicy. Zerowe zanieczyszczenie świetlne, ciepła czekolada w cenie biletu.",
@@ -175,6 +177,7 @@
       },
       {
         id: "e3",
+        seriesId: "maraton",
         title: "Maraton Pustynny — bieg uliczny 21 km",
         slug: "maraton-pustynny-2026",
         description: "Półmaraton z metą na szczycie najwyższej wydmy. Trasa atestowana PZLA. Pakiety startowe z medalem.",
@@ -207,6 +210,7 @@
       },
       {
         id: "e5",
+        seriesId: "dziecko",
         title: "Dzień Dziecka na Pustyni",
         slug: "dzien-dziecka-2026",
         description: "Gry, zabawy, jazda quadami, animacje, dmuchańce, lody. Wstęp dla dzieci do 12 lat bezpłatny!",
@@ -236,6 +240,133 @@
         price: "40 zł",
         cover: "linear-gradient(135deg,#3F5E32 0%,#1F1F1F 100%)",
         published: true
+      },
+      // ----- Past editions -----
+      {
+        id: "e_inv25",
+        seriesId: "inwazja",
+        title: "Inwazja Pustynna 2025",
+        slug: "inwazja-pustynna-2025",
+        description: "XXI edycja największej rekonstrukcji w południowej Polsce. Frekwencja: 4 600 osób.",
+        startDate: "2025-08-15",
+        endDate: "2025-08-17",
+        time: "10:00 - 20:00",
+        location: "Główne pole pustyni",
+        category: "Rekonstrukcja",
+        capacity: 5000,
+        registered: 4623,
+        price: "25 zł",
+        cover: "linear-gradient(135deg,#6B4422 0%,#1F1F1F 100%)",
+        gallery: ["p11","p12","p15","p16"],
+        published: true
+      },
+      {
+        id: "e_inv24",
+        seriesId: "inwazja",
+        title: "Inwazja Pustynna 2024",
+        slug: "inwazja-pustynna-2024",
+        description: "XX jubileuszowa edycja. Po raz pierwszy z udziałem czołgów Sherman z muzeum w Poznaniu.",
+        startDate: "2024-08-16",
+        endDate: "2024-08-18",
+        time: "10:00 - 20:00",
+        location: "Główne pole pustyni",
+        category: "Rekonstrukcja",
+        capacity: 4000,
+        registered: 3854,
+        price: "20 zł",
+        cover: "linear-gradient(135deg,#8B5A2B 0%,#4A2F18 100%)",
+        gallery: ["p11","p15"],
+        published: true
+      },
+      {
+        id: "e_per25",
+        seriesId: "perseidy",
+        title: "Perseidy 2025",
+        slug: "perseidy-2025",
+        description: "Obserwacja roju Perseidów z udziałem astronoma dr. Macieja Mikołajewskiego. Ponad 240 obserwacji w 4 godziny.",
+        startDate: "2025-08-12",
+        endDate: "2025-08-13",
+        time: "21:00 - 03:00",
+        location: "Punkt widokowy Czubatka",
+        category: "Astronomia",
+        capacity: 180,
+        registered: 178,
+        price: "20 zł",
+        cover: "linear-gradient(135deg,#1F1F1F 0%,#234567 100%)",
+        gallery: ["p13"],
+        published: true
+      },
+      {
+        id: "e_mar25",
+        seriesId: "maraton",
+        title: "Maraton Pustynny 2025",
+        slug: "maraton-pustynny-2025",
+        description: "Półmaraton z rekordową frekwencją 712 startujących. Zwycięzca: Bartłomiej Kowalik (1:18:23).",
+        startDate: "2025-09-06",
+        endDate: "2025-09-06",
+        time: "08:00",
+        location: "Start: Klucze, Meta: Czubatka",
+        category: "Sport",
+        capacity: 800,
+        registered: 712,
+        price: "100 zł",
+        cover: "linear-gradient(135deg,#E8841E 0%,#8B5A2B 100%)",
+        gallery: ["p12"],
+        published: true
+      },
+      {
+        id: "e_dz25",
+        seriesId: "dziecko",
+        title: "Dzień Dziecka 2025",
+        slug: "dzien-dziecka-2025",
+        description: "Świetna pogoda i 1 200 odwiedzających rodzin. Specjalna atrakcja: pokaz wielbłądzich wyścigów!",
+        startDate: "2025-06-01",
+        endDate: "2025-06-01",
+        time: "10:00 - 18:00",
+        location: "Strefa rodzinna",
+        category: "Rodzinne",
+        capacity: 1500,
+        registered: 1247,
+        price: "Bezpłatne",
+        cover: "linear-gradient(135deg,#A8C49B 0%,#FFD27A 100%)",
+        gallery: [],
+        published: true
+      }
+    ],
+
+    // ---- Series of recurring events ----
+    eventSeries: [
+      {
+        id: "inwazja",
+        name: "Inwazja Pustynna",
+        description: "Doroczna rekonstrukcja historyczna z udziałem czołgów i pojazdów wojskowych",
+        firstEdition: 2003,
+        editions: 22,
+        category: "Rekonstrukcja"
+      },
+      {
+        id: "perseidy",
+        name: "Noc Perseidów",
+        description: "Wspólna obserwacja roju Perseidów ze szczytu Czubatki",
+        firstEdition: 2015,
+        editions: 11,
+        category: "Astronomia"
+      },
+      {
+        id: "maraton",
+        name: "Maraton Pustynny",
+        description: "Półmaraton biegowy z metą na szczycie najwyższej wydmy",
+        firstEdition: 2017,
+        editions: 9,
+        category: "Sport"
+      },
+      {
+        id: "dziecko",
+        name: "Dzień Dziecka na Pustyni",
+        description: "Coroczna impreza rodzinna 1 czerwca",
+        firstEdition: 2010,
+        editions: 16,
+        category: "Rodzinne"
       }
     ],
 

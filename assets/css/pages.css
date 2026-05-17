@@ -1398,3 +1398,222 @@
 }
 .faq-item.open .faq-a { max-height: 500px; }
 .faq-a-inner { padding: 0 var(--s-4) var(--s-4); }
+
+
+
+/* =========================================================
+   ENHANCED CALENDAR — multi-day events, popovers, year nav
+   ========================================================= */
+.calendar-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  margin-bottom: var(--s-4);
+  flex-wrap: wrap;
+}
+.cal-year-jumper {
+  display: flex;
+  background: var(--sand-50);
+  padding: 4px;
+  border-radius: var(--r-full);
+  border: 1px solid var(--border);
+}
+.cal-year-jumper button {
+  padding: 4px 10px;
+  font-size: .8rem;
+  font-weight: 600;
+  border-radius: var(--r-full);
+  color: var(--text-muted);
+}
+.cal-year-jumper button.active {
+  background: var(--sand-900);
+  color: var(--sand-50);
+}
+.cal-month-stats {
+  display: flex;
+  gap: var(--s-3);
+  font-size: .85rem;
+  color: var(--text-muted);
+  flex-wrap: wrap;
+}
+.cal-month-stats span { display: inline-flex; align-items: center; gap: 4px; }
+.cal-month-stats strong { color: var(--text); }
+
+.calendar-day .ev-stripe {
+  position: absolute;
+  bottom: 4px;
+  left: 4px; right: 4px;
+  height: 3px;
+  background: var(--sun-400);
+  border-radius: 2px;
+}
+.calendar-day .ev-stripe.start { left: 50%; }
+.calendar-day .ev-stripe.end { right: 50%; }
+.calendar-day .ev-stripe.middle { left: -1px; right: -1px; border-radius: 0; }
+.calendar-day-pin {
+  position: absolute;
+  top: 4px; right: 4px;
+  background: var(--sun-400);
+  color: var(--sand-900);
+  font-size: .6rem;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: var(--r-full);
+  line-height: 1.2;
+}
+.calendar-day .ev-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--sand-900);
+  color: var(--sand-50);
+  padding: 8px 12px;
+  border-radius: var(--r-sm);
+  font-size: .8rem;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .15s;
+  box-shadow: var(--shadow-md);
+  z-index: 5;
+  max-width: 280px;
+  white-space: normal;
+  text-align: left;
+}
+.calendar-day:hover .ev-tooltip { opacity: 1; }
+.calendar-day .ev-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%; left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--sand-900);
+}
+
+/* =========================================================
+   EVENT SERIES — past editions gallery
+   ========================================================= */
+.series-section {
+  background: linear-gradient(180deg, var(--sand-50), var(--sand-100));
+}
+.series-card {
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  margin-bottom: var(--s-5);
+  transition: all var(--t-mid);
+}
+.series-card:hover { box-shadow: var(--shadow-md); }
+.series-card-head {
+  display: grid;
+  grid-template-columns: 110px 1fr auto;
+  align-items: center;
+  gap: var(--s-4);
+  padding: var(--s-5);
+  cursor: pointer;
+  user-select: none;
+}
+.series-card-head:hover { background: var(--sand-50); }
+.series-card-num {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--sun-500);
+  line-height: 1;
+  text-align: center;
+}
+.series-card-num small { display: block; font-size: .65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .15em; font-weight: 600; margin-top: 2px; }
+.series-card h3 { margin-bottom: 4px; font-size: 1.3rem; }
+.series-card .series-meta {
+  display: flex; gap: var(--s-3); flex-wrap: wrap;
+  font-size: .85rem; color: var(--text-muted);
+}
+.series-toggle {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: var(--sand-100);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem;
+  transition: all var(--t-fast);
+  flex-shrink: 0;
+}
+.series-card.open .series-toggle { background: var(--sun-400); color: var(--sand-900); transform: rotate(180deg); }
+.series-editions {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height var(--t-mid);
+  border-top: 1px solid var(--border);
+}
+.series-card.open .series-editions { max-height: 3000px; }
+.series-editions-inner { padding: var(--s-5); }
+.edition-tile {
+  display: grid;
+  grid-template-columns: 80px 1fr 80px;
+  gap: var(--s-3);
+  padding: var(--s-3);
+  border-radius: var(--r-md);
+  background: var(--sand-50);
+  margin-bottom: var(--s-3);
+  align-items: center;
+  cursor: pointer;
+  transition: all var(--t-fast);
+}
+.edition-tile:hover { background: var(--sand-100); transform: translateX(4px); }
+.edition-tile .year-block {
+  background: var(--sand-900);
+  color: var(--sun-400);
+  border-radius: var(--r-sm);
+  padding: 10px;
+  text-align: center;
+}
+.edition-tile .year-block strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  line-height: 1;
+}
+.edition-tile .year-block small { font-size: .7rem; color: var(--sand-400); display:block; margin-top:2px; }
+.edition-tile .edition-info strong { display: block; }
+.edition-tile .edition-info small { color: var(--text-muted); font-size: .8rem; }
+.edition-gallery {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+.edition-gallery > * {
+  width: 44px; height: 44px;
+  border-radius: var(--r-sm);
+  background-size: cover;
+  background-position: center;
+  flex-shrink: 0;
+  transition: transform var(--t-fast);
+}
+.edition-gallery > *:hover { transform: scale(1.15); z-index: 2; }
+.edition-gallery .more {
+  background: var(--sand-900);
+  color: var(--sun-400);
+  font-weight: 700;
+  font-size: .7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.edition-stat {
+  text-align: center;
+  font-size: .8rem;
+  color: var(--text-muted);
+}
+.edition-stat strong {
+  display: block;
+  font-size: 1.1rem;
+  color: var(--sun-500);
+  font-family: var(--font-display);
+}
+@media (max-width: 700px) {
+  .series-card-head { grid-template-columns: 1fr; text-align: center; }
+  .edition-tile { grid-template-columns: 70px 1fr; }
+  .edition-tile .edition-stat { grid-column: 1 / -1; }
+}
