@@ -413,10 +413,15 @@
         progress: 65,
         budget: "2 400 000 zł",
         funding: "EFRR / NFOŚiGW",
+        fundingCodes: ["efrr", "nfos"],
         startDate: "2025-03-01",
         endDate: "2026-12-31",
         cover: "linear-gradient(135deg,#A8C49B 0%,#6E9A5C 100%)",
-        gallery: []
+        gallery: [],
+        docs: [
+          { name: "Karta projektu (PDF)", url: "#" },
+          { name: "Sprawozdanie 2025", url: "#" }
+        ]
       },
       {
         id: "pr2",
@@ -426,10 +431,15 @@
         progress: 15,
         budget: "8 200 000 zł",
         funding: "Fundusz Spójności UE",
+        fundingCodes: ["coh"],
         startDate: "2026-09-01",
         endDate: "2028-06-30",
         cover: "linear-gradient(135deg,#F4A340 0%,#8B5A2B 100%)",
-        gallery: []
+        gallery: [],
+        docs: [
+          { name: "Studium wykonalności", url: "#" },
+          { name: "Wizualizacje", url: "#" }
+        ]
       },
       {
         id: "pr3",
@@ -439,10 +449,15 @@
         progress: 100,
         budget: "950 000 zł",
         funding: "LIFE+ UE",
+        fundingCodes: ["life"],
         startDate: "2023-04-01",
         endDate: "2025-10-31",
         cover: "linear-gradient(135deg,#3F5E32 0%,#A8C49B 100%)",
-        gallery: []
+        gallery: [],
+        docs: [
+          { name: "Raport końcowy LIFE+", url: "#" },
+          { name: "Mapa przed/po", url: "#" }
+        ]
       },
       {
         id: "pr4",
@@ -452,10 +467,14 @@
         progress: 40,
         budget: "1 100 000 zł",
         funding: "WFOŚiGW Małopolska",
+        fundingCodes: ["wfos"],
         startDate: "2025-06-01",
         endDate: "2027-05-31",
         cover: "linear-gradient(135deg,#4A9BC4 0%,#1F1F1F 100%)",
-        gallery: []
+        gallery: [],
+        docs: [
+          { name: "Specyfikacja techniczna", url: "#" }
+        ]
       },
       {
         id: "pr5",
@@ -465,10 +484,12 @@
         progress: 5,
         budget: "480 000 zł",
         funding: "Fundusz Innowacji",
+        fundingCodes: ["inn"],
         startDate: "2026-11-01",
         endDate: "2027-08-31",
         cover: "linear-gradient(135deg,#8FC6E0 0%,#4A9BC4 100%)",
-        gallery: []
+        gallery: [],
+        docs: []
       },
       {
         id: "pr6",
@@ -478,11 +499,26 @@
         progress: 100,
         budget: "320 000 zł",
         funding: "Program Rozwoju Obszarów Wiejskich",
+        fundingCodes: ["prow"],
         startDate: "2024-04-01",
         endDate: "2024-11-30",
         cover: "linear-gradient(135deg,#D9BC8E 0%,#8B5A2B 100%)",
-        gallery: []
+        gallery: [],
+        docs: [
+          { name: "Mapa szlaków po modernizacji", url: "#" }
+        ]
       }
+    ],
+
+    fundingSources: [
+      { code: "efrr", name: "EFRR — Europejski Fundusz Rozwoju Regionalnego", org: "Unia Europejska", description: "Wspiera rozwój regionalny — infrastruktura, innowacje, środowisko.", totalReceived: "8 600 000 zł", projects: 1 },
+      { code: "life", name: "LIFE+", org: "Komisja Europejska", description: "Program ochrony środowiska i klimatu UE — czynna ochrona siedlisk Natura 2000.", totalReceived: "1 200 000 zł", projects: 1 },
+      { code: "coh",  name: "Fundusz Spójności", org: "Unia Europejska", description: "Duże inwestycje infrastrukturalne i ochrona środowiska.", totalReceived: "8 200 000 zł", projects: 1 },
+      { code: "nfos", name: "NFOŚiGW", org: "Narodowy Fundusz Ochrony Środowiska", description: "Krajowy fundusz finansujący ochronę przyrody i edukację ekologiczną.", totalReceived: "2 400 000 zł", projects: 1 },
+      { code: "wfos", name: "WFOŚiGW Małopolska", org: "Wojewódzki Fundusz Ochrony Środowiska", description: "Regionalny fundusz wspierający lokalne projekty ekologiczne.", totalReceived: "1 100 000 zł", projects: 1 },
+      { code: "prow", name: "PROW", org: "Program Rozwoju Obszarów Wiejskich", description: "Wsparcie rozwoju obszarów wiejskich — turystyka, infrastruktura, dziedzictwo.", totalReceived: "320 000 zł", projects: 1 },
+      { code: "inn",  name: "Fundusz Innowacji", org: "PARP / Narodowe Centrum Badań", description: "Wsparcie projektów cyfrowych i innowacyjnych w turystyce i kulturze.", totalReceived: "480 000 zł", projects: 1 },
+      { code: "nca",  name: "Granty NCN", org: "Narodowe Centrum Nauki", description: "Granty badawcze — m.in. inwentaryzacja gatunków na pustyni.", totalReceived: "180 000 zł", projects: 0 }
     ],
 
     prices: [

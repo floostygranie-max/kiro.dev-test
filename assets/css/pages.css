@@ -1617,3 +1617,334 @@
   .edition-tile { grid-template-columns: 70px 1fr; }
   .edition-tile .edition-stat { grid-column: 1 / -1; }
 }
+
+
+
+/* =========================================================
+   PROJECTS — enhanced status filters & funding section
+   ========================================================= */
+.status-filters {
+  display: flex;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--s-7);
+}
+.status-filter-btn {
+  flex: 1;
+  min-width: 200px;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: var(--s-4);
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  cursor: pointer;
+  transition: all var(--t-mid);
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+.status-filter-btn::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  height: 4px; width: 0;
+  background: var(--sun-400);
+  transition: width var(--t-mid);
+}
+.status-filter-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.status-filter-btn:hover::before { width: 100%; }
+.status-filter-btn.active {
+  background: var(--sand-900);
+  border-color: var(--sand-900);
+  color: var(--sand-50);
+}
+.status-filter-btn.active::before { width: 100%; }
+.status-filter-btn .icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--r-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  flex-shrink: 0;
+}
+.status-filter-btn[data-status=""]   .icon-wrap { background: linear-gradient(135deg, var(--sand-100), var(--sand-200)); }
+.status-filter-btn[data-status="in-progress"] .icon-wrap { background: linear-gradient(135deg, #FEF3C7, var(--sun-400)); }
+.status-filter-btn[data-status="planned"]    .icon-wrap { background: linear-gradient(135deg, var(--sky-100), var(--sky-300)); }
+.status-filter-btn[data-status="completed"]  .icon-wrap { background: linear-gradient(135deg, #DCFCE7, var(--green-300)); }
+.status-filter-btn .body strong { display: block; font-size: 1rem; }
+.status-filter-btn .body small { color: var(--text-muted); font-size: .8rem; }
+.status-filter-btn.active .body small { color: var(--sand-300); }
+.status-filter-btn .num {
+  margin-left: auto;
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--sun-500);
+}
+.status-filter-btn.active .num { color: var(--sun-400); }
+
+@media (max-width: 700px) {
+  .status-filter-btn { flex: 1 1 100%; }
+}
+
+/* Project KPI dashboard */
+.project-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--s-4);
+  margin-bottom: var(--s-7);
+}
+@media (max-width: 900px) { .project-kpi-grid { grid-template-columns: 1fr 1fr; } }
+
+.project-kpi {
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  padding: var(--s-5);
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.project-kpi::before {
+  content: "";
+  position: absolute;
+  top: -10px; right: -10px;
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--sun-400), transparent);
+  opacity: .15;
+}
+.project-kpi .label { font-size: .75rem; text-transform: uppercase; letter-spacing: .12em; color: var(--text-muted); font-weight: 700; }
+.project-kpi .value {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 2.6rem);
+  font-weight: 800;
+  color: var(--sand-900);
+  line-height: 1;
+  margin-top: 8px;
+  position: relative;
+}
+.project-kpi .delta {
+  font-size: .8rem;
+  color: var(--text-muted);
+  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Enhanced project card */
+.project-card {
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  transition: all var(--t-mid);
+  display: flex;
+  flex-direction: column;
+}
+.project-card .cover .status { font-weight: 700; }
+.project-card .cover .funding-badge {
+  position: absolute;
+  bottom: var(--s-3); left: var(--s-3);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: rgba(255,255,255,.95);
+  border-radius: var(--r-full);
+  font-size: .7rem;
+  font-weight: 700;
+  color: var(--sand-900);
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+.project-card .body { flex: 1; display: flex; flex-direction: column; }
+.project-card .docs {
+  margin-top: var(--s-3);
+  padding-top: var(--s-3);
+  border-top: 1px dashed var(--border);
+  display: flex;
+  gap: var(--s-2);
+  flex-wrap: wrap;
+}
+.project-card .docs a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: var(--sand-50);
+  border-radius: var(--r-full);
+  font-size: .75rem;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  transition: all var(--t-fast);
+}
+.project-card .docs a:hover { background: var(--sand-900); color: var(--sand-50); }
+
+/* =========================================================
+   FUNDING / DOFINANSOWANIA section
+   ========================================================= */
+.funding-section {
+  background:
+    linear-gradient(135deg, rgba(0,51,160,.04) 0%, rgba(255,237,0,.06) 100%),
+    var(--surface);
+}
+.funding-banner {
+  background: linear-gradient(135deg, #003399 0%, #0050D8 100%);
+  color: #fff;
+  border-radius: var(--r-xl);
+  padding: var(--s-7);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: var(--s-7);
+}
+.funding-banner::before {
+  content: "★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★";
+  position: absolute;
+  top: -10px; right: -10px;
+  font-size: 1rem;
+  color: #FFCC00;
+  letter-spacing: 8px;
+  width: 200px;
+  text-align: right;
+  line-height: 2;
+  animation: rotate 30s linear infinite;
+  transform-origin: 50% 50%;
+}
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.funding-banner .eu-flag {
+  display: inline-block;
+  width: 60px;
+  height: 40px;
+  background: linear-gradient(135deg, #003399 0%, #0050D8 100%);
+  border-radius: var(--r-sm);
+  position: relative;
+  margin-bottom: var(--s-3);
+  border: 2px solid #FFCC00;
+}
+.funding-banner .eu-flag::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle 2px at 30% 30%, #FFCC00 1px, transparent 1px),
+                    radial-gradient(circle 2px at 70% 30%, #FFCC00 1px, transparent 1px),
+                    radial-gradient(circle 2px at 30% 70%, #FFCC00 1px, transparent 1px),
+                    radial-gradient(circle 2px at 70% 70%, #FFCC00 1px, transparent 1px),
+                    radial-gradient(circle 2px at 50% 50%, #FFCC00 1px, transparent 1px);
+}
+.funding-banner h2 { color: #fff; margin-bottom: var(--s-3); }
+.funding-banner p { color: rgba(255,255,255,.9); max-width: 640px; }
+
+.funding-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--s-4);
+}
+.funding-card {
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  padding: var(--s-5);
+  border: 1px solid var(--border);
+  transition: all var(--t-mid);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-3);
+}
+.funding-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--sun-400); }
+
+.funding-logo {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--r-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -.02em;
+  text-align: center;
+  line-height: 1;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-sm);
+}
+.funding-logo.efrr   { background: linear-gradient(135deg, #003399, #0050D8); font-size: 1.2rem; }
+.funding-logo.life   { background: linear-gradient(135deg, #6E9A5C, #3F5E32); }
+.funding-logo.nfos   { background: linear-gradient(135deg, #4A9BC4, #234567); font-size: 1.1rem; }
+.funding-logo.wfos   { background: linear-gradient(135deg, #A8C49B, #6E9A5C); font-size: 1.1rem; }
+.funding-logo.coh    { background: linear-gradient(135deg, #FFD27A, #C56812); color: #1F1F1F; font-size: 1.1rem; }
+.funding-logo.prow   { background: linear-gradient(135deg, #C0392B, #8B5A2B); font-size: 1.1rem; }
+.funding-logo.nca    { background: linear-gradient(135deg, #1F1F1F, #6B4422); font-size: 1.1rem; }
+.funding-logo.inn    { background: linear-gradient(135deg, #F4A340, #C56812); font-size: 1.4rem; }
+
+.funding-card h4 { font-size: 1rem; margin-bottom: 4px; }
+.funding-card .source { font-size: .8rem; color: var(--text-muted); }
+.funding-card p { font-size: .85rem; color: var(--text-muted); margin: 8px 0; }
+.funding-card .amount {
+  margin-top: auto;
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--border);
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  font-size: .85rem;
+}
+.funding-card .amount strong {
+  color: var(--sun-500);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+}
+
+/* Project timeline (chronological view) */
+.project-timeline {
+  position: relative;
+  padding-left: 36px;
+  margin-top: var(--s-7);
+}
+.project-timeline::before {
+  content: "";
+  position: absolute;
+  left: 12px; top: 0; bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--green-500) 0%, var(--sun-400) 60%, var(--sky-300) 100%);
+}
+.proj-tl-item {
+  position: relative;
+  padding-bottom: var(--s-5);
+  padding-left: 24px;
+}
+.proj-tl-item::before {
+  content: "";
+  position: absolute;
+  left: -32px; top: 4px;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 4px solid var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+.proj-tl-item.completed::before  { background: var(--ok); }
+.proj-tl-item.in-progress::before { background: var(--sun-400); }
+.proj-tl-item.planned::before    { background: var(--sky-300); }
+.proj-tl-item .year-tag {
+  display: inline-block;
+  font-family: monospace;
+  font-size: .75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+.proj-tl-item h5 {
+  font-size: 1rem;
+  font-family: var(--font-body);
+  margin-bottom: 4px;
+}
+.proj-tl-item small { color: var(--text-muted); font-size: .8rem; }

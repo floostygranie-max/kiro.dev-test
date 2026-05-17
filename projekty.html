@@ -27,27 +27,46 @@
 
   <section class="section">
     <div class="container">
-      <div class="events-tabs" id="status-tabs">
-        <button class="active" data-status="">Wszystkie</button>
-        <button data-status="in-progress">W trakcie</button>
-        <button data-status="planned">Planowane</button>
-        <button data-status="completed">Zakończone</button>
+
+      <!-- KPI dashboard -->
+      <div class="project-kpi-grid" id="proj-kpi"></div>
+
+      <!-- Status filter cards -->
+      <div class="status-filters" id="status-filters"></div>
+
+      <!-- Projects grid -->
+      <div class="cards-grid" id="projects-list"></div>
+
+      <!-- Chronological timeline -->
+      <div style="margin-top: 64px">
+        <div class="section-head reveal">
+          <span class="eyebrow">Chronologia</span>
+          <h2>Wszystkie projekty na osi czasu</h2>
+        </div>
+        <div class="project-timeline" id="proj-timeline"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== FUNDING SECTION =================== -->
+  <section class="section funding-section">
+    <div class="container">
+      <div class="funding-banner reveal">
+        <div class="eu-flag"></div>
+        <h2>Współfinansowane ze środków UE i krajowych</h2>
+        <p class="lead">Pustynia Błędowska realizuje swoje projekty dzięki wsparciu Unii Europejskiej, krajowych funduszy ochrony środowiska oraz programów regionalnych. Łącznie pozyskaliśmy <strong>22,5+ mln zł</strong> dofinansowania.</p>
       </div>
 
-      <!-- Stats overview -->
-      <div class="stats-grid" id="proj-stats" style="margin-bottom: 48px; background: var(--surface); padding: 24px; border-radius: var(--r-lg); box-shadow: var(--shadow-sm);"></div>
+      <h3 style="margin-bottom:24px;font-family:var(--font-body);text-transform:uppercase;letter-spacing:.1em;font-size:.95rem;color:var(--sand-700)">💰 Nasi fundatorzy</h3>
+      <div class="funding-grid" id="funding-grid"></div>
 
-      <div class="cards-grid" id="projects-list"></div>
+      <div class="alert alert-info" style="margin-top: 32px">
+        <strong>📜 Transparentność</strong><br>
+        Wszystkie projekty rozliczamy publicznie, zgodnie z wymogami UE. Sprawozdania, kosztorysy i karty projektów dostępne są <a href="kontakt.html" style="color:var(--sun-500);font-weight:600">na życzenie</a> w sekretariacie. Zapraszamy do kontroli — to wasze pieniądze!
+      </div>
     </div>
   </section>
 </main>
-
-<style>
-#proj-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; text-align: center; }
-#proj-stats .stat-item .stat-value { color: var(--sun-500); font-size: 2.5rem; font-family: var(--font-display); font-weight: 700; line-height: 1; }
-#proj-stats .stat-item .stat-label { color: var(--text-muted); font-size: .85rem; margin-top: 4px; }
-@media (max-width: 700px) { #proj-stats { grid-template-columns: 1fr 1fr; } }
-</style>
 
 <div id="footer-slot"></div>
 <script src="assets/js/store.js"></script>
@@ -55,69 +74,147 @@
 <script>
 (function(){
   const all = Store.all("projects");
+  const sources = Store.all("fundingSources");
   let filterStatus = "";
 
-  // Stats
-  const stats = [
-    { label: "Projektów łącznie", value: all.length },
-    { label: "W trakcie", value: all.filter(p => p.status === "in-progress").length },
-    { label: "Zakończonych", value: all.filter(p => p.status === "completed").length },
-    { label: "Łączny budżet", value: all.reduce((s,p) => s + (parseInt((p.budget||"0").replace(/\D/g,"")) || 0), 0).toLocaleString("pl-PL") + " zł" }
-  ];
-  document.getElementById("proj-stats").innerHTML = stats.map(s => `
-    <div class="stat-item">
-      <div class="stat-value">${s.value}</div>
-      <div class="stat-label">${s.label}</div>
-    </div>
-  `).join("");
-
-  document.getElementById("status-tabs").addEventListener("click", e => {
-    if (!e.target.dataset || !("status" in e.target.dataset)) return;
-    filterStatus = e.target.dataset.status;
-    document.querySelectorAll("#status-tabs button").forEach(b => b.classList.toggle("active", b === e.target));
-    render();
-  });
-
   const statusLabels = {
-    "completed": "✅ Zakończone",
-    "in-progress": "🔧 W trakcie",
-    "planned": "📋 Planowane"
+    "completed":   { label: "✅ Zakończone", text: "Projekt sfinalizowany" },
+    "in-progress": { label: "🔧 W trakcie",  text: "Aktywnie realizowany" },
+    "planned":     { label: "📋 Planowane",  text: "W fazie przygotowań" }
   };
 
-  function render() {
+  // ============== KPI DASHBOARD ==============
+  const totalBudget = all.reduce((s,p) => s + (parseInt((p.budget||"0").replace(/\D/g,"")) || 0), 0);
+  const completed = all.filter(p => p.status === "completed");
+  const completedBudget = completed.reduce((s,p) => s + (parseInt((p.budget||"0").replace(/\D/g,"")) || 0), 0);
+  const avgProgress = Math.round(all.reduce((s,p) => s + (p.progress||0), 0) / all.length);
+
+  document.getElementById("proj-kpi").innerHTML = `
+    <div class="project-kpi reveal">
+      <div class="label">Projektów łącznie</div>
+      <div class="value">${all.length}</div>
+      <div class="delta">📊 Aktywne portfolio</div>
+    </div>
+    <div class="project-kpi reveal">
+      <div class="label">Łączny budżet</div>
+      <div class="value">${(totalBudget / 1000000).toFixed(1)} mln</div>
+      <div class="delta">💰 Pozyskane środki: ${totalBudget.toLocaleString('pl-PL')} zł</div>
+    </div>
+    <div class="project-kpi reveal">
+      <div class="label">Zrealizowane</div>
+      <div class="value">${completed.length} <small style="font-size:.5em;color:var(--text-muted)">/${all.length}</small></div>
+      <div class="delta">✅ ${(completedBudget / 1000000).toFixed(1)} mln zł wydane</div>
+    </div>
+    <div class="project-kpi reveal">
+      <div class="label">Średni postęp</div>
+      <div class="value">${avgProgress}%</div>
+      <div class="delta">⚡ Status portfolio</div>
+    </div>
+  `;
+
+  // ============== STATUS FILTER CARDS ==============
+  function renderStatusFilters() {
+    const filters = [
+      { status: "",            icon: "🌍", label: "Wszystkie",   count: all.length },
+      { status: "in-progress", icon: "🔧", label: "W trakcie",   count: all.filter(p => p.status === "in-progress").length },
+      { status: "planned",     icon: "📋", label: "Planowane",   count: all.filter(p => p.status === "planned").length },
+      { status: "completed",   icon: "✅", label: "Zakończone",  count: all.filter(p => p.status === "completed").length }
+    ];
+    const sf = document.getElementById("status-filters");
+    sf.innerHTML = filters.map(f => `
+      <button class="status-filter-btn ${f.status === filterStatus ? 'active' : ''}" data-status="${f.status}">
+        <div class="icon-wrap">${f.icon}</div>
+        <div class="body">
+          <strong>${f.label}</strong>
+          <small>${f.status === "" ? "Cały portfolio" : (statusLabels[f.status]?.text || "")}</small>
+        </div>
+        <div class="num">${f.count}</div>
+      </button>
+    `).join("");
+    sf.querySelectorAll("[data-status]").forEach(b => {
+      b.addEventListener("click", () => {
+        filterStatus = b.dataset.status;
+        renderStatusFilters();
+        renderList();
+      });
+    });
+  }
+
+  // ============== PROJECTS LIST ==============
+  function renderList() {
     const list = filterStatus ? all.filter(p => p.status === filterStatus) : all;
     const root = document.getElementById("projects-list");
     if (!list.length) {
       root.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><h3>Brak projektów</h3><p>W tej kategorii nie ma żadnych projektów.</p></div>`;
       return;
     }
-    root.innerHTML = list.map(p => `
-      <div class="project-card reveal">
-        <div class="cover" style="background:${p.cover}">
-          <span class="status status-${p.status}">${statusLabels[p.status] || p.status}</span>
+    root.innerHTML = list.map(p => {
+      const fundingBadge = (p.fundingCodes || []).map(code => {
+        const src = sources.find(s => s.code === code);
+        return src ? `<span class="funding-badge">${App.escapeHtml(src.code === 'efrr' || src.code === 'life' || src.code === 'coh' ? '🇪🇺' : '🇵🇱')} ${App.escapeHtml(src.name.split(' ')[0])}</span>` : '';
+      }).slice(0,1).join("");
+      const docs = (p.docs || []).map(d => `<a href="${d.url}">📄 ${App.escapeHtml(d.name)}</a>`).join("");
+      return `
+        <div class="project-card reveal">
+          <div class="cover" style="background:${p.cover}">
+            <span class="status status-${p.status}">${statusLabels[p.status]?.label || p.status}</span>
+            ${fundingBadge}
+          </div>
+          <div class="body">
+            <h3>${App.escapeHtml(p.title)}</h3>
+            <p class="desc">${App.escapeHtml(p.description)}</p>
+            <div class="progress-row">
+              <span>Postęp</span>
+              <strong>${p.progress}%</strong>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill ${p.progress === 100 ? 'done' : ''}" style="width:${p.progress}%"></div>
+            </div>
+            <div class="project-meta">
+              <div><span>Budżet</span><strong>${App.escapeHtml(p.budget)}</strong></div>
+              <div><span>Finansowanie</span><strong>${App.escapeHtml(p.funding)}</strong></div>
+              <div><span>Start</span><strong>${App.fmtDateShort(p.startDate)}</strong></div>
+              <div><span>Koniec</span><strong>${App.fmtDateShort(p.endDate)}</strong></div>
+            </div>
+            ${docs ? `<div class="docs">${docs}</div>` : ''}
+          </div>
         </div>
-        <div class="body">
-          <h3>${App.escapeHtml(p.title)}</h3>
-          <p class="desc">${App.escapeHtml(p.description)}</p>
-          <div class="progress-row">
-            <span>Postęp</span>
-            <strong>${p.progress}%</strong>
-          </div>
-          <div class="progress-bar">
-            <div class="progress-fill ${p.progress === 100 ? 'done' : ''}" style="width:${p.progress}%"></div>
-          </div>
-          <div class="project-meta">
-            <div><span>Budżet</span><strong>${App.escapeHtml(p.budget)}</strong></div>
-            <div><span>Finansowanie</span><strong>${App.escapeHtml(p.funding)}</strong></div>
-            <div><span>Start</span><strong>${App.fmtDateShort(p.startDate)}</strong></div>
-            <div><span>Koniec</span><strong>${App.fmtDateShort(p.endDate)}</strong></div>
-          </div>
-        </div>
-      </div>
-    `).join("");
+      `;
+    }).join("");
     root.querySelectorAll(".reveal").forEach(el => setTimeout(() => el.classList.add("in"), 50));
   }
-  render();
+
+  // ============== FUNDING SOURCES ==============
+  document.getElementById("funding-grid").innerHTML = sources.map(src => {
+    const initials = src.code.toUpperCase();
+    return `
+      <div class="funding-card reveal">
+        <div class="funding-logo ${src.code}">${initials}</div>
+        <div>
+          <h4>${App.escapeHtml(src.name)}</h4>
+          <small class="source">${App.escapeHtml(src.org)}</small>
+        </div>
+        <p>${App.escapeHtml(src.description)}</p>
+        <div class="amount">
+          <span style="color:var(--text-muted)">Otrzymane:</span>
+          <strong>${App.escapeHtml(src.totalReceived)}</strong>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  // ============== TIMELINE ==============
+  const sortedByYear = [...all].sort((a,b) => a.startDate.localeCompare(b.startDate));
+  document.getElementById("proj-timeline").innerHTML = sortedByYear.map(p => `
+    <div class="proj-tl-item ${p.status}">
+      <span class="year-tag">${p.startDate.slice(0,4)}–${p.endDate.slice(0,4)}</span>
+      <h5>${App.escapeHtml(p.title)}</h5>
+      <small>${App.escapeHtml(p.budget)} · ${App.escapeHtml(p.funding)} · ${statusLabels[p.status]?.label}</small>
+    </div>
+  `).join("");
+
+  renderStatusFilters();
+  renderList();
 })();
 </script>
 </body>
