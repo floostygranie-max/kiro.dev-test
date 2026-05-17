@@ -1,0 +1,331 @@
+// Prisma schema for Pustynia Błędowska
+// Run: npx prisma generate && npx prisma db push && npm run db:seed
+// For PostgreSQL: change provider to "postgresql"
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ============== AUTH ==============
+model User {
+  id            String    @id @default(cuid())
+  username      String    @unique
+  email         String    @unique
+  passwordHash  String
+  name          String
+  role          Role      @default(EDITOR)
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  news          News[]    @relation("NewsAuthor")
+  activity      Activity[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+enum Role {
+  ADMIN
+  EDITOR
+  MODERATOR
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ============== CONTENT ==============
+model News {
+  id          String   @id @default(cuid())
+  title       String
+  titleEn     String?
+  slug        String   @unique
+  excerpt     String
+  excerptEn   String?
+  content     String   // HTML from TipTap
+  contentEn   String?
+  cover       String   // CSS gradient or image URL
+  category    String
+  tags        String   // JSON-encoded array (SQLite has no native arrays)
+  views       Int      @default(0)
+  featured    Boolean  @default(false)
+  published   Boolean  @default(true)
+  publishedAt DateTime @default(now())
+  authorId    String?
+  author      User?    @relation("NewsAuthor", fields: [authorId], references: [id], onDelete: SetNull)
+  reactions   Reaction[]
+  galleryIds  String   @default("[]") // JSON array of photo IDs
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  @@index([category])
+  @@index([published, publishedAt])
+}
+
+model Event {
+  id          String   @id @default(cuid())
+  title       String
+  titleEn     String?
+  slug        String   @unique
+  description String
+  descriptionEn String?
+  startDate   DateTime
+  endDate     DateTime
+  time        String?
+  location    String
+  category    String
+  capacity    Int?
+  registered  Int      @default(0)
+  price       String
+  cover       String
+  seriesId    String?  // FK-like, allows past editions linked to series
+  galleryIds  String   @default("[]")
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  @@index([startDate])
+  @@index([seriesId])
+}
+
+model EventSeries {
+  id            String  @id @default(cuid())
+  name          String
+  description   String
+  firstEdition  Int
+  category      String
+}
+
+model Project {
+  id            String   @id @default(cuid())
+  title         String
+  description   String
+  status        ProjectStatus @default(PLANNED)
+  progress      Int      @default(0)
+  budget        String
+  funding       String
+  fundingCodes  String   @default("[]") // JSON array
+  startDate     DateTime
+  endDate       DateTime
+  cover         String
+  docs          String   @default("[]") // JSON array of {name, url}
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+enum ProjectStatus {
+  PLANNED
+  IN_PROGRESS
+  COMPLETED
+}
+
+model BikeTrail {
+  id            String   @id @default(cuid())
+  name          String
+  color         String
+  difficulty    String
+  length        Float
+  elevationGain Int
+  time          String
+  surface       String
+  startPoint    String
+  description   String
+  highlights    String   @default("[]") // JSON array
+  recommended   String   @default("[]")
+  points        String   // SVG polyline points
+  elevation    String    @default("[]") // JSON array of numbers
+  order         Int      @default(0)
+}
+
+model GalleryFolder {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  cover       String
+  order       Int      @default(0)
+  photos      Photo[]
+}
+
+model Photo {
+  id        String   @id @default(cuid())
+  title     String
+  cover     String
+  author    String?
+  date      DateTime?
+  tags      String   @default("[]") // JSON array
+  aspect    String   @default("square") // landscape | portrait | square
+  eventId   String?  // optional link to event
+  folderId  String
+  folder    GalleryFolder @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  @@index([folderId])
+  @@index([eventId])
+}
+
+model Price {
+  id          String  @id @default(cuid())
+  category    String
+  name        String
+  price       Float
+  unit        String
+  description String?
+  order       Int     @default(0)
+}
+
+model POI {
+  id          String  @id @default(cuid())
+  name        String
+  type        String  // viewpoint, parking, info, food, etc.
+  x           Float   // 0-100 SVG coords
+  y           Float
+  lat         Float?  // optional GPS
+  lon         Float?
+  description String
+  openHours   String?
+  icon        String?
+  photoTips   String? // JSON: {bestTime, lens, tip} for photo POIs
+}
+
+model Trail {
+  id         String  @id @default(cuid())
+  name       String
+  color      String
+  length     String
+  difficulty String
+  time       String
+  points     String  // SVG points
+}
+
+model Partner {
+  id          String   @id @default(cuid())
+  name        String
+  tier        Tier     @default(SILVER)
+  category    String
+  description String
+  website     String?
+  since       Int?
+  logo        String   // JSON: {kind, colors}
+  order       Int      @default(0)
+}
+
+enum Tier {
+  PLATINUM
+  GOLD
+  SILVER
+  BRONZE
+}
+
+model FundingSource {
+  code         String  @id
+  name         String
+  org          String
+  description  String
+  totalReceived String
+  projects     Int     @default(0)
+}
+
+model Department {
+  id           String  @id @default(cuid())
+  name         String
+  description  String?
+  email        String
+  phone        String?
+  person       String?
+  role         String?
+  icon         String?
+  responseTime String  @default("24h")
+  order        Int     @default(0)
+}
+
+model FAQ {
+  id        String  @id @default(cuid())
+  q         String
+  a         String
+  category  String
+  order     Int     @default(0)
+}
+
+model Reaction {
+  id      String  @id @default(cuid())
+  newsId  String
+  type    String  // heart | thumb | love | fire | clap
+  count   Int     @default(0)
+  news    News    @relation(fields: [newsId], references: [id], onDelete: Cascade)
+  @@unique([newsId, type])
+}
+
+model Message {
+  id       String   @id @default(cuid())
+  name     String
+  email    String
+  phone    String?
+  dept     String?
+  deptId   String?
+  subject  String?
+  message  String
+  read     Boolean  @default(false)
+  date     DateTime @default(now())
+}
+
+model Subscriber {
+  id    String   @id @default(cuid())
+  email String   @unique
+  date  DateTime @default(now())
+}
+
+model PartnerApplication {
+  id       String   @id @default(cuid())
+  company  String
+  name     String
+  position String?
+  email    String
+  phone    String?
+  type     String
+  message  String
+  date     DateTime @default(now())
+  status   String   @default("new")
+}
+
+// ============== AUDIT ==============
+model Activity {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  username  String   // copy in case user is deleted
+  action    String   // create | update | delete | login | publish
+  target    String   // collection name
+  details   String?
+  date      DateTime @default(now())
+  @@index([date])
+  @@index([target])
+}
+
+// ============== SETTINGS (key-value) ==============
+model Setting {
+  key   String @id
+  value String // JSON-encoded
+}

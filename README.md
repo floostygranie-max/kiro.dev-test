@@ -192,3 +192,37 @@ Materiały treściowe (teksty o pustyni, ciekawostki) — pochodzą z wiedzy pub
 ---
 
 🏜️ **Pustynia Błędowska — Polska Sahara** • Klucze, woj. małopolskie
+
+
+
+---
+
+## 🚀 Two implementations
+
+This repository contains **two implementations** of the website:
+
+### 1. Static (vanilla HTML/CSS/JS) — root directory
+Production-ready, deployable on GitHub Pages. **No build step.** Just open in a browser.
+- 13 public pages + 20 admin pages
+- localStorage as database
+- Detailed in this README above
+
+### 2. Next.js 14 (full stack) — `next-app/` directory
+Modern React stack with database, auth, API routes.
+- Next.js 14 App Router + TypeScript + Tailwind CSS
+- Prisma ORM (SQLite local / PostgreSQL prod)
+- NextAuth.js authentication
+- shadcn/ui primitives + Framer Motion
+- Server Components + ISR
+
+To run the Next.js version:
+```bash
+cd next-app
+npm install
+cp .env.example .env
+npx prisma db push && npm run db:seed
+npm run dev
+# → http://localhost:3000
+```
+
+See [`next-app/README.md`](./next-app/README.md) for full setup, architecture, and migration guide.
